@@ -1,2 +1,2 @@
 # magma
-PDM
+Principles of Data Management
