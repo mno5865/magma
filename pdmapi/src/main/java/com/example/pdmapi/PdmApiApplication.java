@@ -2,20 +2,16 @@ package com.example.pdmapi;
 
 import com.jcraft.jsch.*;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
-import java.util.logging.Logger;
 import java.util.Scanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PdmapiApplication {
+public class PdmApiApplication {
 
     public static void main(String[] args) {
 
@@ -64,31 +60,12 @@ public class PdmapiApplication {
             System.out.println("Database connection established");
 
             // Do something with the database....
-            SpringApplication.run(PdmapiApplication.class, args);
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            boolean close = false;
-            try {
-                close = conn.isClosed();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (conn != null && !close) {
-                System.out.println("Closing Database Connection");
-                try {
-                    conn.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (session != null && session.isConnected()) {
-                System.out.println("Closing SSH Connection");
-                session.disconnect();
-            }
+            SpringApplication.run(PdmApiApplication.class, args);
+            //removed so that db & ssh tunnel remain open while api is running
         }
     }
-
-
 }

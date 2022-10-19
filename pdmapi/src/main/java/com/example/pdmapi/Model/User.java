@@ -1,13 +1,14 @@
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "User")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID")
     private long userID;
 
@@ -27,22 +28,10 @@ public class User {
     private String lastName;
 
     @Column(name = "CreationDate")
-    private String creationDate;
+    private Date creationDate;
 
     @Column(name = "AccessDate")
-    private String accessDate;
-
-    public User(String username, String password, String email,
-                String firstName, String lastName, String creationDate,
-                String accessDate) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.creationDate = creationDate;
-        this.accessDate = accessDate;
-    }
+    private Date accessDate;
 
     public User() {
     }
@@ -95,19 +84,19 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
-    public String getAccessDate() {
+    public Date getAccessDate() {
         return accessDate;
     }
 
-    public void setAccessDate(String accessDate) {
+    public void setAccessDate(Date accessDate) {
         this.accessDate = accessDate;
     }
 }
