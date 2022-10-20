@@ -1,61 +1,62 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.User;
-import com.example.pdmapi.Repository.UserRepository;
+import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/users")
-    List<User> all() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
-
-    @PostMapping("/users")
-    User newUser(@RequestBody User newUser) {
-        return userRepository.save(newUser);
-    }
-
-    // Single item
 
     @GetMapping("/users/{id}")
-    User one(@PathVariable Long id) {
+    public ResponseEntity<User> getUser(@PathVariable long id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 
-        return userRepository.findById(id).orElse(null);
+    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> createUser(@RequestBody User newUser) {
+        User user = userService.createUser(newUser);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/users/{id}")
-    User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
-
-        return userRepository.findById(id)
-                .map(user -> {
-
-                    user.setUsername(newUser.getUsername());
-                    user.setPassword(newUser.getPassword());
-                    user.setEmail(newUser.getEmail());
-                    user.setFirstName(newUser.getFirstName());
-                    user.setLastName(newUser.getLastName());
-                    user.setCreationDate(newUser.getCreationDate());
-                    user.setAccessDate(newUser.getAccessDate());
-
-                    return userRepository.save(user);
-                })
-                .orElseGet(() -> {
-                    newUser.setUserID(id);
-                    return userRepository.save(newUser);
-                });
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User userDetails) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(userService.updateUser(id, userDetails), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
     }
 
     @DeleteMapping("/users/{id}")
-    void deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+    public ResponseEntity deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.pdmapi.Model;
 
+import org.checkerframework.common.aliasing.qual.Unique;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -12,28 +14,42 @@ public class User {
     @Column(name = "UserID")
     private long userID;
 
-    @Column(name = "Username")
+    @Unique
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "Email")
+    @Unique
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "FirstName")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "LastName")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "CreationDate")
+    @Column(name = "creation_date")
     private Date creationDate;
 
-    @Column(name = "AccessDate")
+    @Column(name = "access_date")
     private Date accessDate;
 
     public User() {
+    }
+
+    public User(@Unique String username, String password,
+                @Unique String email, String firstName,
+                String lastName, Date creationDate, Date accessDate) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.creationDate = creationDate;
+        this.accessDate = accessDate;
     }
 
     public long getUserID() {
