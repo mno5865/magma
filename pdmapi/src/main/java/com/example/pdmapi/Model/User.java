@@ -1,6 +1,5 @@
 package com.example.pdmapi.Model;
 
-
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
@@ -39,22 +38,6 @@ public class User {
     private Date accessDate;
 
     public User() {
-    }
-
-    public User(@Unique String username, String password,
-                @Unique String email, String firstName,
-                String lastName, Date creationDate, Date accessDate) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.creationDate = creationDate;
-        this.accessDate = accessDate;
-    }
-
-    public long getUserID() {
-        return userID;
     }
 
     public void setUserID(long userID) {
