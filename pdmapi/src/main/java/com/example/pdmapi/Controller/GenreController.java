@@ -28,7 +28,7 @@ public class GenreController {
         if (genre.isPresent()) {
             return new ResponseEntity<>(genre.get(), HttpStatus.OK);
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
