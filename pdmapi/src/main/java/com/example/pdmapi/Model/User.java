@@ -1,6 +1,5 @@
 package com.example.pdmapi.Model;
 
-
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;

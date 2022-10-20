@@ -38,7 +38,7 @@ public class UserController {
         User user = userService.createUser(newUser);
 
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
@@ -50,7 +50,7 @@ public class UserController {
         if (user.isPresent()) {
             return new ResponseEntity<>(userService.updateUser(id, userDetails), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
