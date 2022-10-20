@@ -40,22 +40,6 @@ public class User {
     public User() {
     }
 
-    public User(@Unique String username, String password,
-                @Unique String email, String firstName,
-                String lastName, Date creationDate, Date accessDate) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.creationDate = creationDate;
-        this.accessDate = accessDate;
-    }
-
-    public long getUserID() {
-        return userID;
-    }
-
     public void setUserID(long userID) {
         this.userID = userID;
     }
