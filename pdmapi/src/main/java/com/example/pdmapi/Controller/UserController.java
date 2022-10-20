@@ -44,7 +44,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User userDetails) {
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
