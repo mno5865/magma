@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
@@ -40,4 +41,7 @@ public class Album {
     public void setRelease_date(String release_date) {
         this.release_date = release_date;
     }
+=======
+package com.example.pdmapi.Model;public class Album {
+>>>>>>> development
 }

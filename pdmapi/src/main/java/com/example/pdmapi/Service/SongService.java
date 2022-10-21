@@ -34,6 +34,8 @@ public class SongService {
 
         song.setSongID(songId);
         song.setTitle(songDetails.getTitle());
+        song.setRuntime(songDetails.getRuntime());
+        song.setReleaseDate(songDetails.getReleaseDate());
 
         return songRepository.save(song);
     }

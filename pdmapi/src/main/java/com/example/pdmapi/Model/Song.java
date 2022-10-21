@@ -1,6 +1,8 @@
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "song", schema = "p32001_08")
@@ -14,11 +16,11 @@ public class Song {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "run_time")
-    private String runtime;
+    @Column(name = "runtime")
+    private Time runtime;
 
     @Column(name = "release_date")
-    private String release_date;
+    private Date releaseDate;
 
     public Song() {
     }
@@ -36,19 +38,19 @@ public class Song {
         this.title = title;
     }
 
-    public String getRuntime() {
+    public Time getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(String runtime) {
+    public void setRuntime(Time runtime) {
         this.runtime = runtime;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(Date release_date) {
+        this.releaseDate = release_date;
     }
 }
