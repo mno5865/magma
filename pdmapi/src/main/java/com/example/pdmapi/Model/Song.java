@@ -3,6 +3,7 @@ package com.example.pdmapi.Model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 @Entity
 @Table(name = "song", schema = "p32001_08")
@@ -21,6 +22,9 @@ public class Song {
 
     @Column(name = "release_date")
     private Date releaseDate;
+
+    @ManyToMany(mappedBy = "songs")
+    private List<Album> albums;
 
     public Song() {
     }

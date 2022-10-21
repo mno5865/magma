@@ -1,6 +1,7 @@
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "album", schema = "p32001_08")
@@ -16,6 +17,12 @@ public class Album {
 
     @Column(name = "release_date")
     private String release_date;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "AlbumContainsSong",
+            joinColumns = @JoinColumn(name = "song_id", referencedColumnName = "album_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "song_id"))
+    private List<Song> songs;
 
     public Album() {
     }
@@ -33,11 +40,11 @@ public class Album {
         this.title = title;
     }
 
-    public String getRelease_date() {
+    public String getReleaseDate() {
         return release_date;
     }
 
-    public void setRelease_date(String release_date) {
+    public void setReleaseDate(String release_date) {
         this.release_date = release_date;
     }
 }

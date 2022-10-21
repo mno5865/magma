@@ -34,6 +34,7 @@ public class AlbumService {
 
         album.setAlbumID(albumId);
         album.setTitle(albumDetails.getTitle());
+        album.setReleaseDate(albumDetails.getReleaseDate());
 
         return albumRepository.save(album);
     }
