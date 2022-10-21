@@ -16,7 +16,7 @@ public class Song {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "run_time")
+    @Column(name = "runtime")
     private Time runtime;
 
     @Column(name = "release_date")
