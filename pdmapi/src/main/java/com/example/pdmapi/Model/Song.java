@@ -20,7 +20,7 @@ public class Song {
     private Time runtime;
 
     @Column(name = "release_date")
-    private Date release_date;
+    private Date releaseDate;
 
     public Song() {
     }
@@ -46,11 +46,11 @@ public class Song {
         this.runtime = runtime;
     }
 
-    public Date getRelease_date() {
-        return release_date;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(Date release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(Date release_date) {
+        this.releaseDate = release_date;
     }
 }
