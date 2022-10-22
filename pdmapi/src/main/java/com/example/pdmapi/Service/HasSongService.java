@@ -43,6 +43,7 @@ public class HasSongService {
         hasSong.setId(songGenreKey);
         hasSong.setGenre(genre);
         hasSong.setSong(song);
+        hasSongRepository.delete(hasSong);
     }
 
     public List<HasSong> getSongGenres(long songId)
