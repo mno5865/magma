@@ -25,6 +25,12 @@ public class Song {
 
     @ManyToMany(mappedBy = "songs")
     private List<Album> albums;
+    @ManyToMany
+    @JoinTable(
+            name = "HasSong",
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<Genre> genres;
 
     public Song() {
     }
