@@ -42,7 +42,6 @@ public class AlbumController {
             return new ResponseEntity<>(album, HttpStatus.CREATED);
         }
     }
-
     @PutMapping(value = "/albums/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Album> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
         Optional<Album> album = albumService.getAlbum(id);
@@ -58,5 +57,4 @@ public class AlbumController {
         albumService.deleteAlbum(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }
