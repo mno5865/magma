@@ -24,6 +24,9 @@ public class Album {
             inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "song_id"))
     private List<Song> songs;
 
+    @ManyToMany(mappedBy = "artist_albums")
+    List<Artist> artist_albums;
+
     public Album() {
     }
 

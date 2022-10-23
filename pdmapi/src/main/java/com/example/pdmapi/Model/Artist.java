@@ -22,6 +22,13 @@ public class Artist {
             inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<Song> artist_songs;
 
+    @ManyToMany
+    @JoinTable(
+            name = "ReleasesAlbum",
+            joinColumns = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id"))
+    private List<Album> artist_albums;
+
     public Artist() {
     }
 
