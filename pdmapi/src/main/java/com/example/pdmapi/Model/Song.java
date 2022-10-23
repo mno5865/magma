@@ -32,6 +32,9 @@ public class Song {
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @ManyToMany(mappedBy = "artist_songs")
+    List<Artist> artist_songs;
+
     public Song() {
     }
 

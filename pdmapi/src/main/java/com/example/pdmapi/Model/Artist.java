@@ -1,5 +1,6 @@
 package com.example.pdmapi.Model;
 
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -8,11 +9,18 @@ public class Artist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ArtistID")
+    @Column(name = "artist_id")
     private long artistID;
 
     @Column(name = "name")
     private String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ReleasesSong",
+            joinColumns  = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id"))
+    private List<Song> artist_songs;
 
     public Artist() {
     }

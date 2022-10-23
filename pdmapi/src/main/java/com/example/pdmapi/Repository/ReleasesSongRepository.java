@@ -1,9 +1,8 @@
 package com.example.pdmapi.Repository;
 
-import com.example.pdmapi.Model.HasSong;
+import com.example.pdmapi.Model.ReleasesSong;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface HasSongRepository extends JpaRepository<HasSong, Long> {
+public interface ReleasesSongRepository extends JpaRepository<ReleasesSong, Long> {
 }
