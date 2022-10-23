@@ -9,7 +9,7 @@ public class Artist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "artist_id")
+    @Column(name = "artistid")
     private long artistID;
 
     @Column(name = "name")
