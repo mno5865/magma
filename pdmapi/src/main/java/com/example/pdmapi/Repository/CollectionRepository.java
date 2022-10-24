@@ -1,10 +1,10 @@
 package com.example.pdmapi.Repository;
 
-import com.example.pdmapi.Model.Album;
+import com.example.pdmapi.Model.Collection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlbumRepository extends JpaRepository<Album, Long> {
+public interface CollectionRepository extends JpaRepository<Collection, Long> {
 
 }
