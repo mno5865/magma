@@ -1,6 +1,7 @@
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "genre", schema = "p32001_08")
@@ -13,6 +14,9 @@ public class Genre {
 
     @Column(name = "name")
     private String name;
+
+    @ManyToMany(mappedBy = "genres")
+    private List<Album> albums;
 
     public Genre() {
     }
