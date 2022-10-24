@@ -24,12 +24,8 @@ public class GenreController {
 
     @GetMapping("/genres/{id}")
     public ResponseEntity<Genre> getGenre(@PathVariable long id) {
-        Optional<Genre> genre = genreService.getGenre(id);
-        if (genre.isPresent()) {
-            return new ResponseEntity<>(genre.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Genre genre = genreService.getGenre(id);
+        return new ResponseEntity<>(genre, HttpStatus.OK);
     }
 
     @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -45,12 +41,7 @@ public class GenreController {
 
     @PutMapping(value = "/genres/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Genre> updateGenre(@PathVariable long id, @RequestBody Genre genreDetails) {
-        Optional<Genre> genre = genreService.getGenre(id);
-        if (genre.isPresent()) {
-            return new ResponseEntity<>(genreService.updateGenre(id, genreDetails), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(genreService.updateGenre(id, genreDetails), HttpStatus.OK);
     }
 
     @DeleteMapping("/genres/{id}")
