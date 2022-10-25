@@ -81,14 +81,14 @@ public class AlbumService {
         }
     }
 
-    public List<Song> getSongsByAlbum(long albumId){
+    public List<Song> getSongsByAlbum(long albumId) {
         List<Song> songs = new ArrayList<>();
 
-        String query = ("SELECT song.song_id, song.title, song.release-date, song.runtime "
+        String query = ("SELECT song.song_id, song.title, song.release_date, song.runtime "
                 + "FROM album_contains_song "
                 + "INNER JOIN song on album_contains_song.song_id = song.song_id "
                 + "INNER JOIN album on album_contains_song.album_id = album.album_id "
-                + "WHERE album_id='%d").formatted(albumId);
+                + "WHERE album.album_id=%d").formatted(albumId);
         try{
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
@@ -100,7 +100,7 @@ public class AlbumService {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
-                song.setReleaseDate(rs.getDate("release-date"));
+                song.setReleaseDate(rs.getDate("release_date"));
                 song.setRuntime(rs.getTime("runtime"));
                 songs.add(song);
             }
@@ -108,6 +108,34 @@ public class AlbumService {
             e.printStackTrace();
         }
         return songs;
+    }
+
+    public Song getSongInAlbumByTrackNumber(long albumId, int trackNumber) {
+        String query = ("SELECT song.song_id, song.title, song.release_date, song.runtime "
+                + "FROM album_contains_song "
+                + "INNER JOIN song on album_contains_song.song_id = song.song_id "
+                + "INNER JOIN album on album_contains_song.album_id = album.album_id "
+                + "WHERE album.album_id=%d AND album_contains_song.track_number=%d").formatted(albumId, trackNumber);
+        try{
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            Song song = new Song();
+            while(rs.next()) {
+
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setRuntime(rs.getTime("runtime"));
+            }
+            return song;
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // UPDATE

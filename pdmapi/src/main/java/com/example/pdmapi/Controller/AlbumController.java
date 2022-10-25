@@ -42,6 +42,16 @@ public class AlbumController {
         }
     }
 
+    @GetMapping("/albums/{albumId}/songs/{trackNumber}")
+    public ResponseEntity<Song> getAlbumSong(@PathVariable long albumId, @PathVariable int trackNumber) {
+        Song song = albumService.getSongInAlbumByTrackNumber(albumId, trackNumber);
+        if(song != null){
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping(value = "/albums", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createAlbum(@RequestBody Album newAlbum) {
         int rowsAffected = albumService.createAlbum(newAlbum);
