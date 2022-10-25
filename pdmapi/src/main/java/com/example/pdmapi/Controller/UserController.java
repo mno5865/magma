@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/users/id/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);

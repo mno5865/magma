@@ -16,7 +16,7 @@ public class UserService {
     DataSource dataSource;
 
     public User getUser(Long userID) {
-        String stmt = "SELECT * FROM user WHERE user_id=%d".formatted(userID);
+        String stmt = "SELECT * FROM \"user\" WHERE user_id=%d".formatted(userID);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        String stmt = "SELECT * FROM user WHERE username=%s".formatted(username);
+        String stmt = "SELECT * FROM \"user\" WHERE username='%s'".formatted(username);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -68,7 +68,7 @@ public class UserService {
     }
 
     public User getUserByEmail(String email) {
-        String stmt = "SELECT * FROM user WHERE email=%s".formatted(email);
+        String stmt = "SELECT * FROM \"user\" WHERE email='%s'".formatted(email);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -94,9 +94,10 @@ public class UserService {
     }
 
     public int createUser(User user) {
-        String stmt = ("INSERT INTO user(username, password, email, first_name, last_name, creation_date, access_date)"
-                + "VALUES ('%s', '%s', '%s', '%s', '%s' %tF").formatted(user.getUsername(), user.getPassword(),
-                user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate());
+        String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
+                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tF')").formatted(user.getEmail(),
+                user.getUsername(),  user.getPassword(), user.getFirstName(), user.getLastName(),
+                user.getCreationDate(), user.getAccessDate());
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -111,11 +112,10 @@ public class UserService {
 
     // UPDATE
     public int updateUser(Long userId, User user) {
-        String stmt = ("UPDATE user SET " +
-                "username=%s password=%s email=%s first_name=%s last_name=%s creation_date=%s access_date=%s")
-                .formatted(user.getUsername(), user.getPassword(), user.getEmail(), user.getFirstName(),
-                        user.getLastName()) + " creation_date=" + user.getCreationDate() + " access_date=" +
-                user.getAccessDate() + " WHERE user_id=" +userId;
+        String stmt = ("UPDATE \"user\" SET " +
+                "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
+                "access_date='%tF' WHERE user_id=%d").formatted(user.getUsername(), user.getPassword(), user.getEmail(),
+                user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate(), userId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -130,7 +130,7 @@ public class UserService {
 
     // DELETE
     public int deleteUser(Long userId) {
-        String stmt = "DELETE FROM user WHERE user_id=%d".formatted(userId);
+        String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
