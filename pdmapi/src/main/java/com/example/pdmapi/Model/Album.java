@@ -24,12 +24,6 @@ public class Album {
             inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "song_id"))
     private List<Song> songs;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "AlbumGenre",
-            joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "album_id"),
-            inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "genre_id"))
-    private List<Genre> genres;
-
     public Album() {
     }
 
