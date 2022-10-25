@@ -1,53 +1,111 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Album;
-import com.example.pdmapi.Model.AlbumContainsSong;
-import com.example.pdmapi.Model.Keys.SongAlbumKey;
-import com.example.pdmapi.Model.Song;
-import com.example.pdmapi.Repository.AlbumContainsSongRepository;
-import com.example.pdmapi.Repository.AlbumRepository;
-import com.example.pdmapi.Repository.SongRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
-import com.example.pdmapi.Service.SongService;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AlbumService {
 
     @Autowired
-    AlbumRepository albumRepository;
+    DataSource dataSource;
 
     // CREATE
-    public Album createAlbum(Album album) {
-        return albumRepository.save(album);
+    public int createAlbum(Album album) {
+        String query = "INSERT INTO album(title) VALUES ('%s')".formatted(album.getTitle());
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     // READ
     public List<Album> getAlbums() {
-        return albumRepository.findAll();
+        String query = "SELECT * FROM album";
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            List<Album> albums = new ArrayList<>();
+            while(rs.next()) {
+                Album album = new Album();
+                album.setAlbumID(rs.getLong("album_id"));
+                album.setTitle(rs.getString("title"));
+                album.setReleaseDate(rs.getDate("release_date"));
+                albums.add(album);
+            }
+            return albums;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public Optional<Album> getAlbum(Long albumId) {
-        return albumRepository.findById(albumId);
+    public Album getAlbum(Long albumId) {
+        String query = "SELECT * FROM album WHERE album_id=%d".formatted(albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            Album album = new Album();
+            while(rs.next()) {
+                album.setAlbumID(rs.getLong("album_id"));
+
+            }
+            return album;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // UPDATE
-    public Album updateAlbum(Long albumId, Album albumDetails) {
-        Album album = albumRepository.findById(albumId).get();
-
-        album.setAlbumID(albumId);
-        album.setTitle(albumDetails.getTitle());
-        album.setReleaseDate(albumDetails.getReleaseDate());
-
-        return albumRepository.save(album);
+    public int updateAlbum(Long albumId, Album albumDetails) {
+        String query = "UPDATE album SET name='%s' WHERE album_id=%d"
+                .formatted(albumDetails.getTitle(), albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // DELETE
-    public void deleteAlbum(Long albumId) {
-        albumRepository.deleteById(albumId);
+    public int deleteAlbum(Long albumId) {
+        String query = "DELETE FROM album WHERE album_id=%d".formatted(albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
