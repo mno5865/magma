@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -44,28 +43,32 @@ public class AlbumController {
     }
 
     @PostMapping(value = "/albums", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Album> createAlbum(@RequestBody Album newAlbum) {
-        Album album = albumService.createAlbum(newAlbum);
-
-        if (album == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Integer> createAlbum(@RequestBody Album newAlbum) {
+        int rowsAffected = albumService.createAlbum(newAlbum);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(album, HttpStatus.CREATED);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+
     @PutMapping(value = "/albums/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Album> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
-        Optional<Album> album = albumService.getAlbum(id);
-        if (album.isPresent()) {
-            return new ResponseEntity<>(albumService.updateAlbum(id, albumDetails), HttpStatus.OK);
+    public ResponseEntity<Integer> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
+        int rowsAffected = albumService.updateAlbum(id, albumDetails);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/albums/{id}")
-    public ResponseEntity deleteAlbum(@PathVariable long id) {
-        albumService.deleteAlbum(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> deleteAlbum(@PathVariable long id) {
+        int rowsAffected = albumService.deleteAlbum(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
     }
 }

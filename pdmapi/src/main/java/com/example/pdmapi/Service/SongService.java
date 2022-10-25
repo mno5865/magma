@@ -32,7 +32,7 @@ public class SongService {
     public Song updateSong(Long songId, Song songDetails) {
         Song song = songRepository.findById(songId).get();
 
-        song.setSongID(songId);
+        song.setSongId(songId);
         song.setTitle(songDetails.getTitle());
         song.setRuntime(songDetails.getRuntime());
         song.setReleaseDate(songDetails.getReleaseDate());
