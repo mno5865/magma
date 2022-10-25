@@ -1,7 +1,7 @@
 package com.example.pdmapi.Model;
 
 import com.example.pdmapi.Model.Keys.SongAlbumKey;
-import org.checkerframework.common.aliasing.qual.Unique;
+//import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 
@@ -20,7 +20,7 @@ public class AlbumContainsSong {
     @JoinColumn(name = "album_id")
     private Album album;
 
-    @Unique
+   // @Unique
     @Column(insertable = false, updatable = false, columnDefinition="serial")
     private int trackNumber;
 

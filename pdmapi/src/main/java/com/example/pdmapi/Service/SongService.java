@@ -20,8 +20,9 @@ public class SongService {
 
     // CREATE
     public int createSong(Song song) {
-        String stmt = "INSERT INTO song(title,runtime, release_date) VALUES ('"
-                + song.getTitle() + "', " + song.getRuntime() + ", " + song.getReleaseDate() + ")";
+        //String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('"
+        //        + song.getTitle() + "', " + song.getRuntime() + ", " + song.getReleaseDate() + ")";
+        String stmt = "INSERT INTO song(title,runtime, release_date) VALUES ('%s',%tT,%tF)".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
         try
         {
             Connection conn = DataSourceUtils.getConnection(dataSource);
