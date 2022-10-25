@@ -22,6 +22,9 @@ public class Song {
     @Column(name = "release_date")
     private Date releaseDate;
 
+    public Song() {
+    }
+
     public long getSongId() {
         return songId;
     }
