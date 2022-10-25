@@ -2,11 +2,14 @@ package com.example.pdmapi;
 
 import com.jcraft.jsch.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.ini4j.Ini;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,16 +22,22 @@ public class PdmApiApplication {
         String rhost = "starbug.cs.rit.edu";
         int rport = 5432;
 
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter your username:");
+        String user;
+        String pass;
 
-        String in = input.next();
-        String user = in;
-        System.out.println("Enter your password:");
+        try{
+            Ini ini = new Ini(new File("pdmapi/src/main/java/com/example/pdmapi/Service/dbInfo.ini"));
+            user = ini.get("header", "username");
+            pass = ini.get("header", "password");
+        } catch (IOException e){
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter Username:");
+            user = input.next();
+            System.out.println("Enter Password:");
+            pass = input.next();
+            input.close();
+        }
 
-        in = input.next();
-        String password = in;
-        input.close();
         String databaseName = "p32001_08";
 
         String driverName = "org.postgresql.Driver";
@@ -39,7 +48,7 @@ public class PdmApiApplication {
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
             session = jsch.getSession(user, rhost, 22);
-            session.setPassword(password);
+            session.setPassword(pass);
             session.setConfig(config);
             session.setConfig("PreferredAuthentications","publickey,keyboard-interactive,password");
             session.connect();
@@ -53,13 +62,11 @@ public class PdmApiApplication {
             System.out.println("database Url: " + url);
             Properties props = new Properties();
             props.put("user", user);
-            props.put("password", password);
+            props.put("password", pass);
 
             Class.forName(driverName);
             conn = DriverManager.getConnection(url, props);
             System.out.println("Database connection established");
-
-            // Do something with the database....
 
         } catch (Exception e) {
             e.printStackTrace();

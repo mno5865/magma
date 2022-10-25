@@ -1,45 +1,105 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Genre;
-import com.example.pdmapi.Repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GenreService {
-
     @Autowired
-    GenreRepository genreRepository;
+    DataSource dataSource;
 
-    // CREATE
-    public Genre createGenre(Genre genre) {
-        return genreRepository.save(genre);
+    public Genre getGenre(Long genreID) {
+        String stmt = "SELECT * FROM genre WHERE genre_id=%d".formatted(genreID);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Genre genre = new Genre();
+            while(rs.next()) {
+                genre.setGenreID(rs.getLong("genre_id"));
+                genre.setName(rs.getString("name"));
+            }
+            return genre;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // READ
     public List<Genre> getGenres() {
-        return genreRepository.findAll();
+        String stmt = "SELECT * FROM genre";
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            List<Genre> genres = new ArrayList<>();
+            while(rs.next()) {
+                Genre genre = new Genre();
+                genre.setGenreID(rs.getLong("genre_id"));
+                genre.setName(rs.getString("name"));
+                genres.add(genre);
+            }
+            return genres;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public Optional<Genre> getGenre(Long genreId) {
-        return genreRepository.findById(genreId);
+    public int createGenre(Genre genre) {
+        String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // UPDATE
-    public Genre updateGenre(Long genreId, Genre genreDetails) {
-        Genre genre = genreRepository.findById(genreId).get();
-
-        genre.setGenreID(genreId);
-        genre.setName(genreDetails.getName());
-
-        return genreRepository.save(genre);
+    public int updateGenre(Long genreId, Genre genreDetails) {
+        String stmt = "UPDATE genre SET name='%s' WHERE genre_id=%d".formatted(genreDetails.getName(), genreId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // DELETE
-    public void deleteGenre(Long genreId) {
-        genreRepository.deleteById(genreId);
+    public int deleteGenre(Long genreId) {
+        String stmt = "DELETE FROM genre WHERE genre_id=%d".formatted(genreId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
