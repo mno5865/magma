@@ -19,8 +19,9 @@ export class LoginComponent implements OnInit {
 
   logInUser(username : string, password : string): void {
     this.loginService.verifyUser(username).subscribe(userInfo => this.userInfo = userInfo)
+    console.log(this.userInfo)
     if (password == this.userInfo.password) {
-      this.router.navigate(['/', 'home  '])
+      this.router.navigate(['/', 'home'])
     } else {
       this.userInfo = {userID: -1, username: "", password: "", email: "", firstName: "", lastName: "",
         creationDate: new Date, accessDate: new Date}

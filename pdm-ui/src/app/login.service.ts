@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LoginService {
-  private userURL = 'https://localhost:8080/users';
+  private userURL = 'http://localhost:8080/api/users';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,7 +16,6 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   verifyUser(username: string): Observable<User> {
-    console.log(this.http.get<User>(this.userURL+"/"+username, this.httpOptions))
     return this.http.get<User>(this.userURL+"/"+username, this.httpOptions)
   }
 }
