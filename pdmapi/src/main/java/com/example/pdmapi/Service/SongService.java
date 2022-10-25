@@ -20,9 +20,7 @@ public class SongService {
 
     // CREATE
     public int createSong(Song song) {
-        //String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('"
-        //        + song.getTitle() + "', " + song.getRuntime() + ", " + song.getReleaseDate() + ")";
-        String stmt = "INSERT INTO song(title,runtime, release_date) VALUES ('%s',%tT,%tF)".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
+        String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s','%tT','%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
         try
         {
             Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -90,10 +88,8 @@ public class SongService {
 
     // UPDATE
     public int updateSong(Long songId, Song songDetails) {
-        String stmt = "UPDATE song SET title='" + songDetails.getTitle() + "',"
-                + "runtime=" + songDetails.getRuntime() + ","
-                + "release_date=" + songDetails.getReleaseDate()
-                + " WHERE song_id=%d".formatted(songId);
+        String stmt = "UPDATE song SET title='%s',runtime='%tT',release_date='%tF' WHERE song_id=%d"
+                .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(),songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
