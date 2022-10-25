@@ -1,6 +1,7 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Album;
+import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,19 @@ public class AlbumController {
 
     @GetMapping("/albums/{id}")
     public ResponseEntity<Album> getAlbum(@PathVariable long id) {
-        Optional<Album> album = albumService.getAlbum(id);
-        if (album.isPresent()) {
-            return new ResponseEntity<>(album.get(), HttpStatus.OK);
+        Album album = albumService.getAlbum(id);
+        if (album != null) {
+            return new ResponseEntity<>(album, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/albums/{albumId}/songs")
+    public ResponseEntity<List<Song>> getAlbumSongs(@PathVariable long albumId) {
+        List<Song> songs = albumService.getSongsByAlbum(albumId);
+        if(songs != null){
+            return new ResponseEntity<>(songs, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
