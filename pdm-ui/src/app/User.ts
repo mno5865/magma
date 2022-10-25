@@ -1,9 +1,10 @@
-import { User } from "./user";
-
-export interface Customer {
-  username: string;
-  cart: Product[];
-  state: string;
-  city: string;
-  street: string;
+export interface User {
+  userID: number,
+  username: string,
+  password: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  creationDate: Date,
+  accessDate: Date
 }
