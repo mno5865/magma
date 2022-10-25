@@ -18,40 +18,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    @GetMapping("/users/id/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id) {
+        User user = userService.getUser(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/users/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createUser(@RequestBody User newUser) {
-        User user = userService.createUser(newUser);
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
-        }
+    public ResponseEntity createUser(@RequestBody User newUser) {
+        userService.createUser(newUser);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User userDetails) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(userService.updateUser(id, userDetails), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
+        userService.updateUser(id, updatedUser);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")

@@ -4,6 +4,8 @@ import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "user", schema = "p32001_08")
@@ -35,7 +37,7 @@ public class User {
     private Date creationDate;
 
     @Column(name = "access_date")
-    private Date accessDate;
+    private Timestamp accessDate;
 
     public User() {
     }
@@ -92,11 +94,11 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public Date getAccessDate() {
+    public Timestamp getAccessDate() {
         return accessDate;
     }
 
-    public void setAccessDate(Date accessDate) {
+    public void setAccessDate(Timestamp accessDate) {
         this.accessDate = accessDate;
     }
 }
