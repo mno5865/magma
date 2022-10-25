@@ -62,6 +62,7 @@ public class AlbumController {
         }
     }
 
+    //TODO erroring out
     @PutMapping(value = "/albums/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
         int rowsAffected = albumService.updateAlbum(id, albumDetails);
@@ -71,6 +72,17 @@ public class AlbumController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+
+    /*@PutMapping(value = "/albums/{albumId}/?{songId}/?{trackNumber}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> updateSongTrackNumberInAlbum
+            (@PathVariable long albumId, @PathVariable long songId, @PathVariable int trackNumber) {
+        int rowsAffected = albumService.updateSongTrackNumberInAlbum(albumId, songId, trackNumber);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.I_AM_A_TEAPOT);
+        }
+    }*/
 
     @DeleteMapping("/albums/{id}")
     public ResponseEntity<Integer> deleteAlbum(@PathVariable long id) {

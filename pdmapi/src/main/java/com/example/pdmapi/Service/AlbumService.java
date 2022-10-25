@@ -2,7 +2,6 @@ package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Song;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +16,23 @@ import java.util.List;
 @Service
 public class AlbumService {
 
-    @Autowired
+    final
     DataSource dataSource;
+
+    public AlbumService(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     // CREATE
     public int createAlbum(Album album) {
-        String query = "INSERT INTO album(title, release_date) VALUES ('%s', '%tF')"
+        String st = ("INSERT INTO album(title, release_date) VALUES ('%s', '%tF')")
                 .formatted(album.getTitle(), album.getReleaseDate());
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
@@ -61,7 +64,7 @@ public class AlbumService {
     }
 
     public Album getAlbum(long albumId) {
-        String query = "SELECT * FROM album WHERE album_id=%d".formatted(albumId);
+        String query = ("SELECT * FROM album WHERE album_id=%d").formatted(albumId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
@@ -125,7 +128,6 @@ public class AlbumService {
 
             Song song = new Song();
             while(rs.next()) {
-
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setReleaseDate(rs.getDate("release_date"));
@@ -138,31 +140,48 @@ public class AlbumService {
         }
     }
 
+    // TODO fix this aswell
     // UPDATE
-    public int updateAlbum(Long albumId, Album albumDetails) {
-        String query = "UPDATE album SET title='%s' release_date='%tF' WHERE album_id=%d"
+    public int updateAlbum(long albumId, Album albumDetails) {
+        String st = ("UPDATE album SET title='%s' release_date=%tF WHERE album_id=%d")
                 .formatted(albumDetails.getTitle(), albumDetails.getReleaseDate(), albumId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         }
     }
 
-    // DELETE
-    public int deleteAlbum(long albumId) {
-        String query = "DELETE FROM album WHERE album_id=%d".formatted(albumId);
+    /*// TODO fix this is think
+    public int updateSongTrackNumberInAlbum(long albumId, long songId, int trackNumber) {
+        String st = ("UPDATE album_contains_song.track_number SET track_number=%d WHERE album_id=%d AND song_id=%d")
+                .formatted(trackNumber, albumId, songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }*/
+
+    // DELETE
+    public int deleteAlbum(long albumId) {
+        String st = ("DELETE FROM album WHERE album_id=%d").formatted(albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
