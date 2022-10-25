@@ -1,16 +1,9 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Album;
-import com.example.pdmapi.Model.AlbumContainsSong;
-import com.example.pdmapi.Model.Keys.SongAlbumKey;
-import com.example.pdmapi.Model.Song;
-import com.example.pdmapi.Repository.AlbumContainsSongRepository;
 import com.example.pdmapi.Repository.AlbumRepository;
-import com.example.pdmapi.Repository.SongRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.pdmapi.Service.SongService;
 
 import java.util.List;
 import java.util.Optional;
