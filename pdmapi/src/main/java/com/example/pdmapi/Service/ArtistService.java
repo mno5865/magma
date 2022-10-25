@@ -47,7 +47,7 @@ public class ArtistService {
             List<Artist> artists = new ArrayList<>();
             while(rs.next()) {
                 Artist artist = new Artist();
-                artist.setArtistID(rs.getLong("artistid"));
+                artist.setArtistID(rs.getLong("artist_id"));
                 artist.setName(rs.getString("name"));
                 artists.add(artist);
             }
@@ -59,7 +59,7 @@ public class ArtistService {
     }
 
     public Artist getArtist(Long artistId) {
-        String query = "SELECT * FROM artist WHERE artistid=%d".formatted(artistId);
+        String query = "SELECT * FROM artist WHERE artist_id=%d".formatted(artistId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
@@ -68,7 +68,7 @@ public class ArtistService {
             ResultSet rs = stmt.executeQuery(query);
             Artist artist = new Artist();
             while(rs.next()) {
-                artist.setArtistID(rs.getLong("artistid"));
+                artist.setArtistID(rs.getLong("artist_id"));
                 artist.setName(rs.getString("name"));
             }
             return artist;
@@ -80,7 +80,7 @@ public class ArtistService {
 
     // UPDATE
     public int updateArtist(Long artistId, Artist artistDetails) {
-        String query = "UPDATE artist SET name='%s' WHERE artistid=%d"
+        String query = "UPDATE artist SET name='%s' WHERE artist_id=%d"
                 .formatted(artistDetails.getName(), artistId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -96,7 +96,7 @@ public class ArtistService {
 
     // DELETE
     public int deleteArtist(Long artistId) {
-        String query = "DELETE FROM artist WHERE artistid=%d".formatted(artistId);
+        String query = "DELETE FROM artist WHERE artist_id=%d".formatted(artistId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
