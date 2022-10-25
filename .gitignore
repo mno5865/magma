@@ -1,2 +1,4 @@
+.run
 .idea
 pdmapi
+pdmapi/src/main/java/com/example/pdmapi/Service/dbInfo.ini
