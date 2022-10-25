@@ -5,32 +5,24 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-@Entity
-@Table(name = "song", schema = "p32001_08")
 public class Song {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "song_id")
     private long songId;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "runtime")
     private Time runtime;
 
-    @Column(name = "release_date")
     private Date releaseDate;
-
-    @ManyToMany(mappedBy = "songs")
-    private List<Album> albums;
 
     public Song() {
     }
 
+    public long getSongId() {
+        return songId;
+    }
 
-    public void setSongID(long songId) {
+    public void setSongId(long songId) {
         this.songId = songId;
     }
 

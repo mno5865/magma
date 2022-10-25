@@ -12,8 +12,6 @@ public class Album {
 
     private Date release_date;
 
-    private List<Song> songs;
-
     public Album() {
     }
 
@@ -35,13 +33,5 @@ public class Album {
 
     public void setReleaseDate(Date release_date) {
         this.release_date = release_date;
-    }
-
-    public List<Song> getSongs() {
-        return songs;
-    }
-
-    public void addSong(Song song) {
-        this.songs.add(song);
     }
 }
