@@ -6,6 +6,9 @@ public class Genre {
 
     private String name;
 
+    @ManyToMany(mappedBy = "genres")
+    private List<Album> albums;
+
     public Genre() {
     }
 
