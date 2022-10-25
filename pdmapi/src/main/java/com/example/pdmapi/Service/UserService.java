@@ -94,10 +94,9 @@ public class UserService {
     }
 
     public int createUser(User user) {
-        String stmt = ("INSERT INTO user(username, password, email, first_name, last_name, creation_date, accss_date)" +
-                "VALUES ('%s', '%s', '%s', '%s', '%s'").formatted(user.getUsername(), user.getPassword(),
-                user.getEmail(), user.getFirstName(), user.getLastName()) + ", " + user.getCreationDate() + ", " +
-                user.getAccessDate() + ")";
+        String stmt = ("INSERT INTO user(username, password, email, first_name, last_name, creation_date, access_date)"
+                + "VALUES ('%s', '%s', '%s', '%s', '%s' %tF").formatted(user.getUsername(), user.getPassword(),
+                user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate());
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
