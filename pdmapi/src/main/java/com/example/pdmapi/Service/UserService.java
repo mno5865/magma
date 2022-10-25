@@ -32,7 +32,7 @@ public class UserService {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setCreationDate(rs.getDate("creation_date"));
-                user.setAccessDate(rs.getDate("access_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
             }
             return user;
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class UserService {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setCreationDate(rs.getDate("creation_date"));
-                user.setAccessDate(rs.getDate("access_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
             }
             return user;
         } catch (Exception e) {
@@ -84,7 +84,7 @@ public class UserService {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setCreationDate(rs.getDate("creation_date"));
-                user.setAccessDate(rs.getDate("access_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
             }
             return user;
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class UserService {
 
     public int createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
-                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tF')").formatted(user.getEmail(),
+                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
                 user.getUsername(),  user.getPassword(), user.getFirstName(), user.getLastName(),
                 user.getCreationDate(), user.getAccessDate());
         try {
@@ -114,7 +114,7 @@ public class UserService {
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
                 "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
-                "access_date='%tF' WHERE user_id=%d").formatted(user.getUsername(), user.getPassword(), user.getEmail(),
+                "access_date='%tc' WHERE user_id=%d").formatted(user.getUsername(), user.getPassword(), user.getEmail(),
                 user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate(), userId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
