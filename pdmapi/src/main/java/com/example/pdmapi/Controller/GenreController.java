@@ -17,36 +17,32 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
 
-    @GetMapping("/genres")
-    public ResponseEntity<List<Genre>> getGenres() {
-        return new ResponseEntity<>(genreService.getGenres(), HttpStatus.OK);
-    }
-
     @GetMapping("/genres/{id}")
     public ResponseEntity<Genre> getGenre(@PathVariable long id) {
         Genre genre = genreService.getGenre(id);
         return new ResponseEntity<>(genre, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Genre> createGenre(@RequestBody Genre newGenre) {
-        Genre genre = genreService.createGenre(newGenre);
+    @GetMapping("/genres")
+    public ResponseEntity<List<Genre>> getGenres() {
+        return new ResponseEntity<>(genreService.getGenres(), HttpStatus.OK);
+    }
 
-        if (genre == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(genre, HttpStatus.CREATED);
-        }
+    @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createGenre(@RequestBody Genre newGenre) {
+        int rowsAffected = genreService.createGenre(newGenre);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/genres/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Genre> updateGenre(@PathVariable long id, @RequestBody Genre genreDetails) {
-        return new ResponseEntity<>(genreService.updateGenre(id, genreDetails), HttpStatus.OK);
+    public ResponseEntity updateGenre(@PathVariable long id, @RequestBody Genre genreDetails) {
+        int rowsAffected = genreService.updateGenre(id, genreDetails);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/genres/{id}")
     public ResponseEntity deleteGenre(@PathVariable long id) {
-        genreService.deleteGenre(id);
+        int rowsAffected = genreService.deleteGenre(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
