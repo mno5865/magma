@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -18,19 +16,18 @@ public class SongController {
     @Autowired
     private SongService songService;
 
+    @CrossOrigin
     @GetMapping("/songs")
     public ResponseEntity<List<Song>> getSongs() {
         List<Song> songs = songService.getSongs();
-        if(songs == null)
-        {
+        if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(songService.getSongs(), HttpStatus.OK);
         }
     }
 
+    @CrossOrigin
     @GetMapping("/songs/{id}")
     public ResponseEntity<Song> getSong(@PathVariable long id) {
         Song song = songService.getSong(id);
@@ -41,6 +38,7 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
         int rowsAffected = songService.createSong(newSong);
@@ -51,8 +49,9 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/songs/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateSong(@PathVariable long id, @RequestBody Song songDetails) {
+    public ResponseEntity<Integer> updateSong(@PathVariable long id, @RequestBody Song songDetails) {
         int rowsAffected = songService.updateSong(id, songDetails);
         if (rowsAffected != -1) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -61,18 +60,15 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/songs/{id}")
-    public ResponseEntity deleteSong(@PathVariable long id) {
+    public ResponseEntity<Integer> deleteSong(@PathVariable long id) {
         int rowsAffected = songService.deleteSong(id);
-        if(rowsAffected != -1)
-        {
+        if(rowsAffected != -1) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
 }
