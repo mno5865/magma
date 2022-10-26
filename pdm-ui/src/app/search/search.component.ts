@@ -9,7 +9,7 @@ export class SearchComponent implements OnInit {
 
   constructor() { }
 
-  search(searchTerm: HTMLInputElement, searchby: HTMLSelectElement, sortby: HTMLSelectElement){
+  search(searchTerm: string, searchby: string, sortby: string){
     console.log(searchTerm, searchby, sortby);
     alert('search');
   }
