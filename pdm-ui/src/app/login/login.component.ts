@@ -27,4 +27,8 @@ export class LoginComponent implements OnInit {
         creationDate: new Date, accessDate: new Date}
     }
   }
+
+  goToCreate(): void {
+    this.router.navigate(['/', 'create'])
+  }
 }
