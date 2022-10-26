@@ -26,7 +26,7 @@ public class PdmApiApplication {
         String pass;
 
         try{
-            Ini ini = new Ini(new File("pdmapi/src/main/java/com/example/pdmapi/Service/dbInfo.ini"));
+            Ini ini = new Ini(new File("src/main/java/com/example/pdmapi/Service/dbInfo.ini"));
             user = ini.get("header", "username");
             pass = ini.get("header", "password");
         } catch (IOException e){
