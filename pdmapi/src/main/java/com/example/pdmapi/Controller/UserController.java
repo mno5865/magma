@@ -1,5 +1,7 @@
 package com.example.pdmapi.Controller;
 
+import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,16 @@ public class UserController {
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/collections")
+    public ResponseEntity<List<Collection>> getSongsByGenre(@PathVariable long userId) {
+        List<Collection> collections = userService.getCollectionsByUserID(userId);
+        if (collections != null){
+            return new ResponseEntity<>(collections, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)

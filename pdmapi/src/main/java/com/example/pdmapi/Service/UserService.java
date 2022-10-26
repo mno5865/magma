@@ -1,5 +1,6 @@
 package com.example.pdmapi.Service;
 
+import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -10,6 +11,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -92,6 +95,34 @@ public class UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Collection> getCollectionsByUserID(long userId) {
+        List<Collection> collections = new ArrayList<>();
+
+        String query = ("SELECT collection.collection_id, collection.title "
+                + "FROM user_creates_collection "
+                + "INNER JOIN \"user\" on user_creates_collection.user_id = \"user\".user_id "
+                + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
+                + "WHERE \"user\".user_id=%d").formatted(userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                Collection collection = new Collection();
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+                collections.add(collection);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return collections;
+
     }
 
     public int createUser(User user) {
