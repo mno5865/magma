@@ -16,11 +16,13 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @CrossOrigin
     @GetMapping("/collections")
     public ResponseEntity<List<Collection>> getCollections() {
         return new ResponseEntity<>(collectionService.getCollections(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/collections/{id}")
     public ResponseEntity<Collection> getCollection(@PathVariable long id) {
         Collection collection = collectionService.getCollection(id);
@@ -31,6 +33,7 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
         int rowsAffected = collectionService.createCollection(newCollection);
@@ -41,6 +44,7 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/collections/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
         int rowsAffected = collectionService.updateCollection(id, collectionDetails);
@@ -51,9 +55,56 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/collections/{id}")
     public ResponseEntity<Integer> deleteCollection(@PathVariable long id) {
         int rowsAffected = collectionService.deleteCollection(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //CollectionHoldsSong RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/collections/{collectionId}/songs/{songId}")
+    public ResponseEntity<Integer> createCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
+        int rowsAffected = collectionService.createCollectionHoldsSong(collectionId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{collectionId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
+        int rowsAffected = collectionService.deleteCollectionHoldsSong(collectionId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //CollectionHoldsAlbum RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> createCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.createCollectionHoldsAlbum(collectionId, albumId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> deleteCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.deleteCollectionHoldsAlbum(collectionId, albumId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {

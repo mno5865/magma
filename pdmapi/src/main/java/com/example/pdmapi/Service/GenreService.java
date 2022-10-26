@@ -1,22 +1,72 @@
 package com.example.pdmapi.Service;
 
+import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Genre;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.pdmapi.Model.Song;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class GenreService {
-    @Autowired
+    final
     DataSource dataSource;
 
+    public GenreService(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    // CREATE
+    public int createGenre(Genre genre) {
+        String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int createSongHasGenre(long genreId, long songId) {
+        String st = ("INSERT INTO song_has_genre (genre_id, song_id) VALUES (%d, %d)").formatted(genreId, songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int createAlbumHasGenre(long genreId, long albumId) {
+        String st = ("INSERT INTO album_has_genre (genre_id, album_id) VALUES (%d, %d)").formatted(genreId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    // READ
     public Genre getGenre(Long genreID) {
         String stmt = "SELECT * FROM genre WHERE genre_id=%d".formatted(genreID);
         try {
@@ -59,18 +109,61 @@ public class GenreService {
         return null;
     }
 
-    public int createGenre(Genre genre) {
-        String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
+    public List<Song> getSongsByGenre(long genreId) {
+        List<Song> songs = new ArrayList<>();
+
+        String query = ("SELECT song.song_id, song.title, song.release_date, song.runtime "
+                + "FROM song_has_genre "
+                + "INNER JOIN song on song_has_genre.song_id = song.song_id "
+                + "INNER JOIN genre on song_has_genre.genre_id = genre.genre_id "
+                + "WHERE genre.genre_id=%d").formatted(genreId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setRuntime(rs.getTime("runtime"));
+                songs.add(song);
+            }
+        }  catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return songs;
+    }
+
+    public List<Album> getAlbumsByGenre(long genreId) {
+        List<Album> albums = new ArrayList<>();
+
+        String query = ("SELECT album.album_id, album.title, album.release_date, "
+                + "FROM album_has_genre "
+                + "INNER JOIN song on album_has_genre.song_id = album.album_id "
+                + "INNER JOIN genre on album_has_genre.genre_id = genre.genre_id "
+                + "WHERE genre.genre_id=%d").formatted(genreId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                Album album = new Album();
+                album.setAlbumID(rs.getLong("album_id"));
+                album.setTitle(rs.getString("title"));
+                album.setReleaseDate(rs.getDate("release_date"));
+                albums.add(album);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return albums;
     }
 
     // UPDATE
@@ -101,5 +194,35 @@ public class GenreService {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public int deleteSongHasGenre(long songId, long genreId){
+        String st = ("DELETE FROM song_has_genre WHERE (song_id=%d AND genre_id=%d)")
+                .formatted(songId, genreId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteAlbumHasGenre(long albumId, long genreId){
+        String st = ("DELETE FROM album_has_genre WHERE (album_id=%d AND genre_id=%d)")
+                .formatted(albumId, genreId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
