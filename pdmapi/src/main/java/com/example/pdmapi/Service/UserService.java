@@ -40,6 +40,28 @@ public class UserService {
         return null;
     }
 
+    public Timestamp getUserSongLastPlayTime(long userId, long songId)
+    {
+        Timestamp timestamp = null;
+        String stmt = "SELECT date_time FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
+                .formatted(userId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                timestamp = rs.getTimestamp("date_time");
+            }
+            return timestamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return timestamp;
+    }
+
     public User getUserByUsername(String username) {
         String stmt = "SELECT * FROM \"user\" WHERE username='%s'".formatted(username);
         try {

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,19 @@ public class UserController {
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Timestamp> getUserSongLastPlayTime(@PathVariable long userId, @PathVariable long songId)
+    {
+        Timestamp timestamp = userService.getUserSongLastPlayTime(userId,songId);
+        if(timestamp != null)
+        {
+            return new ResponseEntity<>(timestamp,HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
