@@ -98,7 +98,7 @@ public class UserController {
 
     @CrossOrigin
     @DeleteMapping("/users/{userId}/collections/{collectionId}")
-    public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long userId, @PathVariable long collectionId) {
+    public ResponseEntity<Integer> deleteUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.deleteUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);

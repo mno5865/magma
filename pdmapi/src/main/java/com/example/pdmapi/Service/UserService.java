@@ -189,7 +189,7 @@ public class UserService {
     }
 
     public int deleteUserCreatesCollection(long userId, long collectionId){
-        String st = ("DELETE FROM user_creates_collection WHERE (userId=%d AND collectionId=%d)")
+        String st = ("DELETE FROM user_creates_collection WHERE (user_id=%d AND collection_id=%d)")
                 .formatted(userId, collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
