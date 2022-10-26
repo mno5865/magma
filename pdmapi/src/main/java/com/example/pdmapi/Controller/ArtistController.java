@@ -18,11 +18,13 @@ public class ArtistController {
     @Autowired
     private ArtistService artistService;
 
+    @CrossOrigin
     @GetMapping("/artists")
     public ResponseEntity<List<Artist>> getArtists() {
         return new ResponseEntity<>(artistService.getArtists(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/artists/{id}")
     public ResponseEntity<Artist> getArtist(@PathVariable long id) {
         Artist artist = artistService.getArtist(id);
@@ -33,6 +35,7 @@ public class ArtistController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/artists/{artistId}/songs")
     public ResponseEntity<List<Song>> getArtistSongs(@PathVariable long artistId)
     {
@@ -46,6 +49,7 @@ public class ArtistController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId )
     {
@@ -60,6 +64,7 @@ public class ArtistController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/artists", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtist(@RequestBody Artist newArtist) {
         int rowsAffected = artistService.createArtist(newArtist);
@@ -70,6 +75,7 @@ public class ArtistController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/artists/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateArtist(@PathVariable long id, @RequestBody Artist artistDetails) {
         int rowsAffected = artistService.updateArtist(id, artistDetails);
@@ -80,6 +86,7 @@ public class ArtistController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/artists/{id}")
     public ResponseEntity<Integer> deleteArtist(@PathVariable long id) {
         int rowsAffected = artistService.deleteArtist(id);
@@ -89,7 +96,8 @@ public class ArtistController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-
+    
+    @CrossOrigin
     @DeleteMapping("/artists/{artistId}/songs/{songId}")
     public ResponseEntity<Integer> deleteArtistReleaseSong(@PathVariable long artistId, @PathVariable long songId)
     {

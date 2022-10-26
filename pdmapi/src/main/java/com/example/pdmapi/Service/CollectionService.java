@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,5 +107,66 @@ public class CollectionService {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    //CollectionHoldsSong RELATIONSHIP
+    public int createCollectionHoldsSong(long collectionId, long songId) {
+        String st = ("INSERT INTO collection_holds_song (collection_id, song_id) VALUES (%d, %d)")
+                .formatted(collectionId, songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteCollectionHoldsSong(long collectionId, long songId){
+        String st = ("DELETE FROM collection_holds_song WHERE (collection_id=%d AND song_id=%d)")
+                .formatted(collectionId, songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    //CollectionHoldsAlbum RELATIONSHIP
+    public int createCollectionHoldsAlbum(long collectionId, long albumId) {
+        String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
+        String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
