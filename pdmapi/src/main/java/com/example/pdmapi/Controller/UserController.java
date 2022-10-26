@@ -85,4 +85,16 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteUserListensToSong(@PathVariable long userId, @PathVariable long songId)
+    {
+        int rowsAffected = userService.deleteUserListensToSong(userId,songId);
+        if(rowsAffected == 1)
+        {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+        return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+    }
+    }
 }

@@ -199,4 +199,21 @@ public class UserService {
         }
         return -1;
     }
+
+    public int deleteUserListensToSong(long userId, long songId)
+    {
+        String stmt = "DELETE FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
+                .formatted(userId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }
