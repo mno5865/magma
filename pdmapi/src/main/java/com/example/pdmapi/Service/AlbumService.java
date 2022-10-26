@@ -140,10 +140,9 @@ public class AlbumService {
         }
     }
 
-    // TODO fix this aswell
     // UPDATE
     public int updateAlbum(long albumId, Album albumDetails) {
-        String st = ("UPDATE album SET title='%s' release_date=%tF WHERE album_id=%d")
+        String st = ("UPDATE album SET title='%s', release_date='%tF' WHERE album_id=%d")
                 .formatted(albumDetails.getTitle(), albumDetails.getReleaseDate(), albumId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -157,9 +156,9 @@ public class AlbumService {
         }
     }
 
-    /*// TODO fix this is think
+    // TODO fix
     public int updateSongTrackNumberInAlbum(long albumId, long songId, int trackNumber) {
-        String st = ("UPDATE album_contains_song.track_number SET track_number=%d WHERE album_id=%d AND song_id=%d")
+        String st = ("UPDATE album_contains_song SET track_number=%d WHERE (album_id=%d AND song_id=%d)")
                 .formatted(trackNumber, albumId, songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -171,7 +170,7 @@ public class AlbumService {
             e.printStackTrace();
             return -1;
         }
-    }*/
+    }
 
     // DELETE
     public int deleteAlbum(long albumId) {
