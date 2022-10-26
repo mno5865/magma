@@ -15,7 +15,7 @@ public class Album {
     public Album() {
     }
 
-    public void setAlbumId(long albumId) {
+    public void setAlbumID(long albumId) {
         this.albumId = albumId;
     }
 

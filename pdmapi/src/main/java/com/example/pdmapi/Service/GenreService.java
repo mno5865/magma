@@ -155,7 +155,7 @@ public class GenreService {
 
             while(rs.next()) {
                 Album album = new Album();
-                album.setAlbumId(rs.getLong("album_id"));
+                album.setAlbumID(rs.getLong("album_id"));
                 album.setTitle(rs.getString("title"));
                 album.setReleaseDate(rs.getDate("release_date"));
                 albums.add(album);
@@ -212,7 +212,7 @@ public class GenreService {
     }
 
     public int deleteAlbumHasGenre(long albumId, long genreId){
-        String st = ("DELETE FROM song_has_genre WHERE (album_id=%d AND genre_id=%d)")
+        String st = ("DELETE FROM album_has_genre WHERE (album_id=%d AND genre_id=%d)")
                 .formatted(albumId, genreId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
