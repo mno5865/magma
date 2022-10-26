@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../collection.service';
 import { Collection } from '../Collection';
 
@@ -11,7 +11,12 @@ import { Collection } from '../Collection';
 export class CollectionpageComponent implements OnInit {
 
   collectionInfo: Collection = {collectionID: -1, title: ""}
-  constructor(private router : Router, private collectionService : CollectionService) { }
+  constructor(router : Router, private collectionService : CollectionService, route: ActivatedRoute) {
+    var username: string = ""
+    route.params.subscribe((params) => {
+      username = params["username"]   // this keeps track of the username field of the URL
+    })
+  }
 
   ngOnInit(): void {
   }
