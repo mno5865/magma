@@ -34,7 +34,7 @@ public class GenreController {
     }
 
     @GetMapping("/genres/{genreId}/songs")
-    public ResponseEntity<List<Song>> getGenreSongs(@PathVariable long genreId) {
+    public ResponseEntity<List<Song>> getSongsByGenre(@PathVariable long genreId) {
         List<Song> songs = genreService.getSongsByGenre(genreId);
         if(songs != null){
             return new ResponseEntity<>(songs, HttpStatus.OK);
@@ -46,6 +46,16 @@ public class GenreController {
     @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createGenre(@RequestBody Genre newGenre) {
         int rowsAffected = genreService.createGenre(newGenre);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/genres/{genreId}/songs/{songId}")
+    public ResponseEntity createSongHasGenre(@PathVariable long genreId, @PathVariable long songId) {
+        int rowsAffected = genreService.createSongHasGenre(genreId, songId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
@@ -73,7 +83,7 @@ public class GenreController {
         }
     }
 
-    @DeleteMapping("/genres/{genreId}/song?={songId}")
+    @DeleteMapping("/genres/{genreId}/songs/{songId}")
     public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long genreId, @PathVariable long songId) {
         int rowsAffected = genreService.deleteSongHasGenre(songId, genreId);
         if (rowsAffected == 1) {

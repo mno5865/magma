@@ -37,9 +37,8 @@ public class GenreService {
         return -1;
     }
 
-    public int createSongHasGenre(long songId, long genreId){
-        String st = ("INSERT INTO song_has_genre(song_id, genre_id) WHERE (song_id=%d AND genre_id=%d)")
-                .formatted(songId, genreId);
+    public int createSongHasGenre(long genreId, long songId) {
+        String st = ("INSERT INTO song_has_genre (genre_id, song_id) VALUES (%d, %d)").formatted(genreId, songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
