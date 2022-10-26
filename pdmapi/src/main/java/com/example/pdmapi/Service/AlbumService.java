@@ -39,6 +39,21 @@ public class AlbumService {
         }
     }
 
+    public int createAlbumContainsSong(long albumId, long songId){
+        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d)")
+                .formatted(albumId, songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     // READ
     public List<Album> getAlbums() {
         String query = "SELECT * FROM album";
@@ -175,6 +190,20 @@ public class AlbumService {
     // DELETE
     public int deleteAlbum(long albumId) {
         String st = ("DELETE FROM album WHERE album_id=%d").formatted(albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteAlbumContainsSong(long albumId, long songId){
+        String st = ("DELETE FROM album_contains_song WHERE (album_id=%d AND song_id=%d)").formatted(albumId, songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
