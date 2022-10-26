@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Collection } from './Collection';
-import { Observable } from 'rxjs';
+import {map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,7 @@ export class CollectionService {
   }
 
   public getCollectionByName(userID: number, collectionName: string): Observable<Collection> {
+    console.log("THE COMMAND IS: " + this.globalURL+"users/"+userID+"/collections/"+collectionName)
     return this.http.get<Collection>(this.globalURL+"users/"+userID+"/collections/"+collectionName, this.httpOptions)
   }
 
@@ -38,7 +39,7 @@ export class CollectionService {
     return this.http.post<number>(this.globalURL+"collections", JSON.stringify(collection), this.httpOptions)
   }
 
-  createUserCollectionRelationship(userID: number, collectionID: number): Observable<number> {
-    return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/"+collectionID, this.httpOptions)
+  createUserCollectionRelationship(userID: number, collectionToMakeID: number): Observable<number> {
+    return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/"+collectionToMakeID, this.httpOptions)
   }
 }
