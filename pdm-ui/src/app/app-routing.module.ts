@@ -6,18 +6,20 @@ import { CreateuserComponent } from './createuser/createuser.component'
 import { CollectionviewComponent } from './collectionview/collectionview.component'
 import { CollectionpageComponent } from './collectionpage/collectionpage.component'
 import { CanActivate } from '@angular/router'
-import {CollectionredirectService } from './collectionredirect.service'
+import { CollectionredirectService } from './collectionredirect.service'
+import {UsercollectionsredirectService } from './usercollectionsredirect.service'
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'create', component: CreateuserComponent },
-  { path: 'collections', component: CollectionviewComponent},
-  { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent},
-  { path: 'collection/:username', component: CollectionpageComponent },
-  { path: '',   redirectTo: '/login', pathMatch: 'full' },
+  { path: 'collections', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
+  { path: 'collections/:username', component: CollectionviewComponent},
+  { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
+  { path: 'collection/:collectionID', component: CollectionpageComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-];
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
