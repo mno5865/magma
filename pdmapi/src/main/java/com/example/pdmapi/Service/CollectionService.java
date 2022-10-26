@@ -192,4 +192,45 @@ public class CollectionService {
             return -1;
         }
     }
+
+    public int getSongCountFromCollection(long collectionId)
+    {
+        int i = 0;
+        String stmt1 = "SELECT COUNT(song.title) AS total_songs " +
+                "FROM song,collection_holds_song,collection " +
+                "WHERE collection_holds_song.song_id=song.song_id " +
+                "AND collection_holds_song.collection_id=collection.collection_id " +
+                "AND collection.collection_id=%d".formatted(collectionId);
+
+        String stmt2 = "SELECT COUNT(song.title) AS total_songs " +
+                "FROM song,album_contains_song,album,collection_holds_album,collection " +
+                "WHERE (album_contains_song.song_id=song.song_id\n" +
+                "    AND album_contains_song.album_id=album.album_id) " +
+                "AND (collection_holds_album.album_id=album.album_id\n" +
+                "    AND collection_holds_album.collection_id=collection.collection_id) " +
+                "AND collection.collection_id=%d".formatted(collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement1 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs1 = statement1.executeQuery(stmt1);
+            ResultSet rs2 = statement2.executeQuery(stmt2);
+            while(rs1.next())
+            {
+                i = i + rs1.getInt("total_songs");
+            }
+            while(rs2.next())
+            {
+                i = i + rs2.getInt("total_songs");
+            }
+            return i;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }
