@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -21,12 +19,9 @@ public class SongController {
     @GetMapping("/songs")
     public ResponseEntity<List<Song>> getSongs() {
         List<Song> songs = songService.getSongs();
-        if(songs == null)
-        {
+        if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(songService.getSongs(), HttpStatus.OK);
         }
     }
@@ -52,7 +47,7 @@ public class SongController {
     }
 
     @PutMapping(value = "/songs/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateSong(@PathVariable long id, @RequestBody Song songDetails) {
+    public ResponseEntity<Integer> updateSong(@PathVariable long id, @RequestBody Song songDetails) {
         int rowsAffected = songService.updateSong(id, songDetails);
         if (rowsAffected != -1) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -62,17 +57,13 @@ public class SongController {
     }
 
     @DeleteMapping("/songs/{id}")
-    public ResponseEntity deleteSong(@PathVariable long id) {
+    public ResponseEntity<Integer> deleteSong(@PathVariable long id) {
         int rowsAffected = songService.deleteSong(id);
-        if(rowsAffected != -1)
-        {
+        if(rowsAffected != -1) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
 }
