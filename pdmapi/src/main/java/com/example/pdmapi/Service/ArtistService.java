@@ -2,6 +2,7 @@ package com.example.pdmapi.Service;
 
 
 import com.example.pdmapi.Model.Artist;
+import com.example.pdmapi.Model.Song;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,23 @@ public class ArtistService {
         }
     }
 
+    public int createArtistReleasesSong(long artistId, long songId)
+    {
+        String stmt = ("INSERT INTO artist_releases_song (artist_id, song_id) VALUES (%d,%d)")
+                .formatted(artistId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     // READ
     public List<Artist> getArtists() {
         String query = "SELECT * FROM artist";
@@ -56,6 +74,37 @@ public class ArtistService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<Song> getSongsByArtist(long artistId)
+    {
+        List<Song> songs = new ArrayList<>();
+        String stmt = "SELECT song.song_id,song.title,song.release_date,song.runtime" +
+                " FROM artist_releases_song" +
+                " INNER JOIN song on artist_releases_song.song_id = song.song_id" +
+                " INNER JOIN artist on artist_releases_song.artist_id = artist.artist_id" +
+                " WHERE artist.artist_id=%d".formatted(artistId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setRuntime(rs.getTime("runtime"));
+                songs.add(song);
+            }
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return songs;
     }
 
     public Artist getArtist(Long artistId) {
@@ -107,5 +156,22 @@ public class ArtistService {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public int deleteArtistReleaseSong(long songId, long artistId)
+    {
+        String stmt = "DELETE FROM artist_releases_song WHERE song_id=%d AND artist_id=%d"
+                .formatted(songId,artistId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

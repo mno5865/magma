@@ -19,7 +19,6 @@ public class ApiConfig {
         String pass;
 
         try{
-
             String str = System.getProperty("user.dir");
             String path;
             if (str.substring(str.length()-5).equals("magma")) {
@@ -28,7 +27,6 @@ public class ApiConfig {
                 path = "src/main/java/com/example/pdmapi/Service/dbInfo.ini";
             }
             Ini ini = new Ini(new File(path));
-
             user = ini.get("header", "username");
             pass = ini.get("header", "password");
         } catch (IOException e){
