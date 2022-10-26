@@ -1,0 +1,26 @@
+<div class="container">
+  <div class = "row">
+    <input type="text" placeholder="Search" #searchTerm required>
+    <button (click)="search(searchTerm, searchBy, sortBy)"> Click Event</button>
+  </div>
+  <div class = "row">
+    <div class ="col">
+      <b>Search By</b>
+      <select #searchBy required>
+        <option>Name</option>
+        <option>Artist</option>
+        <option>Album</option>
+        <option>Genre</option>
+      </select>
+    </div>
+    <div class ="col">
+      <b>Sort By</b>
+      <select #sortBy required>
+        <option>Name</option>
+        <option>Artist</option>
+        <option>release year</option>
+        <option>Genre</option>
+      </select>
+    </div>
+  </div>
+</div>
