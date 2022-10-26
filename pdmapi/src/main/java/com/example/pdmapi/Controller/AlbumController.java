@@ -62,7 +62,7 @@ public class AlbumController {
         }
     }
 
-    @PostMapping(value = "/albums/{albumId}/songs?=", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/albums/{albumId}/songs?={songId}")
     public ResponseEntity<Integer> createAlbumContainsSong(@PathVariable long albumId, @PathVariable long songId) {
         int rowsAffected = albumService.createAlbumContainsSong(albumId, songId);
         if (rowsAffected == 1) {
@@ -83,7 +83,7 @@ public class AlbumController {
     }
 
     //TODO FIX
-    @PutMapping(value = "/albums/{albumId}/song?={songId}/?={trackNumber}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/albums/{albumId}/song?={songId}/?={trackNumber}")
     public ResponseEntity<Integer> updateSongTrackNumberInAlbum
             (@PathVariable long albumId, @PathVariable long songId, @PathVariable int trackNumber) {
         int rowsAffected = albumService.updateSongTrackNumberInAlbum(albumId, songId, trackNumber);
