@@ -1,6 +1,6 @@
 package com.example.pdmapi.Model;
 
-import org.checkerframework.common.aliasing.qual.Unique;
+//import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -16,14 +16,14 @@ public class User {
     @Column(name = "UserID")
     private long userID;
 
-    @Unique
+    //@Unique
     @Column(name = "username")
     private String username;
 
     @Column(name = "password")
     private String password;
 
-    @Unique
+    //@Unique
     @Column(name = "email")
     private String email;
 
