@@ -34,6 +34,19 @@ public class CollectionController {
     }
 
     @CrossOrigin
+    @GetMapping("/users/{userID}/collections/{collectionName}")
+    public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
+                                                                  @PathVariable String collectionName) {
+        collectionName = collectionName.replace('-', ' ');
+        Collection collection = collectionService.getCollectionByTitleAndUserID(userID, collectionName);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
         int rowsAffected = collectionService.createCollection(newCollection);

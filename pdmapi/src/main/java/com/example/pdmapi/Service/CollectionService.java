@@ -1,6 +1,7 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,28 @@ public class CollectionService {
         return null;
     }
 
+    public Collection getCollectionByTitleAndUserID(long userID, String title) {
+        String stmt = ("SELECT * FROM collection " +
+                "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
+                "WHERE user_id=%d AND title='%s'").formatted(userID, title);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Collection collection = new Collection();
+            while(rs.next()) {
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+            }
+            return collection;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // UPDATE
     public int updateCollection(Long collectionId, Collection collectionDetails) {
         String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
@@ -103,7 +126,7 @@ public class CollectionService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
