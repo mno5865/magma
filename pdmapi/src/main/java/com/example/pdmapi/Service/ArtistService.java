@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
+import javax.sql.ConnectionEvent;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,6 +34,23 @@ public class ArtistService {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public int createArtistReleasesAlbum(long artistId, long albumId)
+    {
+        String stmt = "INSERT INTO artist_releases_album (artist_id, album_id) VALUES (%d,%d)"
+                .formatted(artistId,albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // READ
