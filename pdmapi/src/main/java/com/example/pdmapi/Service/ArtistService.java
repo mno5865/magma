@@ -1,6 +1,7 @@
 package com.example.pdmapi.Service;
 
 
+import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Artist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -76,6 +77,35 @@ public class ArtistService {
         }
     }
 
+    public List<Album> getAlbumsByArtist(long artistId)
+    {
+        List<Album> albums = new ArrayList<>();
+        String stmt = "SELECT album.album_id,album.title,album.release_date " +
+                "FROM artist_releases_album " +
+                "INNER JOIN album on artist_releases_album.album_id = album.album_id " +
+                "INNER JOIN artist on artist_releases_album.artist_id = artist.artist_id " +
+                "WHERE artist.artist_id=%d".formatted(artistId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                Album album = new Album();
+                album.setAlbumID(rs.getLong("album_id"));
+                album.setTitle(rs.getString("title"));
+                album.setReleaseDate(rs.getDate("release_date"));
+                albums.add(album);
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return albums;
+    }
+
     public Artist getArtist(Long artistId) {
         String query = "SELECT * FROM artist WHERE artist_id=%d".formatted(artistId);
         try {
@@ -125,5 +155,22 @@ public class ArtistService {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public int deleteArtistReleaseAlbum(long albumId, long artistId)
+    {
+        String stmt = "DELETE FROM artist_releases_album WHERE album_id=%d AND artist_id=%d"
+                .formatted(albumId,artistId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
