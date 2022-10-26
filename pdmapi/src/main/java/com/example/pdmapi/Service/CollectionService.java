@@ -140,4 +140,33 @@ public class CollectionService {
         }
     }
     //CollectionHoldsAlbum RELATIONSHIP
+    public int createCollectionHoldsAlbum(long collectionId, long albumId) {
+        String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
+        String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }
