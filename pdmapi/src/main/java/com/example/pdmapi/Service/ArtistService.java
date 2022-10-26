@@ -35,6 +35,23 @@ public class ArtistService {
         }
     }
 
+    public int createArtistReleasesSong(long artistId, long songId)
+    {
+        String stmt = ("INSERT INTO artist_releases_song (artist_id, song_id) VALUES (%d,%d)")
+                .formatted(artistId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     // READ
     public List<Artist> getArtists() {
         String query = "SELECT * FROM artist";

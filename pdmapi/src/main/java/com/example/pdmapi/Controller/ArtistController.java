@@ -32,6 +32,20 @@ public class ArtistController {
         }
     }
 
+    @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId )
+    {
+        int rowsAffected = artistService.createArtistReleasesSong(artistId,songId);
+        if(rowsAffected == 1)
+        {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.CREATED);
+        }
+        else
+        {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(value = "/artists", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtist(@RequestBody Artist newArtist) {
         int rowsAffected = artistService.createArtist(newArtist);
