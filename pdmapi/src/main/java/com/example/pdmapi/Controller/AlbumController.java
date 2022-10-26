@@ -17,11 +17,13 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    @CrossOrigin
     @GetMapping("/albums")
     public ResponseEntity<List<Album>> getAlbums() {
         return new ResponseEntity<>(albumService.getAlbums(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/albums/{id}")
     public ResponseEntity<Album> getAlbum(@PathVariable long id) {
         Album album = albumService.getAlbum(id);
@@ -32,6 +34,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/albums/{albumId}/songs")
     public ResponseEntity<List<Song>> getAlbumSongs(@PathVariable long albumId) {
         List<Song> songs = albumService.getSongsByAlbum(albumId);
@@ -42,6 +45,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/albums/{albumId}/songs/{trackNumber}")
     public ResponseEntity<Song> getAlbumSong(@PathVariable long albumId, @PathVariable int trackNumber) {
         Song song = albumService.getSongInAlbumByTrackNumber(albumId, trackNumber);
@@ -52,6 +56,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/albums", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createAlbum(@RequestBody Album newAlbum) {
         int rowsAffected = albumService.createAlbum(newAlbum);
@@ -62,6 +67,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/albums/{albumId}/songs?={songId}")
     public ResponseEntity<Integer> createAlbumContainsSong(@PathVariable long albumId, @PathVariable long songId) {
         int rowsAffected = albumService.createAlbumContainsSong(albumId, songId);
@@ -72,6 +78,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/albums/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
         int rowsAffected = albumService.updateAlbum(id, albumDetails);
@@ -94,6 +101,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/albums/{id}")
     public ResponseEntity<Integer> deleteAlbum(@PathVariable long id) {
         int rowsAffected = albumService.deleteAlbum(id);
@@ -104,6 +112,7 @@ public class AlbumController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/albums/{albumId}/song?={songId}")
     public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long albumId, @PathVariable long songId) {
         int rowsAffected = albumService.deleteAlbumContainsSong(albumId, songId);

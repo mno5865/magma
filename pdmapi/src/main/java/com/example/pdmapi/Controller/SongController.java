@@ -16,6 +16,7 @@ public class SongController {
     @Autowired
     private SongService songService;
 
+    @CrossOrigin
     @GetMapping("/songs")
     public ResponseEntity<List<Song>> getSongs() {
         List<Song> songs = songService.getSongs();
@@ -26,6 +27,7 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/songs/{id}")
     public ResponseEntity<Song> getSong(@PathVariable long id) {
         Song song = songService.getSong(id);
@@ -36,6 +38,7 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
         int rowsAffected = songService.createSong(newSong);
@@ -46,6 +49,7 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/songs/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateSong(@PathVariable long id, @RequestBody Song songDetails) {
         int rowsAffected = songService.updateSong(id, songDetails);
@@ -56,6 +60,7 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/songs/{id}")
     public ResponseEntity<Integer> deleteSong(@PathVariable long id) {
         int rowsAffected = songService.deleteSong(id);

@@ -16,11 +16,13 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @CrossOrigin
     @GetMapping("/collections")
     public ResponseEntity<List<Collection>> getCollections() {
         return new ResponseEntity<>(collectionService.getCollections(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/collections/{id}")
     public ResponseEntity<Collection> getCollection(@PathVariable long id) {
         Collection collection = collectionService.getCollection(id);
@@ -31,6 +33,7 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
         int rowsAffected = collectionService.createCollection(newCollection);
@@ -41,6 +44,7 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/collections/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
         int rowsAffected = collectionService.updateCollection(id, collectionDetails);
@@ -51,6 +55,7 @@ public class CollectionController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/collections/{id}")
     public ResponseEntity<Integer> deleteCollection(@PathVariable long id) {
         int rowsAffected = collectionService.deleteCollection(id);
