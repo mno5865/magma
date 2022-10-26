@@ -13,7 +13,7 @@ export class CollectionviewComponent implements OnInit {
   userID: number = 0
   collectionInfo: Collection = {collectionID: -1, title: ""}
   collectionList: Collection[] = []
-  constructor(router : Router, private collectionService : CollectionService, route: ActivatedRoute) {
+  constructor(private router : Router, private collectionService : CollectionService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
     })
@@ -23,12 +23,15 @@ export class CollectionviewComponent implements OnInit {
     this.setCollections()
   }
 
+  OnClick(): void {
+    this.router.navigate(['/collection/', this.collectionService.getCollectionID()])
+  }
+
   CreateCollection(title: string): void {
     if (title != "") {
       var newCollection: Collection = {title: title, collectionID: 0}
       var result: number
       this.collectionService.createCollection(newCollection).subscribe(returnValue => result = returnValue)
-      this.collectionService
     }
   }
 

@@ -19,8 +19,8 @@ export class CreateuserComponent implements OnInit {
 
   CreateAccount(username : string, password : string, email : string, firstName : string, lastName : string): void {
     if (username != "" && password != "" && email != "" && firstName != "" && lastName != "") {
-      var newUser: User = {username: username, password: password, email: email, firstName: firstName, lastName: lastName,
-        creationDate: new Date(), accessDate: new Date(), userID: 0}
+      var newUser: User = { username: username, password: password, email: email, firstName: firstName,
+        lastName: lastName, creationDate: new Date(), accessDate: new Date(), userID: 0}
       this.loginService.createUser(newUser).subscribe()
       this.router.navigate(['/', 'login'])
     } else {
