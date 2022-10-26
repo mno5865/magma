@@ -19,6 +19,17 @@ public class UserController {
     private UserService userService;
 
     @CrossOrigin
+    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody User newUser) {
+        int rowsAffected = userService.createUser(newUser);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
     @GetMapping("/users/id/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
@@ -41,39 +52,6 @@ public class UserController {
     }
 
     @CrossOrigin
-    @GetMapping("/users/{userId}/collections")
-    public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
-        List<Collection> collections = userService.getCollectionsByUserID(userId);
-        if (collections != null){
-            return new ResponseEntity<>(collections, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @CrossOrigin
-    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User newUser) {
-        int rowsAffected = userService.createUser(newUser);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @CrossOrigin
-    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
-    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
-        int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
         int rowsAffected = userService.updateUser(id, updatedUser);
@@ -88,6 +66,40 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
         int rowsAffected = userService.deleteUser(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //user_creates_collection RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
+    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections")
+    public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
+        List<Collection> collections = userService.getCollectionsByUserID(userId);
+        if (collections != null){
+            return new ResponseEntity<>(collections, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/users/{userId}/collections/{collectionId}")
+    public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.deleteUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {

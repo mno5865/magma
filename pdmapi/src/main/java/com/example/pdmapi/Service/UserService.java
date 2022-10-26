@@ -19,6 +19,23 @@ public class UserService {
     @Autowired
     DataSource dataSource;
 
+    public int createUser(User user) {
+        String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
+                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
+                user.getUsername(),  user.getPassword(), user.getFirstName(), user.getLastName(),
+                user.getCreationDate(), user.getAccessDate());
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public User getUser(Long userID) {
         String stmt = "SELECT * FROM \"user\" WHERE user_id=%d".formatted(userID);
         try {
@@ -97,6 +114,53 @@ public class UserService {
         return null;
     }
 
+    public int updateUser(Long userId, User user) {
+        String stmt = ("UPDATE \"user\" SET " +
+                "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
+                "access_date='%tc' WHERE user_id=%d").formatted(user.getUsername(), user.getPassword(), user.getEmail(),
+                user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate(), userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int deleteUser(Long userId) {
+        String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    //user_creates_collection RELATIONSHIP
+    public int createUserCreatesCollection(long userId, long collectionId) {
+        String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
+                collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     public List<Collection> getCollectionsByUserID(long userId) {
         List<Collection> collections = new ArrayList<>();
 
@@ -122,29 +186,11 @@ public class UserService {
             e.printStackTrace();
         }
         return collections;
-
     }
 
-    public int createUser(User user) {
-        String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
-                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
-                user.getUsername(),  user.getPassword(), user.getFirstName(), user.getLastName(),
-                user.getCreationDate(), user.getAccessDate());
-        try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    public int createUserCreatesCollection(long userId, long collectionId) {
-        String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
-                collectionId);
+    public int deleteUserCreatesCollection(long userId, long collectionId){
+        String st = ("DELETE FROM user_creates_collection WHERE (userId=%d AND collectionId=%d)")
+                .formatted(userId, collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
@@ -155,38 +201,5 @@ public class UserService {
             e.printStackTrace();
             return -1;
         }
-    }
-
-    // UPDATE
-    public int updateUser(Long userId, User user) {
-        String stmt = ("UPDATE \"user\" SET " +
-                "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
-                "access_date='%tc' WHERE user_id=%d").formatted(user.getUsername(), user.getPassword(), user.getEmail(),
-                user.getFirstName(), user.getLastName(), user.getCreationDate(), user.getAccessDate(), userId);
-        try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    // DELETE
-    public int deleteUser(Long userId) {
-        String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
-        try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
     }
 }
