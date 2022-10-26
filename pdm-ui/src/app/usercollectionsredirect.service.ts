@@ -15,8 +15,8 @@ export class UsercollectionsredirectService implements CanActivate {
   constructor(private router: Router, private utilsService : UtilsService) { }
 
   canActivate(): Observable<boolean> {
-    var username: string = this.utilsService.getUsername();
-    this.router.navigate(["collections/" + username])
+    var userID: number = this.utilsService.getUserID();
+    this.router.navigate(["collections/" + userID])
     return of(false)
   }
 

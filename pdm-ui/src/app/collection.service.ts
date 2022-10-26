@@ -25,6 +25,12 @@ export class CollectionService {
     return this.collectionName
   }
 
+  public getUserCollections(userID: number): Observable<Collection[]> {
+    var collections = this.http.get<Collection[]>(this.collectionURL+"/"+userID, this.httpOptions)
+    console.log(collections)
+    return collections
+  }
+
   createCollection(collection: Collection): Observable<Collection> {
     return this.http.post<Collection>(this.collectionURL, JSON.stringify(collection), this.httpOptions)
   }

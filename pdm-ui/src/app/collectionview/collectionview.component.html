@@ -1,7 +1,13 @@
-<div class="container">
+<div id="container">
+
   <label><b>Create New Collection: </b></label>
   <input type="text" placeholder="Enter Collection Name" #collectionName required>
   <button type="submit" (click)="CreateCollection(collectionName.value)">Create</button>
   <br><br>
 
+  <div id="collectionList">
+  <div class="collections">
+    <h2>My Collections</h2>
+
+  </div>
 </div>
