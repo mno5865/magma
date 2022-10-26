@@ -21,4 +21,6 @@ export class CollectionviewComponent implements OnInit {
       this.loginService.createCollection(newCollection).subscribe();
     }
   }
+
+  getCollections(): void {}
 }

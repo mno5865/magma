@@ -8,6 +8,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateuserComponent } from './createuser/createuser.component';
 import { CollectionviewComponent } from './collectionview/collectionview.component';
+import { CollectionpageComponent } from './collectionpage/collectionpage.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { CollectionviewComponent } from './collectionview/collectionview.compone
     LoginComponent,
     HomepageComponent,
     CreateuserComponent,
-    CollectionviewComponent
+    CollectionviewComponent,
+    CollectionpageComponent
   ],
   imports: [
     BrowserModule,
