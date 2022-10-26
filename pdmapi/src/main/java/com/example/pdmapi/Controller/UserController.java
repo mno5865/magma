@@ -20,7 +20,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User newUser) {
+    public ResponseEntity<Integer> createUser(@RequestBody User newUser) {
         int rowsAffected = userService.createUser(newUser);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -53,7 +53,7 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
+    public ResponseEntity<Integer> updateUser(@PathVariable long id, @RequestBody User updatedUser) {
         int rowsAffected = userService.updateUser(id, updatedUser);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -64,7 +64,7 @@ public class UserController {
 
     @CrossOrigin
     @DeleteMapping("/users/{id}")
-    public ResponseEntity deleteUser(@PathVariable long id) {
+    public ResponseEntity<Integer> deleteUser(@PathVariable long id) {
         int rowsAffected = userService.deleteUser(id);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
@@ -76,7 +76,7 @@ public class UserController {
     //user_creates_collection RELATIONSHIP
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/{collectionId}")
-    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+    public ResponseEntity<Integer> createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
