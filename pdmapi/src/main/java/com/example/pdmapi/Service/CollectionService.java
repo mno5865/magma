@@ -21,18 +21,23 @@ public class CollectionService {
     DataSource dataSource;
 
     // CREATE
-    public int createCollection(Collection collection) {
+    public int[] createCollection(Collection collection) {
         String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return new int[2];
     }
 
     // READ
