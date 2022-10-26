@@ -1,6 +1,7 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Artist;
+import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,19 @@ public class ArtistController {
             return new ResponseEntity<>(artist, HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/artists/{artistId}/songs")
+    public ResponseEntity<List<Song>> getArtistSongs(@PathVariable long artistId)
+    {
+        List<Song> songs = artistService.getSongsByArtist(artistId);
+        if(songs != null)
+        {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -73,6 +87,18 @@ public class ArtistController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/artists/{artistId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteArtistReleaseSong(@PathVariable long artistId, @PathVariable long songId)
+    {
+        int rowsAffected = artistService.deleteArtistReleaseSong(songId,artistId);
+        if(rowsAffected == 1)
+        {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
         }
     }
 }
