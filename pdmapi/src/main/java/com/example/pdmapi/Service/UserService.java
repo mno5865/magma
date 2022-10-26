@@ -216,4 +216,44 @@ public class UserService {
         return -1;
     }
 
+    public int createUserListensToAlbum(long userId, long albumId)
+    {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
+                .formatted(userId,albumId,(timestamp),userId,albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public Timestamp getUserAlbumLastPlayTime(long userId, long albumId)
+    {
+        Timestamp timestamp = null;
+        String stmt = "SELECT date_time FROM user_listens_to_album WHERE user_id=%d AND album_id=%d"
+                .formatted(userId,albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                timestamp = rs.getTimestamp("date_time");
+            }
+            return timestamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return timestamp;
+    }
+
 }

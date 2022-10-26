@@ -106,4 +106,31 @@ public class UserController {
         return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
     }
     }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Integer> createUserListensTAlbum(@PathVariable long userId, @PathVariable long albumId)
+    {
+        int rowsAffected = userService.createUserListensToAlbum(userId,albumId);
+        if(rowsAffected == 1)
+        {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Timestamp> getUserAlbumLastPlayTime(@PathVariable long userId, @PathVariable long albumId)
+    {
+        Timestamp timestamp = userService.getUserAlbumLastPlayTime(userId,albumId);
+        if(timestamp != null)
+        {
+            return new ResponseEntity<>(timestamp,HttpStatus.OK);
+        } else
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
