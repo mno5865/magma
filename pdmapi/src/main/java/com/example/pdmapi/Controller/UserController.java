@@ -36,7 +36,7 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/users/{userId}/collections")
-    public ResponseEntity<List<Collection>> getSongsByGenre(@PathVariable long userId) {
+    public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
         List<Collection> collections = userService.getCollectionsByUserID(userId);
         if (collections != null){
             return new ResponseEntity<>(collections, HttpStatus.OK);
@@ -54,7 +54,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/{collectionId}")
-    public ResponseEntity createSongHasGenre(@PathVariable long userId, @PathVariable long collectionId) {
+    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
