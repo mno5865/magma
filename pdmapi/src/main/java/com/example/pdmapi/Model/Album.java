@@ -1,32 +1,19 @@
 package com.example.pdmapi.Model;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "album", schema = "p32001_08")
 public class Album {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "album_id")
     private long albumId;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "release_date")
-    private String release_date;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "AlbumContainsSong",
-            joinColumns = @JoinColumn(name = "song_id", referencedColumnName = "album_id"),
-            inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "song_id"))
-    private List<Song> songs;
+    private Date release_date;
 
     public Album() {
     }
-
 
     public void setAlbumID(long albumId) {
         this.albumId = albumId;
@@ -40,19 +27,11 @@ public class Album {
         this.title = title;
     }
 
-    public String getReleaseDate() {
+    public Date getReleaseDate() {
         return release_date;
     }
 
-    public void setReleaseDate(String release_date) {
+    public void setReleaseDate(Date release_date) {
         this.release_date = release_date;
-    }
-
-    public List<Song> getSongs() {
-        return songs;
-    }
-
-    public void addSong(Song song) {
-        this.songs.add(song);
     }
 }
