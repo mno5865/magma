@@ -12,6 +12,7 @@ import { Observable } from 'rxjs'
 export class CollectionviewComponent implements OnInit {
   userID: number = 0
   collectionInfo: Collection = {collectionID: -1, title: ""}
+  collectionList: Collection[] = []
   constructor(router : Router, private collectionService : CollectionService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
@@ -19,16 +20,22 @@ export class CollectionviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setCollections()
   }
 
   CreateCollection(title: string): void {
     if (title != "") {
       var newCollection: Collection = {title: title, collectionID: 0}
-      this.collectionService.createCollection(newCollection).subscribe()
+      var result: number
+      this.collectionService.createCollection(newCollection).subscribe(returnValue => result = returnValue)
+      this.collectionService
     }
   }
 
-  getCollections(): Observable<Collection[]> {
-    return this.collectionService.getUserCollections(this.userID)
+  setCollections(): void {
+    this.collectionService.getUserCollections(this.userID).subscribe(collectionList =>
+      this.collectionList = collectionList)
+    console.log("TEST MESSAGE")
+    console.log(this.collectionList)
   }
 }

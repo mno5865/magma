@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'home', component: HomepageComponent },
   { path: 'create', component: CreateuserComponent },
   { path: 'collections', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
-  { path: 'collections/:userID', component: CollectionviewComponent},
+  { path: 'users/:userID/collections', component: CollectionviewComponent},
   { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
   { path: 'collection/:collectionID', component: CollectionpageComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

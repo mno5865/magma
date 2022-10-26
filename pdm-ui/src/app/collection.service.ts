@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CollectionService {
-  private collectionURL = 'http://localhost:8080/api/collections';
+  private globalURL = 'http://localhost:8080/api/';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -25,13 +25,20 @@ export class CollectionService {
     return this.collectionName
   }
 
+  public getCollectionByName(userID: number, collectionName: string): Observable<Collection> {
+    return this.http.get<Collection>(this.globalURL+"users/"+userID+"/collections/"+collectionName, this.httpOptions)
+  }
+
   public getUserCollections(userID: number): Observable<Collection[]> {
-    var collections = this.http.get<Collection[]>(this.collectionURL+"/"+userID, this.httpOptions)
-    console.log(collections)
+    var collections = this.http.get<Collection[]>(this.globalURL+"users/"+userID+"/collections", this.httpOptions)
     return collections
   }
 
-  createCollection(collection: Collection): Observable<Collection> {
-    return this.http.post<Collection>(this.collectionURL, JSON.stringify(collection), this.httpOptions)
+  createCollection(collection: Collection): Observable<number> {
+    return this.http.post<number>(this.globalURL+"collections", JSON.stringify(collection), this.httpOptions)
+  }
+
+  createUserCollectionRelationship(userID: number, collectionID: number): Observable<number> {
+    return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/"+collectionID, this.httpOptions)
   }
 }

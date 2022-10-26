@@ -16,7 +16,7 @@ export class UsercollectionsredirectService implements CanActivate {
 
   canActivate(): Observable<boolean> {
     var userID: number = this.utilsService.getUserID();
-    this.router.navigate(["collections/" + userID])
+    this.router.navigate(["users/" + userID + "/collections"])
     return of(false)
   }
 

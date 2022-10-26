@@ -5,9 +5,8 @@
   <button type="submit" (click)="CreateCollection(collectionName.value)">Create</button>
   <br><br>
 
-  <div id="collectionList">
-  <div class="collections">
-    <h2>My Collections</h2>
-
+  <h2>My Collections</h2>
+  <div class="collections" *ngFor="let collection of collectionList">
+    <span id="name"> {{collection.title}} </span>
   </div>
 </div>
