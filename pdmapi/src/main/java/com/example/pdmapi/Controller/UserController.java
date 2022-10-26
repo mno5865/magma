@@ -18,30 +18,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @CrossOrigin
     @GetMapping("/users/id/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping("/users/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User newUser) {
         userService.createUser(newUser);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
         userService.updateUser(id, updatedUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
