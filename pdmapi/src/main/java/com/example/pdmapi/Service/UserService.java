@@ -178,12 +178,11 @@ public class UserService {
     }
 
     public List<User> getFriendsByUser(long userId) {
-        List<users> friends = new ArrayList<>();
+        List<User> friends = new ArrayList<>();
 
-        String query = ("SELECT user_id FROM \"user\" "
-                + "INNER JOIN \"user\" on user_friends_user.user_id = \"user\".user_id "
-                + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
-                + "WHERE \"user\".user_id=%d").formatted(userId);
+        String query = ("SELECT user_two_id FROM user_friends_user "
+                + "INNER JOIN \"user\" on user_friends_user.user_one_id = \"user\".user_id "
+                + "WHERE user_friends_user.user_two_id=%d").formatted(userId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
@@ -192,21 +191,24 @@ public class UserService {
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()) {
-                Collection collection = new Collection();
-                collection.setCollectionID(rs.getLong("collection_id"));
-                collection.setTitle(rs.getString("title"));
-                collections.add(collection);
+                User user = new User();
+                user.setUserID(rs.getLong("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setCreationDate(rs.getDate("creation_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
+                friends.add(user);
             }
         }  catch (SQLException e) {
             e.printStackTrace();
         }
-        return collections;
+        return friends;
     }
 
-
-
     // UPDATE
-
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
                 "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
