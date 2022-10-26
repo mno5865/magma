@@ -1,6 +1,6 @@
 package com.example.pdmapi.Service;
 
-import com.example.pdmapi.Model.Song;
+import com.example.pdmapi.Model.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -13,73 +13,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SongService {
+public class CollectionService {
 
     @Autowired
     DataSource dataSource;
 
     // CREATE
-    public int createSong(Song song) {
-        String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s','%tT','%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
-        try
-        {
+    public int createCollection(Collection collection) {
+        String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
+        try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
-
     }
 
     // READ
-    public List<Song> getSongs() {
-        String stmt = "SELECT * FROM song";
+    public List<Collection> getCollections() {
+        String stmt = "SELECT * FROM collection";
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
-            List<Song> songs = new ArrayList();
+            List<Collection> collections = new ArrayList<>();
             while(rs.next())
             {
-                Song song = new Song();
-                song.setSongID(rs.getLong("song_id"));
-                song.setTitle(rs.getString("title"));
-                song.setRuntime(rs.getTime("runtime"));
-                song.setReleaseDate(rs.getDate("release_date"));
-                songs.add(song);
+                Collection collection = new Collection();
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+                collections.add(collection);
             }
-            return songs;
-        } catch (Exception e)
-        {
+            return collections;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public Song getSong(Long songId) {
-        String stmt = "SELECT * FROM song WHERE song_id=%d".formatted(songId);
+    public Collection getCollection(Long collectionId) {
+        String stmt = "SELECT * FROM collection WHERE collection_id=%d".formatted(collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
-                            ResultSet.TYPE_SCROLL_INSENSITIVE,
-                            ResultSet.CONCUR_UPDATABLE);
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
-            Song song = new Song();
+            Collection collection = new Collection();
             while(rs.next())
             {
-                song.setSongID(rs.getLong("song_id"));
-                song.setTitle(rs.getString("title"));
-                song.setRuntime(rs.getTime("runtime"));
-                song.setReleaseDate(rs.getDate("release_date"));
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
             }
-            return song;
+            return collection;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,9 +79,8 @@ public class SongService {
     }
 
     // UPDATE
-    public int updateSong(Long songId, Song songDetails) {
-        String stmt = "UPDATE song SET title='%s',runtime='%tT',release_date='%tF' WHERE song_id=%d"
-                .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(),songId);
+    public int updateCollection(Long collectionId, Collection collectionDetails) {
+        String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -103,15 +94,15 @@ public class SongService {
     }
 
     // DELETE
-    public int deleteSong(Long songId) {
-        String stmt = "DELETE FROM song WHERE song_id=%d".formatted(songId);
+    public int deleteCollection(Long collectionId) {
+        String stmt = "DELETE FROM collection WHERE collection_id=%d".formatted(collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
