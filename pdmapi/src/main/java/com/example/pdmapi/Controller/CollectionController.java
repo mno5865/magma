@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -24,37 +23,41 @@ public class CollectionController {
 
     @GetMapping("/collections/{id}")
     public ResponseEntity<Collection> getCollection(@PathVariable long id) {
-        Optional<Collection> collection = collectionService.getCollection(id);
-        if (collection.isPresent()) {
-            return new ResponseEntity<>(collection.get(), HttpStatus.OK);
+        Collection collection = collectionService.getCollection(id);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection> createCollection(@RequestBody Collection newCollection) {
-        Collection collection = collectionService.createCollection(newCollection);
-
-        if (collection == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
+        int rowsAffected = collectionService.createCollection(newCollection);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(collection, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
     @PutMapping(value = "/collections/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
-        Optional<Collection> collection = collectionService.getCollection(id);
-        if (collection.isPresent()) {
-            return new ResponseEntity<>(collectionService.updateCollection(id, collectionDetails), HttpStatus.OK);
+    public ResponseEntity<Integer> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
+        int rowsAffected = collectionService.updateCollection(id, collectionDetails);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/collections/{id}")
-    public ResponseEntity deleteCollection(@PathVariable long id) {
-        collectionService.deleteCollection(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> deleteCollection(@PathVariable long id) {
+        int rowsAffected = collectionService.deleteCollection(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
     }
 }

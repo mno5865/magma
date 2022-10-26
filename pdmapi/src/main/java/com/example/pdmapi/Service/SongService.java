@@ -1,47 +1,119 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Song;
-import com.example.pdmapi.Repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SongService {
 
     @Autowired
-    SongRepository songRepository;
+    DataSource dataSource;
 
     // CREATE
-    public Song createSong(Song song) {
-        return songRepository.save(song);
+    public int createSong(Song song) {
+        String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s','%tT','%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
+        try
+        {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+
     }
 
     // READ
     public List<Song> getSongs() {
-        return songRepository.findAll();
+        String stmt = "SELECT * FROM song";
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            List<Song> songs = new ArrayList();
+            while(rs.next())
+            {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getTime("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                songs.add(song);
+            }
+            return songs;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public Optional<Song> getSong(Long songId) {
-        return songRepository.findById(songId);
+    public Song getSong(Long songId) {
+        String stmt = "SELECT * FROM song WHERE song_id=%d".formatted(songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                            ResultSet.TYPE_SCROLL_INSENSITIVE,
+                            ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Song song = new Song();
+            while(rs.next())
+            {
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getTime("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+            }
+            return song;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // UPDATE
-    public Song updateSong(Long songId, Song songDetails) {
-        Song song = songRepository.findById(songId).get();
-
-        song.setSongID(songId);
-        song.setTitle(songDetails.getTitle());
-        song.setRuntime(songDetails.getRuntime());
-        song.setReleaseDate(songDetails.getReleaseDate());
-
-        return songRepository.save(song);
+    public int updateSong(Long songId, Song songDetails) {
+        String stmt = "UPDATE song SET title='%s',runtime='%tT',release_date='%tF' WHERE song_id=%d"
+                .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(),songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // DELETE
-    public void deleteSong(Long songId) {
-        songRepository.deleteById(songId);
+    public int deleteSong(Long songId) {
+        String stmt = "DELETE FROM song WHERE song_id=%d".formatted(songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
