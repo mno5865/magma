@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../login.service';
+import { CollectionService } from '../collection.service';
 import { Collection } from '../Collection';
 
 @Component({
@@ -10,9 +10,12 @@ import { Collection } from '../Collection';
 })
 export class CollectionpageComponent implements OnInit {
 
-  constructor() { }
+  collectionInfo: Collection = {collectionID: -1, title: ""}
+  constructor(private router : Router, private collectionService : CollectionService) { }
 
   ngOnInit(): void {
   }
+
+
 
 }
