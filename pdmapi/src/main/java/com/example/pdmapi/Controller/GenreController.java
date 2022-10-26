@@ -1,6 +1,5 @@
 package com.example.pdmapi.Controller;
 
-import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Genre;
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Service.GenreService;
@@ -44,7 +43,7 @@ public class GenreController {
     }
 
     @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createGenre(@RequestBody Genre newGenre) {
+    public ResponseEntity<Integer> createGenre(@RequestBody Genre newGenre) {
         int rowsAffected = genreService.createGenre(newGenre);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -92,5 +91,4 @@ public class GenreController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-
 }
