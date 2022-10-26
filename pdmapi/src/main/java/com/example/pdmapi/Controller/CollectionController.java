@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,31 +32,32 @@ public class CollectionController {
     }
 
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection> createCollection(@RequestBody Collection newCollection) {
+    public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
         int rowsAffected = collectionService.createCollection(newCollection);
-        if (rowsAffected == -1) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
+        if (rowsAffected == 1) {
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-    }
-    @PutMapping(value = "/collections/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
-        int rowsAffected = collectionService.updateCollection(id, collectionDetails);
-        if (rowsAffected != -1) {
-            return new ResponseEntity<>( HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/collections/{id}")
-    public ResponseEntity deleteCollection(@PathVariable long id) {
-        int rowsAffected = collectionService.deleteCollection(id);
-        if (rowsAffected != -1) {
-            return new ResponseEntity<>( HttpStatus.OK);
+    @PutMapping(value = "/collections/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> updateCollection(@PathVariable long id, @RequestBody Collection collectionDetails) {
+        int rowsAffected = collectionService.updateCollection(id, collectionDetails);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/collections/{id}")
+    public ResponseEntity<Integer> deleteCollection(@PathVariable long id) {
+        int rowsAffected = collectionService.deleteCollection(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
 }
