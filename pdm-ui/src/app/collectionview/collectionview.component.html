@@ -1,1 +1,7 @@
-<p>collectionview works!</p>
+<div class="container">
+  <label><b>Create New Collection: </b></label>
+  <input type="text" placeholder="Enter Collection Name" #collectionName required>
+  <button type="submit" (click)="CreateCollection(collectionName.value)">Create</button>
+  <br><br>
+
+</div>
