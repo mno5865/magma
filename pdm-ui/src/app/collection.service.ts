@@ -40,6 +40,7 @@ export class CollectionService {
   }
 
   createUserCollectionRelationship(userID: number, collectionToMakeID: number): Observable<number> {
+    console.log("THE COMMAND IS:" + this.globalURL+"users/"+userID+"/collections/"+collectionToMakeID)
     return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/"+collectionToMakeID, this.httpOptions)
   }
 }

@@ -32,14 +32,10 @@ export class CollectionviewComponent implements OnInit {
     if (title != "") {
       title = title.replace(' ', '-')
       var newCollection: Collection = {title: title, collectionID: 0}
-      var result: number
-      var collectionID: number
-      this.collectionService.createCollection(newCollection).subscribe(returnValue => result = returnValue)
-      this.collectionService.getCollectionByName(this.userID, title).subscribe(returnValue => {
-        collectionID = returnValue.collectionID
-        console.log("THE COLLECTION ID IS " + collectionID)
-        this.collectionService.createUserCollectionRelationship(this.userID, collectionID).subscribe(relationValue =>
-          result = relationValue)
+      this.collectionService.createCollection(newCollection).subscribe(returnValue => {
+        this.collectionService.createUserCollectionRelationship(this.userID, returnValue).subscribe(result => {
+          this.setCollections()
+        })
       })
     }
   }
@@ -47,7 +43,6 @@ export class CollectionviewComponent implements OnInit {
   setCollections(): void {
     this.collectionService.getUserCollections(this.userID).subscribe(collectionList =>
       this.collectionList = collectionList)
-    console.log("TEST MESSAGE")
     console.log(this.collectionList)
   }
 }
