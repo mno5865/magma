@@ -21,15 +21,13 @@ public class SongService {
     // CREATE
     public int createSong(Song song) {
         String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s','%tT','%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
-        try
-        {
+        try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
@@ -46,8 +44,7 @@ public class SongService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             List<Song> songs = new ArrayList();
-            while(rs.next())
-            {
+            while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
@@ -56,8 +53,7 @@ public class SongService {
                 songs.add(song);
             }
             return songs;
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -72,8 +68,7 @@ public class SongService {
                             ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Song song = new Song();
-            while(rs.next())
-            {
+            while(rs.next()) {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getTime("runtime"));
