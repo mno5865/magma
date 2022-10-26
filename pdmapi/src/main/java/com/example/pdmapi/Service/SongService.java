@@ -49,7 +49,7 @@ public class SongService {
             while(rs.next())
             {
                 Song song = new Song();
-                song.setSongID(rs.getLong("song_id"));
+                song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getTime("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
@@ -74,7 +74,7 @@ public class SongService {
             Song song = new Song();
             while(rs.next())
             {
-                song.setSongID(rs.getLong("song_id"));
+                song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getTime("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
