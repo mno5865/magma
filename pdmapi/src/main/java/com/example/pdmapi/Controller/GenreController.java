@@ -46,6 +46,17 @@ public class GenreController {
     }
 
     @CrossOrigin
+    @GetMapping("/genres/{genreId}/albums")
+    public ResponseEntity<List<Song>> getAlbumsByGenre(@PathVariable long genreId) {
+        List<Song> songs = genreService.getSongsByGenre(genreId);
+        if(songs != null){
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createGenre(@RequestBody Genre newGenre) {
         int rowsAffected = genreService.createGenre(newGenre);
@@ -58,8 +69,19 @@ public class GenreController {
 
     @CrossOrigin
     @PostMapping(value = "/genres/{genreId}/songs/{songId}")
-    public ResponseEntity createSongHasGenre(@PathVariable long genreId, @PathVariable long songId) {
+    public ResponseEntity<Integer> createSongHasGenre(@PathVariable long genreId, @PathVariable long songId) {
         int rowsAffected = genreService.createSongHasGenre(genreId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/genres/{genreId}/albums/{albumId}")
+    public ResponseEntity<Integer> createAlbumHasGenre(@PathVariable long genreId, @PathVariable long albumId) {
+        int rowsAffected = genreService.createAlbumHasGenre(genreId, albumId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
@@ -91,8 +113,19 @@ public class GenreController {
 
     @CrossOrigin
     @DeleteMapping("/genres/{genreId}/songs/{songId}")
-    public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long genreId, @PathVariable long songId) {
+    public ResponseEntity<Integer> deleteSongHasGenre(@PathVariable long genreId, @PathVariable long songId) {
         int rowsAffected = genreService.deleteSongHasGenre(songId, genreId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/genres/{genreId}/albums/{albumId}")
+    public ResponseEntity<Integer> deleteAlbumHasGenre(@PathVariable long genreId, @PathVariable long albumId) {
+        int rowsAffected = genreService.deleteAlbumHasGenre(albumId, genreId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
