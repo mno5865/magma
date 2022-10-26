@@ -145,6 +145,24 @@ public class UserService {
         return -1;
     }
 
+    public int updateUserListensToSong(long userId, long songId)
+    {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "UPDATE user_listens_to_song SET date_time='%tc' WHERE user_id=%d AND song_id=%d"
+                .formatted(timestamp,userId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     // DELETE
     public int deleteUser(Long userId) {
         String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);

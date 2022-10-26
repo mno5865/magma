@@ -54,6 +54,18 @@ public class UserController {
         }
     }
 
+    @PutMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> updateUserListensToSong(@PathVariable long userId, @PathVariable long songId)
+    {
+        int rowsAffected = userService.updateUserListensToSong(userId,songId);
+        if(rowsAffected == 1)
+        {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
