@@ -141,7 +141,7 @@ public class CollectionService {
     }
     //CollectionHoldsAlbum RELATIONSHIP
     public int createCollectionHoldsAlbum(long collectionId, long albumId) {
-        String st = ("INSERT INTO collection_holds_song (collection_id, album_id) VALUES (%d, %d)")
+        String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
                 .formatted(collectionId, albumId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -156,7 +156,7 @@ public class CollectionService {
     }
 
     public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
-        String st = ("DELETE FROM collection_holds_song WHERE (collection_id=%d AND album_id=%d)")
+        String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
                 .formatted(collectionId, albumId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
