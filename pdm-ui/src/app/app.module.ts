@@ -7,13 +7,15 @@ import { LoginComponent } from './login/login.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateuserComponent } from './createuser/createuser.component';
+import { CollectionviewComponent } from './collectionview/collectionview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomepageComponent,
-    CreateuserComponent
+    CreateuserComponent,
+    CollectionviewComponent
   ],
   imports: [
     BrowserModule,
