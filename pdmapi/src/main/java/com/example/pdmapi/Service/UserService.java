@@ -6,9 +6,8 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 
 @Service
 public class UserService {
@@ -123,6 +122,24 @@ public class UserService {
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int createUserListensToSong(long userId, long songId)
+    {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
+                        .formatted(userId,songId,(timestamp),userId,songId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
         return -1;
