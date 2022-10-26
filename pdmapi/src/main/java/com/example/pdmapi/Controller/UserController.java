@@ -1,5 +1,6 @@
 package com.example.pdmapi.Controller;
 
+import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -102,11 +104,44 @@ public class UserController {
     @DeleteMapping(value = "/users/{userId}/songs/{songId}")
     public ResponseEntity<Integer> deleteUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
         int rowsAffected = userService.deleteUserListensToSong(userId,songId);
-        if(rowsAffected == 1)
-        {
+        if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-        return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //UserCreatesCollection RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
+    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections")
+    public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
+        List<Collection> collections = userService.getCollectionsByUserID(userId);
+        if (collections != null){
+            return new ResponseEntity<>(collections, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/users/{userId}/collections/{collectionId}")
+    public ResponseEntity<Integer> deleteUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.deleteUserCreatesCollection(userId, collectionId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
 

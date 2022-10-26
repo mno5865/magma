@@ -1,5 +1,6 @@
 package com.example.pdmapi.Service;
 
+import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -7,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -153,7 +155,7 @@ public class UserService {
     {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
-                        .formatted(userId,songId,(timestamp),userId,songId);
+                        .formatted(userId, songId, (timestamp),userId,songId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
@@ -214,6 +216,64 @@ public class UserService {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    //UserCreatesCollection RELATIONSHIP
+    public int createUserCreatesCollection(long userId, long collectionId) {
+        String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
+                collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public List<Collection> getCollectionsByUserID(long userId) {
+        List<Collection> collections = new ArrayList<>();
+
+        String query = ("SELECT collection.collection_id, collection.title "
+                + "FROM user_creates_collection "
+                + "INNER JOIN \"user\" on user_creates_collection.user_id = \"user\".user_id "
+                + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
+                + "WHERE \"user\".user_id=%d").formatted(userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                Collection collection = new Collection();
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+                collections.add(collection);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return collections;
+    }
+
+    public int deleteUserCreatesCollection(long userId, long collectionId){
+        String st = ("DELETE FROM user_creates_collection WHERE (user_id=%d AND collection_id=%d)")
+                .formatted(userId, collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     //user_listens_collection RELATIONSHIP
