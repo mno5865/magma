@@ -26,7 +26,6 @@ public class PdmApiApplication {
         String pass;
 
         try{
-            Ini ini = new Ini(new File("pdmapi/src/main/java/com/example/pdmapi/Service/dbInfo.ini"));
             String str = System.getProperty("user.dir");
             String path;
             if (str.substring(str.length()-5).equals("magma")) {

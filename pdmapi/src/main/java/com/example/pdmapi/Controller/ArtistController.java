@@ -2,6 +2,7 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Artist;
+import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,31 +34,6 @@ public class ArtistController {
         }
     }
 
-    @GetMapping("/artists/{artistId}/albums")
-    public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable long artistId)
-    {
-        List<Album> albums = artistService.getAlbumsByArtist(artistId);
-        if(albums != null)
-        {
-            return new ResponseEntity<>(albums, HttpStatus.OK);
-        } else
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    
-    @GetMapping("/artists/{artistId}/songs")
-    public ResponseEntity<List<Song>> getArtistSongs(@PathVariable long artistId)
-    {
-        List<Song> songs = artistService.getSongsByArtist(artistId);
-        if(songs != null)
-        {
-            return new ResponseEntity<>(songs, HttpStatus.OK);
-        } else
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
     @PostMapping(value = "/artists", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtist(@RequestBody Artist newArtist) {
@@ -66,32 +42,6 @@ public class ArtistController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping(value = "/artists/{artistId}/albums/{albumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> createArtistReleasesAlbum(@PathVariable long artistId, @PathVariable long albumId)
-    {
-        int rowsAffected = artistService.createArtistReleasesAlbum(artistId,albumId);
-        if(rowsAffected == 1)
-        {
-            return new ResponseEntity<>(rowsAffected,HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
-        }
-    }
-    
-    @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId )
-    {
-        int rowsAffected = artistService.createArtistReleasesSong(artistId,songId);
-        if(rowsAffected == 1)
-        {
-            return new ResponseEntity<>(rowsAffected,HttpStatus.CREATED);
-        }
-        else
-        {
-            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -115,24 +65,62 @@ public class ArtistController {
         }
     }
 
+    // artists_releases_album RELATIONSHIP
+    @PostMapping(value = "/artists/{artistId}/albums/{albumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> createArtistReleasesAlbum(@PathVariable long artistId, @PathVariable long albumId) {
+        int rowsAffected = artistService.createArtistReleasesAlbum(artistId,albumId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/artists/{artistId}/albums")
+    public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable long artistId) {
+        List<Album> albums = artistService.getAlbumsByArtist(artistId);
+        if(albums != null) {
+            return new ResponseEntity<>(albums, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/artists/{artistId}/albums/{albumId}")
-    public ResponseEntity<Integer> deleteArtistReleaseAlbum(@PathVariable long artistId, @PathVariable long albumId)
-    {
+    public ResponseEntity<Integer> deleteArtistReleaseAlbum(@PathVariable long artistId, @PathVariable long albumId) {
         int rowsAffected = artistService.deleteArtistReleaseAlbum(albumId,artistId);
-        if(rowsAffected == 1)
-        {
+        if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-    
+
+    // artists_releases_song RELATIONSHIP
+    @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId ) {
+        int rowsAffected = artistService.createArtistReleasesSong(artistId,songId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/artists/{artistId}/songs")
+    public ResponseEntity<List<Song>> getArtistSongs(@PathVariable long artistId) {
+        List<Song> songs = artistService.getSongsByArtist(artistId);
+        if(songs != null) {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/artists/{artistId}/songs/{songId}")
-    public ResponseEntity<Integer> deleteArtistReleaseSong(@PathVariable long artistId, @PathVariable long songId)
-    {
+    public ResponseEntity<Integer> deleteArtistReleaseSong(@PathVariable long artistId, @PathVariable long songId) {
         int rowsAffected = artistService.deleteArtistReleaseSong(songId,artistId);
-        if(rowsAffected == 1)
-        {
+        if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);

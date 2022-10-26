@@ -68,7 +68,7 @@ public class SongService {
                             ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Song song = new Song();
-            while(rs.next())
+            while(rs.next()) {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getTime("runtime"));
