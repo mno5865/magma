@@ -216,4 +216,60 @@ public class UserService {
         return -1;
     }
 
+    //user_listens_collection RELATIONSHIP
+    // CREATE
+    public int createUserListensToCollection(long userId, long collectionId) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "INSERT INTO user_listens_to_collection (user_id, collection_id, date_time) VALUES (%d,%d,'%tc')"
+                .formatted(userId, collectionId, (timestamp), userId, collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    // READ
+    public Timestamp getUserCollectionPlayTime(long userId, long collectionId)
+    {
+        Timestamp timestamp = null;
+        String stmt = "SELECT date_time FROM user_listens_to_collection WHERE user_id=%d AND collection_id=%d"
+                .formatted(userId, collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next()) {
+                timestamp = rs.getTimestamp("date_time");
+            }
+            return timestamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return timestamp;
+    }
+
+    // DELETE
+    public int deleteUserListensToCollection(long userId, long collectionId)
+    {
+        String stmt = "DELETE FROM user_listens_to_song WHERE user_id=%d AND collection_id=%d"
+                .formatted(userId, collectionId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }
