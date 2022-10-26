@@ -36,6 +36,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
+    public ResponseEntity createSongHasGenre(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
         userService.updateUser(id, updatedUser);
