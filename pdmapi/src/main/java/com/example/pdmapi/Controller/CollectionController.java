@@ -69,7 +69,7 @@ public class CollectionController {
     //CollectionHoldsSong RELATIONSHIP
     @CrossOrigin
     @PostMapping(value = "/collections/{collectionId}/songs/{songId}")
-    public ResponseEntity<Integer> createCollection(@PathVariable long collectionId, @PathVariable long songId) {
+    public ResponseEntity<Integer> createCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
         int rowsAffected = collectionService.createCollectionHoldsSong(collectionId, songId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -80,8 +80,31 @@ public class CollectionController {
 
     @CrossOrigin
     @DeleteMapping("/collections/{collectionId}/songs/{songId}")
-    public ResponseEntity<Integer> deleteCollection(@PathVariable long collectionId, @PathVariable long songId) {
+    public ResponseEntity<Integer> deleteCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
         int rowsAffected = collectionService.deleteCollectionHoldsSong(collectionId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //CollectionHoldsAlbum RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> createCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.createCollectionHoldsAlbum(collectionId, albumId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> deleteCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.deleteCollectionHoldsAlbum(collectionId, albumId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
