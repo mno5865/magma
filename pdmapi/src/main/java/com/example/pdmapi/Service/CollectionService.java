@@ -7,10 +7,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,6 +232,56 @@ public class CollectionService {
             return i;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int getTotalCollectionRuntime(long collectionId)
+    {
+        int i = 0;
+        String stmt1 = "SELECT sum(song.runtime) as total_runtime\n" +
+                "FROM song,collection_holds_song,collection\n" +
+                "WHERE collection_holds_song.song_id=song.song_id\n" +
+                "AND collection_holds_song.collection_id=collection.collection_id\n" +
+                "AND collection.collection_id=%d".formatted(collectionId);
+
+        String stmt2 = "SELECT sum(song.runtime) as total_runtime\n" +
+                "FROM song,album_contains_song,album,collection_holds_album,collection\n" +
+                "WHERE (album_contains_song.song_id=song.song_id\n" +
+                "    AND album_contains_song.album_id=album.album_id)\n" +
+                "AND (collection_holds_album.album_id=album.album_id\n" +
+                "    AND collection_holds_album.collection_id=collection.collection_id)\n" +
+                "AND collection.collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement1 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs1 = statement1.executeQuery(stmt1);
+            ResultSet rs2 = statement2.executeQuery(stmt2);
+            while(rs1.next())
+            {
+                i = i + rs1.getInt("total_runtime");
+            }
+            while(rs2.next())
+            {
+                i = i + rs2.getInt("total_runtime");
+            }
+            return i;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally
+        {
+            try
+            {
+                conn.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
