@@ -127,7 +127,7 @@ public class UserController {
     @GetMapping("/users/{userId}/collections")
     public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
         List<Collection> collections = userService.getCollectionsByUserID(userId);
-        if (collections != null){
+        if (collections != null) {
             return new ResponseEntity<>(collections, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -142,6 +142,28 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+    // user_listens_album RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Integer> createUserListensTAlbum(@PathVariable long userId, @PathVariable long albumId) {
+        int rowsAffected = userService.createUserListensToAlbum(userId,albumId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Timestamp> getUserAlbumLastPlayTime(@PathVariable long userId, @PathVariable long albumId) {
+        Timestamp timestamp = userService.getUserAlbumLastPlayTime(userId,albumId);
+        if(timestamp != null) {
+            return new ResponseEntity<>(timestamp,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
