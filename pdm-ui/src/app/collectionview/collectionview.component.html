@@ -10,7 +10,9 @@
     <button id="name" (click)="OnClick()"> {{collection.title}} </button>
     <span> Songs: </span>
     <span id="songCount">{{this.songInfo[collection.collectionID]}}</span>
-    <span id="duration"> Duration: </span>
+    <span> Duration: </span>
+    <span id="duration"> {{this.durationInfo[collection.collectionID]}} </span>
+    <span> min </span>
     <br><br>
   </div>
 </div>
