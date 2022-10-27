@@ -142,7 +142,7 @@ public class AlbumService {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setReleaseDate(rs.getDate("release_date"));
-                song.setRuntime(rs.getTime("runtime"));
+                song.setRuntime(rs.getLong("runtime"));
                 songs.add(song);
             }
         }  catch (SQLException e) {
@@ -175,7 +175,7 @@ public class AlbumService {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
                 song.setReleaseDate(rs.getDate("release_date"));
-                song.setRuntime(rs.getTime("runtime"));
+                song.setRuntime(rs.getLong("runtime"));
             }
             return song;
         }  catch (SQLException e) {
