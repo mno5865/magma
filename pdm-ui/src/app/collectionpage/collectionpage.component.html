@@ -11,6 +11,7 @@
   <h3>Songs: </h3>
   <div class="songs" *ngFor="let song of songList">
     <button id="songName"> {{song.title}} </button>
+    <button id="deleteSong" (click)="deleteSong(collectionID, song.songId)">Remove</button>
     <span> Time: </span>
     <span> {{durationInfo[song.songId]}} </span>
     <span> min. </span>

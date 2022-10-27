@@ -46,6 +46,11 @@ export class CollectionService {
     return collections
   }
 
+  deleteSongFromCollection(collectionID: number, songID: number): Observable<number> {
+    console.log(this.http.delete<number>(this.globalURL+"collections/"+collectionID+"/songs/"+songID))
+    return this.http.delete<number>(this.globalURL+"collections/"+collectionID+"/songs/"+songID, this.httpOptions)
+  }
+
   deleteCollection(collectionID: number): Observable<number> {
     return this.http.delete<number>(this.globalURL+"collections/"+collectionID+"/deleteAll", this.httpOptions)
   }

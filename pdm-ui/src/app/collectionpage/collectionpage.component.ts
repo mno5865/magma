@@ -57,6 +57,18 @@ export class CollectionpageComponent implements OnInit {
     })
   }
 
+  deleteSong(collectionID: number, songID: number): void {
+    console.log("I AM DELETING: " + songID + " FROM: " + collectionID)
+    this.collectionService.deleteSongFromCollection(collectionID, songID).subscribe()
+    this.redirectToViewSongs()
+  }
+
+  redirectToViewSongs() {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['/users/' + this.userID + '/collections/' + this.collectionID])
+    })
+  }
+
   redirectToView() {
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
       this.router.navigate(['/users/' + this.userID + '/collections/'])

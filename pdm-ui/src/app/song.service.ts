@@ -39,6 +39,4 @@ export class SongService {
     return this.http.get<Song[]>(this.globalURL+"collections/"+collectionID+"/songs", this.httpOptions)
   }
 
-  // deleteSongFromCollection(songID: number)
-
 }
