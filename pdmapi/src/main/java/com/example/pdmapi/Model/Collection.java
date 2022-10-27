@@ -22,6 +22,10 @@ public class Collection {
         this.collectionId = collectionId;
     }
 
+    public long getCollectionID() {
+        return this.collectionId;
+    }
+
     public String getTitle() {
         return title;
     }

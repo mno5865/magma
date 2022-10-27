@@ -1,6 +1,7 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -20,18 +21,23 @@ public class CollectionService {
     DataSource dataSource;
 
     // CREATE
-    public int createCollection(Collection collection) {
+    public int[] createCollection(Collection collection) {
         String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return new int[2];
     }
 
     // READ
@@ -79,6 +85,28 @@ public class CollectionService {
         return null;
     }
 
+    public Collection getCollectionByTitleAndUserID(long userID, String title) {
+        String stmt = ("SELECT * FROM collection " +
+                "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
+                "WHERE user_id=%d AND title='%s'").formatted(userID, title);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Collection collection = new Collection();
+            while(rs.next()) {
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+            }
+            return collection;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // UPDATE
     public int updateCollection(Long collectionId, Collection collectionDetails) {
         String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
@@ -103,7 +131,7 @@ public class CollectionService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
@@ -140,4 +168,33 @@ public class CollectionService {
         }
     }
     //CollectionHoldsAlbum RELATIONSHIP
+    public int createCollectionHoldsAlbum(long collectionId, long albumId) {
+        String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
+        String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
+                .formatted(collectionId, albumId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }
