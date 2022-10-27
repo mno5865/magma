@@ -24,23 +24,29 @@ public class ArtistService {
     // CREATE
     public int createArtist(Artist artist) {
         String query = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
 
     // READ
     public List<Artist> getArtists() {
         String query = "SELECT * FROM artist";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -55,8 +61,14 @@ public class ArtistService {
             return artists;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return null;
     }
     
     public List<Song> getSongsByArtist(long artistId) {
@@ -66,8 +78,8 @@ public class ArtistService {
                 " INNER JOIN song on artist_releases_song.song_id = song.song_id" +
                 " INNER JOIN artist on artist_releases_song.artist_id = artist.artist_id " +
                 " WHERE artist.artist_id=%d").formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -83,6 +95,12 @@ public class ArtistService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return songs;
     }
@@ -94,8 +112,8 @@ public class ArtistService {
                 "INNER JOIN album on artist_releases_album.album_id = album.album_id " +
                 "INNER JOIN artist on artist_releases_album.artist_id = artist.artist_id " +
                 "WHERE artist.artist_id=%d".formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -111,14 +129,20 @@ public class ArtistService {
         } catch (Exception e)
         {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return albums;
     }
 
     public Artist getArtist(Long artistId) {
         String query = "SELECT * FROM artist WHERE artist_id=%d".formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -131,22 +155,34 @@ public class ArtistService {
             return artist;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return null;
     }
 
     // UPDATE
     public int updateArtist(Long artistId, Artist artistDetails) {
         String query = "UPDATE artist SET name='%s' WHERE artist_id=%d"
                 .formatted(artistDetails.getName(), artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -154,16 +190,22 @@ public class ArtistService {
     // DELETE
     public int deleteArtist(Long artistId) {
         String query = "DELETE FROM artist WHERE artist_id=%d".formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
     // artists_releases_album RELATIONSHIP
 
@@ -172,8 +214,8 @@ public class ArtistService {
     {
         String stmt = "INSERT INTO artist_releases_album (artist_id, album_id) VALUES (%d,%d)"
                 .formatted(artistId,albumId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -181,6 +223,12 @@ public class ArtistService {
         } catch (Exception e)
         {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -189,14 +237,20 @@ public class ArtistService {
     public int deleteArtistReleaseAlbum(long albumId, long artistId) {
         String stmt = "DELETE FROM artist_releases_album WHERE album_id=%d AND artist_id=%d"
                 .formatted(albumId,artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -208,8 +262,8 @@ public class ArtistService {
     {
         String stmt = ("INSERT INTO artist_releases_song (artist_id, song_id) VALUES (%d,%d)")
                 .formatted(artistId,songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -217,6 +271,12 @@ public class ArtistService {
         } catch (Exception e)
         {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -225,14 +285,20 @@ public class ArtistService {
     public int deleteArtistReleaseSong(long songId, long artistId) {
         String stmt = "DELETE FROM artist_releases_song WHERE song_id=%d AND artist_id=%d"
                 .formatted(songId,artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
+        }  finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }

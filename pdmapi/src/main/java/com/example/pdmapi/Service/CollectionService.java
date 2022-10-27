@@ -23,8 +23,8 @@ public class CollectionService {
     // CREATE
     public int[] createCollection(Collection collection) {
         String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -36,6 +36,12 @@ public class CollectionService {
             return results;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return new int[2];
     }
@@ -43,8 +49,8 @@ public class CollectionService {
     // READ
     public List<Collection> getCollections() {
         String stmt = "SELECT * FROM collection";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -60,14 +66,20 @@ public class CollectionService {
             return collections;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     public Collection getCollection(Long collectionId) {
         String stmt = "SELECT * FROM collection WHERE collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -81,6 +93,12 @@ public class CollectionService {
             return collection;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -89,8 +107,8 @@ public class CollectionService {
         String stmt = ("SELECT * FROM collection " +
                 "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
                 "WHERE user_id=%d AND title='%s'").formatted(userID, title);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -103,6 +121,12 @@ public class CollectionService {
             return collection;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -110,14 +134,20 @@ public class CollectionService {
     // UPDATE
     public int updateCollection(Long collectionId, Collection collectionDetails) {
         String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -125,14 +155,20 @@ public class CollectionService {
     // DELETE
     public int deleteCollection(Long collectionId) {
         String stmt = "DELETE FROM collection WHERE collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -141,61 +177,85 @@ public class CollectionService {
     public int createCollectionHoldsSong(long collectionId, long songId) {
         String st = ("INSERT INTO collection_holds_song (collection_id, song_id) VALUES (%d, %d)")
                 .formatted(collectionId, songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
 
     public int deleteCollectionHoldsSong(long collectionId, long songId){
         String st = ("DELETE FROM collection_holds_song WHERE (collection_id=%d AND song_id=%d)")
                 .formatted(collectionId, songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
     //CollectionHoldsAlbum RELATIONSHIP
     public int createCollectionHoldsAlbum(long collectionId, long albumId) {
         String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
                 .formatted(collectionId, albumId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
 
     public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
         String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
                 .formatted(collectionId, albumId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return -1;
     }
 
     public int getSongCountFromCollection(long collectionId)
@@ -214,8 +274,8 @@ public class CollectionService {
                 "AND (collection_holds_album.album_id=album.album_id\n" +
                 "    AND collection_holds_album.collection_id=collection.collection_id) " +
                 "AND collection.collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement1 = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -235,6 +295,12 @@ public class CollectionService {
             return i;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
