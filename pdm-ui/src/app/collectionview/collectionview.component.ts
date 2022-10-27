@@ -29,8 +29,8 @@ export class CollectionviewComponent implements OnInit {
     this.setCollections()
   }
 
-  OnClick(): void {
-    this.router.navigate(['/collection/', this.collectionService.getCollectionID()])
+  OnClick(collectionID: number): void {
+    this.router.navigate(['/users/' + this.userID + '/collections/' + collectionID])
   }
 
   CreateCollection(title: string): void {

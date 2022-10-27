@@ -7,7 +7,7 @@
 
   <h2>My Collections</h2>
   <div class="collections" *ngFor="let collection of collectionList">
-    <button id="name" (click)="OnClick()"> {{collection.title}} </button>
+    <button id="name" (click)="OnClick(collection.collectionID)"> {{collection.title}} </button>
     <span> Songs: </span>
     <span id="songCount">{{this.songInfo[collection.collectionID]}}</span>
     <span> Duration: </span>
