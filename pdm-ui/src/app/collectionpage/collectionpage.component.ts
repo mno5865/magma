@@ -48,9 +48,15 @@ export class CollectionpageComponent implements OnInit {
     }
   }
 
+  redirectToView() {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['/users/' + this.userID + '/collections/'])
+    })
+  }
+
   DeleteCollection(collectionID: number): void {
     this.collectionService.deleteCollection(collectionID).subscribe()
-    this.router.navigate(['/users/' + this.userID + '/collections/'])
+    this.redirectToView()
   }
 
 }
