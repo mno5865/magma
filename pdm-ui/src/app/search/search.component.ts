@@ -12,6 +12,7 @@ export class SearchComponent implements OnInit {
   search(searchTerm: string, searchby: string, sortby: string){
     console.log(searchTerm, searchby, sortby);
     alert('search');
+
   }
   ngOnInit(): void {
   }
