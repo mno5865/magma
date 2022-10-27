@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CreateuserComponent } from './createuser/createuser.component';
 import { CollectionviewComponent } from './collectionview/collectionview.component';
 import { CollectionpageComponent } from './collectionpage/collectionpage.component';
+import { SearchcomponentComponent } from './searchcomponent/searchcomponent.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CollectionpageComponent } from './collectionpage/collectionpage.compone
     CreateuserComponent,
     CollectionviewComponent,
     CollectionpageComponent,
-    SearchComponent
+    SearchComponent,
+    SearchcomponentComponent
   ],
   imports: [
     BrowserModule,
