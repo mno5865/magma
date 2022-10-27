@@ -408,11 +408,31 @@ public class UserService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_collection (user_id, collection_id, date_time) VALUES (%d,%d,'%tc')"
                 .formatted(userId, collectionId, (timestamp));
+        String stmt2 = "SELECT album_id FROM collection_holds_album WHERE collection_id=%d".formatted(collectionId);
+        String stmt3 = "SELECT song_id FROM collection_holds_song WHERE collection_id=%d".formatted(collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs1 = statement2.executeQuery(stmt2);
+            while(rs1.next())
+            {
+                long albumId = rs1.getLong("album_id");
+                createUserListensToAlbum(userId,albumId);
+            }
+            Statement statement3 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs2 = statement3.executeQuery(stmt3);
+            while(rs2.next())
+            {
+                long songId = rs2.getLong("song_id");
+                createUserListensToSong(userId,songId);
+            }
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
