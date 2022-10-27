@@ -53,20 +53,7 @@ public class UserService {
         }
     }
 
-    public int createUserFriendsUser(long user1Id, long user2Id) {
-        String st = ("INSERT INTO user_friends_user(user_one_id, user_two_id) VALUES (%d, %d)").
-                formatted(user1Id, user2Id);
-        try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement stmt = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(st);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
+
 
     // READ
     public User getUser(Long userID) {
@@ -256,6 +243,24 @@ public class UserService {
         }
     }
 
+    //user_friends_user Relationship
+    // CREATE
+    public int createUserFriendsUser(long user1Id, long user2Id) {
+        String st = ("INSERT INTO user_friends_user(user_one_id, user_two_id) VALUES (%d, %d)").
+                formatted(user1Id, user2Id);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    // DELETE
     public int deleteUserFriendsUser(long user1Id, long user2Id) {
         String st = ("DELETE FROM user_friends_user WHERE (user_one_id=%d AND user_two_id=%d)")
                 .formatted(user1Id, user2Id);

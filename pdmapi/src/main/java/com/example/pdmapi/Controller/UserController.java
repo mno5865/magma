@@ -106,4 +106,28 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+
+    // user_friends_user RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/friends/{friendId}")
+    public ResponseEntity createUserFriendsUser(@PathVariable long userId, @PathVariable long friendId) {
+        int rowsAffected = userService.createUserFriendsUser(userId, friendId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/users/{userId}/friends/{friendId}")
+    public ResponseEntity<Integer> deleteUserFriendsUser(@PathVariable long userId, @PathVariable long friendId) {
+        int rowsAffected = userService.deleteUserFriendsUser(userId, friendId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
