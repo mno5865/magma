@@ -4,7 +4,9 @@ import { CollectionService } from '../collection.service'
 import { UtilsService } from '../utils.service'
 import { Collection } from '../Collection'
 import { Observable } from 'rxjs'
-import * as stream from "stream";
+import { Song } from '../Song'
+import { SongService } from '../song.service'
+import * as stream from "stream"
 
 @Component({
   selector: 'app-collectionpage',
@@ -16,8 +18,10 @@ export class CollectionpageComponent implements OnInit {
   userID: number = 0
   collectionTitle: string = "_"
   songCount: number = 0
+  collectionList: Collection[] = []
+  songList: Song[] = []
 
-  constructor(router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
+  constructor(private router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]
       this.collectionID = params["collectionID"]   // this keeps track of the collectionID field of the URL
@@ -30,6 +34,7 @@ export class CollectionpageComponent implements OnInit {
       console.log("TESTING 2")
       console.log("THE TITLE IS " + returnCollection.title)
       this.collectionTitle = returnCollection.title
+      this.collectionList.push(returnCollection)
     })
   }
 
@@ -41,6 +46,11 @@ export class CollectionpageComponent implements OnInit {
         this.collectionService.updateCollection(returnCollection).subscribe()
       })
     }
+  }
+
+  DeleteCollection(collectionID: number): void {
+    this.collectionService.deleteCollection(collectionID).subscribe()
+    this.router.navigate(['/users/' + this.userID + '/collections/'])
   }
 
 }

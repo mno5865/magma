@@ -1,9 +1,12 @@
 <div id="container">
 
   <h2 id="name"><b> {{collectionTitle}} </b></h2>
-  <input type="text" placeholder="Enter New Name" #collectionName required>
-  <button type="submit" (click)="setTitle(collectionName.value)">Rename</button>
-
+  <div class="modifications" *ngFor="let collection of collectionList">
+    <input type="text" placeholder="Enter New Name" #collectionName required>
+    <button type="submit" (click)="setTitle(collectionName.value)">Rename</button>
+    <br>
+    <button id="delete" (click)="DeleteCollection(collectionID)">Delete Collection</button>
+  </div>
   <br><br>
 
     <br><br>

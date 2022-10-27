@@ -10,7 +10,7 @@ export class CollectionService {
   private globalURL = 'http://localhost:8080/api/';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
+  }
 
   private collectionID = 0
   private collectionName = "_"
@@ -44,6 +44,10 @@ export class CollectionService {
   public getUserCollections(userID: number): Observable<Collection[]> {
     var collections = this.http.get<Collection[]>(this.globalURL+"users/"+userID+"/collections", this.httpOptions)
     return collections
+  }
+
+  deleteCollection(collectionID: number): Observable<number> {
+    return this.http.delete<number>(this.globalURL+"collections/"+collectionID, this.httpOptions)
   }
 
   createCollection(collection: Collection): Observable<number> {
