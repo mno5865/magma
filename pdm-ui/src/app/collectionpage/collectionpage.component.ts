@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../collection.service';
 import { Collection } from '../Collection';
+import { Observable } from 'rxjs'
+import * as stream from "stream";
 
 @Component({
   selector: 'app-collectionpage',
