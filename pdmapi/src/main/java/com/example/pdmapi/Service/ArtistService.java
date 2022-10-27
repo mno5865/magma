@@ -22,24 +22,30 @@ public class ArtistService {
 
     // CREATE
     public int createArtist(Artist artist) {
-        String query = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
+        String st = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     // READ
     public List<Artist> getArtists() {
         String query = "SELECT * FROM artist";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -55,13 +61,19 @@ public class ArtistService {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public Artist getArtist(Long artistId) {
         String query = "SELECT * FROM artist WHERE artist_id=%d".formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -75,37 +87,55 @@ public class ArtistService {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     // UPDATE
     public int updateArtist(Long artistId, Artist artistDetails) {
-        String query = "UPDATE artist SET name='%s' WHERE artist_id=%d"
+        String st = "UPDATE artist SET name='%s' WHERE artist_id=%d"
                 .formatted(artistDetails.getName(), artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return -1;
     }
 
     // DELETE
     public int deleteArtist(Long artistId) {
-        String query = "DELETE FROM artist WHERE artist_id=%d".formatted(artistId);
+        String st = "DELETE FROM artist WHERE artist_id=%d".formatted(artistId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
+            return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

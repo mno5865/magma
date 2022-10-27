@@ -109,9 +109,20 @@ public class UserController {
 
     // user_friends_user RELATIONSHIP
     @CrossOrigin
-    @PostMapping(value = "/users/{userId}/friends/{friendId}")
-    public ResponseEntity createUserFriendsUser(@PathVariable long userId, @PathVariable long friendId) {
-        int rowsAffected = userService.createUserFriendsUser(userId, friendId);
+    @GetMapping("/users/{userId}/following")
+    public ResponseEntity<List<User>> getUsersFollowing(@PathVariable long userId) {
+        List<User> user = userService.getUsersFollowing(userId);
+        if (user != null){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/following/{friendId}")
+    public ResponseEntity createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
+        int rowsAffected = userService.createUserFollowsUser(userId, friendId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
@@ -120,14 +131,17 @@ public class UserController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/users/{userId}/friends/{friendId}")
-    public ResponseEntity<Integer> deleteUserFriendsUser(@PathVariable long userId, @PathVariable long friendId) {
-        int rowsAffected = userService.deleteUserFriendsUser(userId, friendId);
+    @DeleteMapping("/users/{userId}/following/{friendId}")
+    public ResponseEntity<Integer> deleteUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
+        int rowsAffected = userService.deleteUserFollowsUser(userId, friendId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
-        } else {
+        } else  {
+            rowsAffected = userService.deleteUserFollowsUser(friendId, userId);
+            if (rowsAffected == 1) {
+                return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+            }
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-
 }

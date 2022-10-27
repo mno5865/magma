@@ -1,5 +1,6 @@
 package com.example.pdmapi.Config;
 
+import com.zaxxer.hikari.HikariConfig;
 import org.ini4j.Ini;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -37,5 +38,16 @@ public class ApiConfig {
         dataSourceBuilder.username(user);
         dataSourceBuilder.password(pass);
         return dataSourceBuilder.build();
+    }
+
+    @Bean
+    public HikariConfig config() {
+        HikariConfig hikariConfig = new HikariConfig();
+
+        // other setting
+        hikariConfig.addDataSourceProperty("socketTimeout", 600000);
+        hikariConfig.setMaxLifetime(600000);
+
+        return hikariConfig;
     }
 }

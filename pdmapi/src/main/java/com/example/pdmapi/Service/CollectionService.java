@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,31 +21,36 @@ public class CollectionService {
 
     // CREATE
     public int createCollection(Collection collection) {
-        String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
+        String st = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return -1;
     }
 
     // READ
     public List<Collection> getCollections() {
         String stmt = "SELECT * FROM collection";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             List<Collection> collections = new ArrayList<>();
-            while(rs.next())
-            {
+            while(rs.next()) {
                 Collection collection = new Collection();
                 collection.setCollectionID(rs.getLong("collection_id"));
                 collection.setTitle(rs.getString("title"));
@@ -53,58 +59,81 @@ public class CollectionService {
             return collections;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     public Collection getCollection(Long collectionId) {
         String stmt = "SELECT * FROM collection WHERE collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Collection collection = new Collection();
-            while(rs.next())
-            {
+            while(rs.next()) {
                 collection.setCollectionID(rs.getLong("collection_id"));
                 collection.setTitle(rs.getString("title"));
             }
             return collection;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
     // UPDATE
     public int updateCollection(Long collectionId, Collection collectionDetails) {
-        String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
+        String st = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e) {
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return -1;
     }
 
     // DELETE
     public int deleteCollection(Long collectionId) {
-        String stmt = "DELETE FROM collection WHERE collection_id=%d".formatted(collectionId);
+        String st = "DELETE FROM collection WHERE collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        }catch (Exception e) {
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return -1;
     }
 }
