@@ -228,5 +228,5 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-}
+
 }
