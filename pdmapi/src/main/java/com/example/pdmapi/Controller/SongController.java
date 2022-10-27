@@ -71,4 +71,16 @@ public class SongController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping("/collections/{collectionId}/songs")
+    public ResponseEntity<List<Song>> getCollectionsSongs(@PathVariable long collectionId)
+    {
+        List<Song> songs = songService.getCollectionSongs(collectionId);
+        if(songs != null)
+        {
+            return new ResponseEntity<>(songs,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

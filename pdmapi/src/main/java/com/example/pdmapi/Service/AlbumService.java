@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -273,5 +274,39 @@ public class AlbumService {
             }
         }
         return -1;
+    }
+
+    public List<Album> getCollectionAlbums(long collectionId)
+    {
+        String stmt = "SELECT album.album_id,album.title,album.release_date\n" +
+                "FROM album,collection_holds_album\n" +
+                "WHERE album.album_id=collection_holds_album.album_id\n" +
+                "AND collection_holds_album.collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        List<Album> albums = new ArrayList<>();
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                Album album = new Album();
+                album.setAlbumID(rs.getLong("album_id"));
+                album.setTitle(rs.getString("title"));
+                album.setReleaseDate(rs.getDate("release_date"));
+                albums.add(album);
+            }
+            return albums;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

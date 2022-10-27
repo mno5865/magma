@@ -140,4 +140,37 @@ public class SongService {
         }
         return -1;
     }
+
+    public List<Song> getCollectionSongs(long collectionId) {
+        String stmt = "SELECT song.song_id,song.title,song.runtime,song.release_date\n" +
+                "FROM song,collection_holds_song\n" +
+                "WHERE song.song_id=collection_holds_song.song_id\n" +
+                "AND collection_holds_song.collection_id=%d".formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        List<Song> songs = new ArrayList<>();
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while (rs.next()) {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                songs.add(song);
+            }
+            return songs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }
