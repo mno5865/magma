@@ -357,7 +357,7 @@ public class UserService {
     public int createUserListensToAlbum(long userId, long albumId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
-                .formatted(userId,albumId,(timestamp),userId,albumId);
+                .formatted(userId, albumId, (timestamp));
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -407,7 +407,7 @@ public class UserService {
     public int createUserListensToCollection(long userId, long collectionId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_collection (user_id, collection_id, date_time) VALUES (%d,%d,'%tc')"
-                .formatted(userId, collectionId, (timestamp), userId, collectionId);
+                .formatted(userId, collectionId, (timestamp));
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
