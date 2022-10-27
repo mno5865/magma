@@ -359,6 +359,10 @@ public class CollectionService {
                 .formatted(collectionId);
         String stmt2 = "SELECT album_id from collection_holds_album WHERE collection_id=%d"
                 .formatted(collectionId);
+        String stmt3 = "DELETE FROM user_creates_collection WHERE collection_id=%d"
+                .formatted(collectionId);
+        String stmt4 = "DELETE FROM user_listens_to_collection WHERE collection_id=%d"
+                .formatted(collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try
         {
@@ -366,6 +370,12 @@ public class CollectionService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement3 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement4 = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs1 = statement1.executeQuery(stmt1);
@@ -380,8 +390,12 @@ public class CollectionService {
                 int i = deleteCollectionHoldsAlbum(collectionId,rs2.getLong("album_id"));
                 if(i == -1) {return -1;}
             }
-            int i = deleteCollection(collectionId);
+            int i = statement3.executeUpdate(stmt3);
             if(i == -1) {return -1;}
+            int j = statement4.executeUpdate(stmt4);
+            if(j == -1) {return -1;}
+            int k = deleteCollection(collectionId);
+            if(k == -1) {return -1;}
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
