@@ -57,7 +57,6 @@ export class CollectionviewComponent implements OnInit {
         })
       })
     })
-    console.log(this.collectionList)
   }
 
   //we aren't using these

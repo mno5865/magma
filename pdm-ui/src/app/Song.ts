@@ -1,6 +1,6 @@
 export interface Song {
-  songid: number,
+  songId: number,
   title: string,
   runtime: number,
-  release: Date
+  releaseDate: Date
 }

@@ -20,8 +20,10 @@ export class CollectionpageComponent implements OnInit {
   songCount: number = 0
   collectionList: Collection[] = []
   songList: Song[] = []
+  durationInfo: {[key:number]:number} = {}
 
-  constructor(private router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
+  constructor(private router : Router, private songService : SongService,  private collectionService : CollectionService,
+              private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]
       this.collectionID = params["collectionID"]   // this keeps track of the collectionID field of the URL
@@ -29,12 +31,10 @@ export class CollectionpageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("TESTING 1 " + this.collectionID)
     this.collectionService.getCollectionByID(this.collectionID).subscribe(returnCollection => {
-      console.log("TESTING 2")
-      console.log("THE TITLE IS " + returnCollection.title)
       this.collectionTitle = returnCollection.title
       this.collectionList.push(returnCollection)
+      this.setSongs()
     })
   }
 
@@ -46,6 +46,15 @@ export class CollectionpageComponent implements OnInit {
         this.collectionService.updateCollection(returnCollection).subscribe()
       })
     }
+  }
+
+  setSongs(): void {
+    this.songService.getSongsFromCollection(this.collectionID).subscribe(songList => {
+      this.songList = songList // set the list of songs to display
+      songList.forEach(song => {
+        this.durationInfo[song.songId] = parseFloat((song.runtime / 60).toFixed(2))
+      })
+    })
   }
 
   redirectToView() {

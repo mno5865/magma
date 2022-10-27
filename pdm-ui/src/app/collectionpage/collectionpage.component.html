@@ -8,6 +8,17 @@
     <button id="delete" (click)="DeleteCollection(collectionID)">Delete Collection</button>
   </div>
   <br><br>
+  <h3>Songs: </h3>
+  <div class="songs" *ngFor="let song of songList">
+    <button id="songName"> {{song.title}} </button>
+    <span> Time: </span>
+    <span> {{durationInfo[song.songId]}} </span>
+    <span> min. </span>
+    <span> Released: </span>
+    <span> {{song.releaseDate}} </span>
+    <br><br>
+  </div>
+  <br><br>
 
     <br><br>
   </div>

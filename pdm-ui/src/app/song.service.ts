@@ -18,4 +18,27 @@ export class SongService {
   private release: Date = new Date()
 
   constructor(private http: HttpClient) { }
+
+  public getSongID(): number {
+    return this.songID;
+  }
+
+  public getSongTitle(): string {
+    return this.songTitle;
+  }
+
+  public getRuntime(): number {
+    return this.runtime;
+  }
+
+  public getRelease(): Date {
+    return this.release;
+  }
+
+  public getSongsFromCollection(collectionID: number): Observable<Song[]> {
+    return this.http.get<Song[]>(this.globalURL+"collections/"+collectionID+"/songs", this.httpOptions)
+  }
+
+  // deleteSongFromCollection(songID: number)
+
 }
