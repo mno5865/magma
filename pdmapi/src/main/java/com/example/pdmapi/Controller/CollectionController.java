@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -135,6 +136,19 @@ public class CollectionController {
             return new ResponseEntity<>(count,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(count,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/collections/{collection_id}/total_duration")
+    public ResponseEntity<Integer> getTotalDurationFromCollection(@PathVariable long collection_id)
+    {
+        int time = collectionService.getTotalCollectionRuntime(collection_id);
+        if(time != -1)
+        {
+            return new ResponseEntity<>(time,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(time,HttpStatus.BAD_REQUEST);
         }
     }
 }

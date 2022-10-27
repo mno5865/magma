@@ -17,7 +17,7 @@ public class Song {
     private String title;
 
     @Column(name = "runtime")
-    private Time runtime;
+    private long runtime;
 
     @Column(name = "release_date")
     private Date releaseDate;
@@ -41,11 +41,11 @@ public class Song {
         this.title = title;
     }
 
-    public Time getRuntime() {
+    public long getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(Time runtime) {
+    public void setRuntime(long runtime) {
         this.runtime = runtime;
     }
 

@@ -20,7 +20,7 @@ public class SongService {
 
     // CREATE
     public int createSong(Song song) {
-        String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s','%tT','%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
+        String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s',%d,'%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -53,7 +53,7 @@ public class SongService {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
-                song.setRuntime(rs.getTime("runtime"));
+                song.setRuntime(rs.getLong("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
                 songs.add(song);
             }
@@ -82,7 +82,7 @@ public class SongService {
             while(rs.next()) {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
-                song.setRuntime(rs.getTime("runtime"));
+                song.setRuntime(rs.getLong("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
             }
             return song;
@@ -100,7 +100,7 @@ public class SongService {
 
     // UPDATE
     public int updateSong(Long songId, Song songDetails) {
-        String stmt = "UPDATE song SET title='%s',runtime='%tT',release_date='%tF' WHERE song_id=%d"
+        String stmt = "UPDATE song SET title='%s',runtime=%d,release_date='%tF' WHERE song_id=%d"
                 .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(),songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
