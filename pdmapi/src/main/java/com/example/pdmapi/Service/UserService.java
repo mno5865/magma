@@ -359,8 +359,24 @@ public class UserService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
                 .formatted(userId,albumId,(timestamp),userId,albumId);
+        String stmt2 = "SELECT song_id FROM album_contains_song WHERE album_id=%d".formatted(albumId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement2.executeQuery(stmt2);
+            while(rs.next())
+            {
+                timestamp = new Timestamp(System.currentTimeMillis());
+                long songId = rs.getLong("song_id");
+                String stmt3 = "INSERT INTO user_listens_to_song (song_id,user_id,date_time) VALUES (%d,%d,'%tc')"
+                        .formatted(songId,userId,timestamp);
+                Statement statement3 = conn.createStatement(
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+                statement3.executeUpdate(stmt3);
+            }
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
