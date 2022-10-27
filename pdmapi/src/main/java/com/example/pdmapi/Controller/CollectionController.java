@@ -124,4 +124,17 @@ public class CollectionController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/collections/{collection_id}/song_count")
+    public ResponseEntity<Integer> getSongCountFromCollection(@PathVariable long collection_id)
+    {
+        int count = collectionService.getSongCountFromCollection(collection_id);
+        if(count != -1)
+        {
+            return new ResponseEntity<>(count,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(count,HttpStatus.BAD_REQUEST);
+        }
+    }
 }
