@@ -113,7 +113,7 @@ public class UserController {
 
     //UserCreatesCollection RELATIONSHIP
     @CrossOrigin
-    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
+    @PostMapping(value = "/users/{userId}/collections/create?={collectionId}")
     public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
@@ -135,7 +135,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/users/{userId}/collections/{collectionId}")
+    @DeleteMapping("/users/{userId}/collections/create?={collectionId}")
     public ResponseEntity<Integer> deleteUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.deleteUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
@@ -147,7 +147,7 @@ public class UserController {
 
     // user_listens_collection RELATIONSHIP
     @CrossOrigin
-    @PostMapping(value = "/users/{userId}/collections/{collectionId}")
+    @PostMapping(value = "/users/{userId}/collections/listen?={collectionId}")
     public ResponseEntity<Integer> createUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserListensToCollection(userId, collectionId);
         if(rowsAffected == 1) {
@@ -158,7 +158,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/users/{userId}/collections/{collectionId}")
+    @GetMapping(value = "/users/{userId}/collections/listen?={collectionId}")
     public ResponseEntity<Timestamp> getUserCollectionPlayTime(@PathVariable long userId, @PathVariable long collectionId) {
         Timestamp timestamp = userService.getUserCollectionPlayTime(userId,collectionId);
         if(timestamp != null) {
@@ -169,7 +169,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/users/{userId}/collections/{collectionId}")
+    @DeleteMapping(value = "/users/{userId}/collections/listen?={collectionId}/")
     public ResponseEntity<Integer> deleteUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.deleteUserListensToCollection(userId, collectionId);
         if(rowsAffected == 1) {
