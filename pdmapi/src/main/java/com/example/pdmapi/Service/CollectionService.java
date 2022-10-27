@@ -142,7 +142,7 @@ public class CollectionService {
             }
         }
     }
-}
+
     //CollectionHoldsSong RELATIONSHIP
     public int createCollectionHoldsSong(long collectionId, long songId) {
         String st = ("INSERT INTO collection_holds_song (collection_id, song_id) VALUES (%d, %d)")
