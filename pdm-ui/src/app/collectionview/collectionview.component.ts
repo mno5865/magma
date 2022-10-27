@@ -46,14 +46,12 @@ export class CollectionviewComponent implements OnInit {
     this.collectionService.getUserCollections(this.userID).subscribe(collectionList => {
       this.collectionList = collectionList
       collectionList.forEach(collection => {
-
+        this.collectionService.getSongCount(collection.collectionID).subscribe(resultNum => {
+          this.songInfo[collection.collectionID] = resultNum
+        })
       })
     })
     console.log(this.collectionList)
-  }
-
-  returnSongCountForCollection(collectionID: number): number {
-    return this.songInfo[collectionID]
   }
 
   getSongCount(title: string): void {

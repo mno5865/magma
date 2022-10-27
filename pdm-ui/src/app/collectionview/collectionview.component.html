@@ -9,8 +9,7 @@
   <div class="collections" *ngFor="let collection of collectionList">
     <button id="name" (click)="OnClick()"> {{collection.title}} </button>
     <span> Songs: </span>
-    <span id="songCount" [innerHTML]="returnSongCountForCollection(collection.collectionID)">
-    </span>
+    <span id="songCount">{{this.songInfo[collection.collectionID]}}</span>
     <span id="duration"> Duration: </span>
     <br><br>
   </div>
