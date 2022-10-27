@@ -2,6 +2,7 @@ package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
+import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -337,6 +338,65 @@ public class CollectionService {
                 i = i + rs2.getInt("total_runtime");
             }
             return i;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally
+        {
+            try
+            {
+                conn.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    public int deleteAll(long collectionId)
+    {
+        String stmt1 = "SELECT song_id from collection_holds_song WHERE collection_id=%d"
+                .formatted(collectionId);
+        String stmt2 = "SELECT album_id from collection_holds_album WHERE collection_id=%d"
+                .formatted(collectionId);
+        String stmt3 = "DELETE FROM user_creates_collection WHERE collection_id=%d"
+                .formatted(collectionId);
+        String stmt4 = "DELETE FROM user_listens_to_collection WHERE collection_id=%d"
+                .formatted(collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try
+        {
+            Statement statement1 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement3 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            Statement statement4 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs1 = statement1.executeQuery(stmt1);
+            while(rs1.next())
+            {
+                int i = deleteCollectionHoldsSong(collectionId,rs1.getLong("song_id"));
+                if(i == -1) {return -1;}
+            }
+            ResultSet rs2 = statement2.executeQuery(stmt2);
+            while(rs2.next())
+            {
+                int i = deleteCollectionHoldsAlbum(collectionId,rs2.getLong("album_id"));
+                if(i == -1) {return -1;}
+            }
+            int i = statement3.executeUpdate(stmt3);
+            if(i == -1) {return -1;}
+            int j = statement4.executeUpdate(stmt4);
+            if(j == -1) {return -1;}
+            int k = deleteCollection(collectionId);
+            if(k == -1) {return -1;}
+            return 1;
         } catch (Exception e) {
             e.printStackTrace();
         } finally

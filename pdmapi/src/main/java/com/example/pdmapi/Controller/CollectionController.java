@@ -2,6 +2,7 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Service.CollectionService;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -149,6 +150,19 @@ public class CollectionController {
             return new ResponseEntity<>(time,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(time,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{id}/deleteAll")
+    public ResponseEntity<Integer> deleteAllCollectionRelations(@PathVariable long id)
+    {
+        int check = collectionService.deleteAll(id);
+        if(check != -1)
+        {
+            return new ResponseEntity<>(check,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(check,HttpStatus.BAD_REQUEST);
         }
     }
 }
