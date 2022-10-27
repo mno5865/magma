@@ -78,14 +78,14 @@ public class UserService {
     }
 
     public List<User> getUsers() {
-        String stmt = "SELECT * FROM user";
+        String stmt = "SELECT * FROM \"user\"";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
-            List<User> users = new ArrayList();
+            List<User> users = new ArrayList<>();
             while(rs.next()) {
                 User user = new User();
                 user.setUserID(rs.getLong("user_id"));
@@ -111,8 +111,7 @@ public class UserService {
         return null;
     }
 
-    public Timestamp getUserSongLastPlayTime(long userId, long songId)
-    {
+    public Timestamp getUserSongLastPlayTime(long userId, long songId){
         Timestamp timestamp = null;
         String stmt = "SELECT date_time FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
                 .formatted(userId,songId);
@@ -191,14 +190,14 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-        try {
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
-
 
     // UPDATE
     public int updateUser(Long userId, User user) {
@@ -224,51 +223,6 @@ public class UserService {
         return -1;
     }
 
-    public int createUserListensToSong(long userId, long songId)
-    {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
-                        .formatted(userId,songId,(timestamp),userId,songId);
-        Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return -1;
-    }
-
-    public int updateUserListensToSong(long userId, long songId)
-    {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String stmt = "UPDATE user_listens_to_song SET date_time='%tc' WHERE user_id=%d AND song_id=%d"
-                .formatted(timestamp,userId,songId);
-        Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
     // DELETE
     public int deleteUser(Long userId) {
         String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
@@ -290,7 +244,7 @@ public class UserService {
         return -1;
     }
 
-            //user_creates_collection RELATIONSHIP
+    //user_creates_collection RELATIONSHIP
     public int createUserCreatesCollection(long userId, long collectionId) {
         String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
                 collectionId);
@@ -443,7 +397,7 @@ public class UserService {
     public int createUserListensToSong(long userId, long songId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
-                .formatted(userId,songId,(timestamp),userId,songId);
+                .formatted(userId, songId, (timestamp));
 
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {

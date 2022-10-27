@@ -42,6 +42,17 @@ public class UserController {
     }
 
     @CrossOrigin
+    @GetMapping("/users/")
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users = userService.getUsers();
+        if (users != null){
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @GetMapping("/users/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -66,8 +77,12 @@ public class UserController {
     @CrossOrigin
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Integer> deleteUser(@PathVariable long id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        int rowsAffected = userService.deleteUser(id);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
     }
 
     //user_creates_collection RELATIONSHIP
@@ -160,6 +175,16 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
+    @DeleteMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Integer> deleteUserListensToAlbum(@PathVariable long userId, @PathVariable long albumId) {
+        int rowsAffected = userService.deleteUserListensToAlbum(userId, albumId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
 
     // user_friends_user RELATIONSHIP
     @CrossOrigin
