@@ -306,7 +306,8 @@ public class UserService {
                 + "FROM user_creates_collection "
                 + "INNER JOIN \"user\" on user_creates_collection.user_id = \"user\".user_id "
                 + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
-                + "WHERE \"user\".user_id=%d").formatted(userId);
+                + "WHERE \"user\".user_id=%d " +
+                "ORDER BY collection.title ASC").formatted(userId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
