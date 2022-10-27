@@ -319,7 +319,7 @@ public class UserService {
     // DELETE
     public int deleteUserListensToCollection(long userId, long collectionId)
     {
-        String stmt = "DELETE FROM user_listens_to_song WHERE user_id=%d AND collection_id=%d"
+        String stmt = "DELETE FROM user_listens_to_collection WHERE user_id=%d AND collection_id=%d"
                 .formatted(userId, collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
