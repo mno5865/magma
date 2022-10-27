@@ -8,6 +8,7 @@ import { CollectionpageComponent } from './collectionpage/collectionpage.compone
 import { CanActivate } from '@angular/router'
 import { CollectionredirectService } from './collectionredirect.service'
 import {UsercollectionsredirectService } from './usercollectionsredirect.service'
+import {SearchComponent} from "./search/search.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
   { path: 'collection/:collectionID', component: CollectionpageComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-
+  { path: 'search', component: SearchComponent },
+  { path: '',   redirectTo: '/login', pathMatch: 'full' },
 ]
 
 @NgModule({
