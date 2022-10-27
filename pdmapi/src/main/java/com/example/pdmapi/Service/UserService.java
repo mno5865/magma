@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 public class UserService {
     @Autowired
@@ -71,7 +70,7 @@ public class UserService {
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -112,6 +111,28 @@ public class UserService {
         return null;
     }
 
+    public Timestamp getUserSongLastPlayTime(long userId, long songId)
+    {
+        Timestamp timestamp = null;
+        String stmt = "SELECT date_time FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
+                .formatted(userId,songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                timestamp = rs.getTimestamp("date_time");
+            }
+            return timestamp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return timestamp;
+    }
+
     public User getUserByUsername(String username) {
         String stmt = "SELECT * FROM \"user\" WHERE username='%s'".formatted(username);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -137,7 +158,7 @@ public class UserService {
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -170,15 +191,16 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        try {
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
+
+    // UPDATE
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
                 "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
@@ -195,12 +217,57 @@ public class UserService {
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return -1;
     }
+
+    public int createUserListensToSong(long userId, long songId)
+    {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
+                        .formatted(userId,songId,(timestamp),userId,songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    public int updateUserListensToSong(long userId, long songId)
+    {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String stmt = "UPDATE user_listens_to_song SET date_time='%tc' WHERE user_id=%d AND song_id=%d"
+                .formatted(timestamp,userId,songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return statement.executeUpdate(stmt);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
     // DELETE
     public int deleteUser(Long userId) {
@@ -216,31 +283,29 @@ public class UserService {
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return -1;
     }
 
-    //user_creates_collection RELATIONSHIP
-
-    // CREATE
+            //user_creates_collection RELATIONSHIP
     public int createUserCreatesCollection(long userId, long collectionId) {
-        String st = ("INSERT INTO user_creates_collection(user_id, collection_id) VALUES(%d, %d)")
-                .formatted(userId, collectionId);
+        String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
+                collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(st);
-        } catch (Exception e) {
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -250,14 +315,13 @@ public class UserService {
     // READ
     public List<Collection> getCollectionsByUserID(long userId) {
         List<Collection> collections = new ArrayList<>();
-
         String query = ("SELECT collection.collection_id, collection.title "
                 + "FROM user_creates_collection "
                 + "INNER JOIN \"user\" on user_creates_collection.user_id = \"user\".user_id "
                 + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
                 + "WHERE \"user\".user_id=%d").formatted(userId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -271,6 +335,12 @@ public class UserService {
             }
         }  catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return collections;
     }
@@ -287,14 +357,14 @@ public class UserService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     //user_listens_album RELATIONSHIP
@@ -302,14 +372,21 @@ public class UserService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
                 .formatted(userId, albumId, (timestamp));
+
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -318,8 +395,8 @@ public class UserService {
         Timestamp timestamp = null;
         String stmt = "SELECT date_time FROM user_listens_to_album WHERE user_id=%d AND album_id=%d"
                 .formatted(userId, albumId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -330,6 +407,12 @@ public class UserService {
             return timestamp;
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return timestamp;
     }

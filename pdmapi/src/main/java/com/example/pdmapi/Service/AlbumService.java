@@ -35,14 +35,14 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     public int createAlbumContainsSong(long albumId, long songId){
@@ -56,14 +56,14 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     // READ
@@ -86,14 +86,14 @@ public class AlbumService {
             return albums;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     public Album getAlbum(long albumId) {
@@ -113,27 +113,25 @@ public class AlbumService {
             return album;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     public List<Song> getSongsByAlbum(long albumId) {
         List<Song> songs = new ArrayList<>();
-
         String query = ("SELECT song.song_id, song.title, song.release_date, song.runtime "
                 + "FROM album_contains_song "
                 + "INNER JOIN song on album_contains_song.song_id = song.song_id "
                 + "INNER JOIN album on album_contains_song.album_id = album.album_id "
                 + "WHERE album.album_id=%d").formatted(albumId);
-
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
+        try{
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -152,7 +150,7 @@ public class AlbumService {
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -165,9 +163,8 @@ public class AlbumService {
                 + "INNER JOIN song on album_contains_song.song_id = song.song_id "
                 + "INNER JOIN album on album_contains_song.album_id = album.album_id "
                 + "WHERE album.album_id=%d AND album_contains_song.track_number=%d").formatted(albumId, trackNumber);
-
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
+        try{
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -183,14 +180,14 @@ public class AlbumService {
             return song;
         }  catch (SQLException e) {
             e.printStackTrace();
-            return null;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     // UPDATE
@@ -205,14 +202,14 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     // TODO fix
@@ -227,14 +224,14 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     // DELETE
@@ -248,14 +245,14 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 
     public int deleteAlbumContainsSong(long albumId, long songId){
@@ -268,13 +265,13 @@ public class AlbumService {
             return stmt.executeUpdate(st);
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             try {
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return -1;
     }
 }
