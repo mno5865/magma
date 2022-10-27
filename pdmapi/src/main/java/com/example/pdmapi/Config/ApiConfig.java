@@ -20,7 +20,14 @@ public class ApiConfig {
         String pass;
 
         try{
-            Ini ini = new Ini(new File("src/main/java/com/example/pdmapi/Service/dbInfo.ini"));
+            String str = System.getProperty("user.dir");
+            String path;
+            if (str.substring(str.length()-5).equals("magma")) {
+                path = "pdmapi/src/main/java/com/example/pdmapi/Service/dbInfo.ini";
+            } else {
+                path = "src/main/java/com/example/pdmapi/Service/dbInfo.ini";
+            }
+            Ini ini = new Ini(new File(path));
             user = ini.get("header", "username");
             pass = ini.get("header", "password");
         } catch (IOException e){

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -65,13 +66,22 @@ public class UserController {
     @CrossOrigin
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
-        int rowsAffected = userService.deleteUser(id);
-        if (rowsAffected == 1) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
+        int rowsAffected = userService.deleteUserListensToSong(userId,songId);
+        if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     //user_creates_collection RELATIONSHIP
     @CrossOrigin
@@ -89,7 +99,7 @@ public class UserController {
     @GetMapping("/users/{userId}/collections")
     public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
         List<Collection> collections = userService.getCollectionsByUserID(userId);
-        if (collections != null){
+        if (collections != null) {
             return new ResponseEntity<>(collections, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,6 +116,63 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+    //user_listens_song RELATIONSHIP
+    @CrossOrigin
+    @PutMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> updateUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
+        int rowsAffected = userService.updateUserListensToSong(userId,songId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> createUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
+        int rowsAffected = userService.createUserListensToSong(userId,songId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/users/{userId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
+        int rowsAffected = userService.deleteUserListensToSong(userId,songId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //user_listens_album RELATIONSHIP
+    @CrossOrigin
+    @GetMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Timestamp> getUserAlbumLastPlayTime(@PathVariable long userId, @PathVariable long albumId) {
+        Timestamp timestamp = userService.getUserAlbumLastPlayTime(userId,albumId);
+        if(timestamp != null) {
+            return new ResponseEntity<>(timestamp,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/albums/{albumId}")
+    public ResponseEntity<Integer> createUserListensToAlbum(@PathVariable long userId, @PathVariable long albumId) {
+        int rowsAffected = userService.createUserListensToAlbum(userId,albumId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     // user_friends_user RELATIONSHIP
     @CrossOrigin

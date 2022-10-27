@@ -34,13 +34,26 @@ public class CollectionController {
     }
 
     @CrossOrigin
+    @GetMapping("/users/{userID}/collections/{collectionName}")
+    public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
+                                                                  @PathVariable String collectionName) {
+        collectionName = collectionName.replace('-', ' ');
+        Collection collection = collectionService.getCollectionByTitleAndUserID(userID, collectionName);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/collections", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createCollection(@RequestBody Collection newCollection) {
-        int rowsAffected = collectionService.createCollection(newCollection);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        int[] results = collectionService.createCollection(newCollection);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -63,6 +76,65 @@ public class CollectionController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //CollectionHoldsSong RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/collections/{collectionId}/songs/{songId}")
+    public ResponseEntity<Integer> createCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
+        int rowsAffected = collectionService.createCollectionHoldsSong(collectionId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{collectionId}/songs/{songId}")
+    public ResponseEntity<Integer> deleteCollectionHoldsSong(@PathVariable long collectionId, @PathVariable long songId) {
+        int rowsAffected = collectionService.deleteCollectionHoldsSong(collectionId, songId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //CollectionHoldsAlbum RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> createCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.createCollectionHoldsAlbum(collectionId, albumId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{collectionId}/albums/{albumId}")
+    public ResponseEntity<Integer> deleteCollectionHoldsAlbum(@PathVariable long collectionId, @PathVariable long albumId) {
+        int rowsAffected = collectionService.deleteCollectionHoldsAlbum(collectionId, albumId);
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/collections/{collection_id}/song_count")
+    public ResponseEntity<Integer> getSongCountFromCollection(@PathVariable long collection_id)
+    {
+        int count = collectionService.getSongCountFromCollection(collection_id);
+        if(count != -1)
+        {
+            return new ResponseEntity<>(count,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(count,HttpStatus.BAD_REQUEST);
         }
     }
 }
