@@ -191,7 +191,7 @@ public class UserService {
     {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_song (user_id, song_id, date_time) VALUES (%d,%d,'%tc')"
-                        .formatted(userId,songId,(timestamp),userId,songId);
+                .formatted(userId,songId,(timestamp),userId,songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -306,7 +306,8 @@ public class UserService {
                 + "FROM user_creates_collection "
                 + "INNER JOIN \"user\" on user_creates_collection.user_id = \"user\".user_id "
                 + "INNER JOIN collection on user_creates_collection.collection_id = collection.collection_id "
-                + "WHERE \"user\".user_id=%d").formatted(userId);
+                + "WHERE \"user\".user_id=%d " +
+                "ORDER BY collection.title ASC").formatted(userId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -456,6 +457,88 @@ public class UserService {
             e.printStackTrace();
         }
         return -1;
+    }
+    //UserFollowersUser RELATIONSHIP
+    public int createUserFollowsUser(long user1Id, long user2Id) {
+        String st = ("INSERT INTO user_follows_user(user_one_id, user_two_id) VALUES (%d, %d)").
+                formatted(user1Id, user2Id);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // READ
+    public List<User> getUsersFollowing(long userId) {
+        List<User> friends = new ArrayList<>();
+
+        String query = ("SELECT * FROM \"user\" AS u " +
+                "INNER JOIN user_follows_user ufu ON u.user_id = ufu.user_two_id " +
+                "WHERE ufu.user_one_id=%d;").formatted(userId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                User user = new User();
+                user.setUserID(rs.getLong("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setCreationDate(rs.getDate("creation_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
+                friends.add(user);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return friends;
+    }
+
+    // DELETE
+    public int deleteUserFollowsUser(long user1Id, long user2Id) {
+        String st = ("DELETE FROM user_follows_user WHERE (user_one_id=%d AND user_two_id=%d)")
+                .formatted(user1Id, user2Id);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            return stmt.executeUpdate(st);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
