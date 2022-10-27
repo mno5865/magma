@@ -156,4 +156,39 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    //UserListensToCollection RELATIONSHIP
+    @CrossOrigin
+    @PostMapping(value = "/users/{userId}/collections/listens/{collectionId}")
+    public ResponseEntity<Integer> createUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.createUserListensToCollection(userId, collectionId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/users/{userId}/collections/listens/{collectionId}")
+    public ResponseEntity<Timestamp> getUserCollectionPlayTime(@PathVariable long userId, @PathVariable long collectionId) {
+        Timestamp timestamp = userService.getUserCollectionPlayTime(userId,collectionId);
+        if(timestamp != null) {
+            return new ResponseEntity<>(timestamp, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/users/{userId}/collections/listens/{collectionId}")
+    public ResponseEntity<Integer> deleteUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
+        int rowsAffected = userService.deleteUserListensToCollection(userId, collectionId);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
