@@ -18,7 +18,7 @@ import { CollectionpageComponent } from './collectionpage/collectionpage.compone
     HomepageComponent,
     CreateuserComponent,
     CollectionviewComponent,
-    CollectionpageComponent
+    CollectionpageComponent,
     SearchComponent
   ],
   imports: [
