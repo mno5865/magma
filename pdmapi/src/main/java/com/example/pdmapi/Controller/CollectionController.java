@@ -2,12 +2,14 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Service.CollectionService;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -122,6 +124,45 @@ public class CollectionController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/collections/{collection_id}/song_count")
+    public ResponseEntity<Integer> getSongCountFromCollection(@PathVariable long collection_id)
+    {
+        int count = collectionService.getSongCountFromCollection(collection_id);
+        if(count != -1)
+        {
+            return new ResponseEntity<>(count,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(count,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/collections/{collection_id}/total_duration")
+    public ResponseEntity<Integer> getTotalDurationFromCollection(@PathVariable long collection_id)
+    {
+        int time = collectionService.getTotalCollectionRuntime(collection_id);
+        if(time != -1)
+        {
+            return new ResponseEntity<>(time,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(time,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/collections/{id}/deleteAll")
+    public ResponseEntity<Integer> deleteAllCollectionRelations(@PathVariable long id)
+    {
+        int check = collectionService.deleteAll(id);
+        if(check != -1)
+        {
+            return new ResponseEntity<>(check,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(check,HttpStatus.BAD_REQUEST);
         }
     }
 }

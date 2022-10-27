@@ -122,4 +122,17 @@ public class AlbumController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/collections/{collectionId}/albums")
+    public ResponseEntity<List<Album>> getCollectionAlbums(@PathVariable long collectionId)
+    {
+        List<Album> albums = albumService.getCollectionAlbums(collectionId);
+        if(albums != null)
+        {
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
