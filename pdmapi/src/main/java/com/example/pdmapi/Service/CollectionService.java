@@ -2,6 +2,7 @@ package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
+import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -356,7 +357,7 @@ public class CollectionService {
     {
         String stmt1 = "SELECT song_id from collection_holds_song WHERE collection_id=%d"
                 .formatted(collectionId);
-        String stmt2 = "SELECT album_id from collection_holds_album WHERE collection_id=1"
+        String stmt2 = "SELECT album_id from collection_holds_album WHERE collection_id=%d"
                 .formatted(collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try
@@ -379,6 +380,8 @@ public class CollectionService {
                 int i = deleteCollectionHoldsAlbum(collectionId,rs2.getLong("album_id"));
                 if(i == -1) {return -1;}
             }
+            int i = deleteCollection(collectionId);
+            if(i == -1) {return -1;}
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
