@@ -13,10 +13,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'create', component: CreateuserComponent },
-  { path: 'collections', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
+  { path: 'users', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
   { path: 'users/:userID/collections', component: CollectionviewComponent},
-  { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
-  { path: 'collection/:collectionID', component: CollectionpageComponent },
+  { path: 'collections', canActivate: [CollectionredirectService], component: CollectionpageComponent },
+  { path: 'users/:userID/collections/:collectionID', component: CollectionpageComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 
 ]

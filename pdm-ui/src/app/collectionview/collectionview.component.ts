@@ -13,10 +13,11 @@ import * as stream from "stream";
 })
 export class CollectionviewComponent implements OnInit {
   userID: number = 0
-  songInfo: {[key:number]:number;} = {};
+  songInfo: {[key:number]:number;} = {}; // the song count of a collection [id, count]
   collectionList: Collection[] = []
   songCount: number = 0
-  constructor(private router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
+  constructor(private router : Router, private collectionService : CollectionService,
+              private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
     })

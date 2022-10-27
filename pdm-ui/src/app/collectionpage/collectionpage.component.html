@@ -1,1 +1,11 @@
-<p>collectionpage works!</p>
+<div id="container">
+
+  <label id="name"><b> {{collectionTitle}} </b></label>
+  <br><br>
+  <input type="text" placeholder="Enter New Name" #collectionName required>
+  <button type="submit" (click)="setTitle(collectionName.value)">Create</button>
+
+  <br><br>
+
+    <br><br>
+  </div>
