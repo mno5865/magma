@@ -35,8 +35,11 @@ export class AlbumService {
   }
 
   listenToAlbum(userID: number, albumID: number): Observable<number> {
-    console.log("LISTENING TO: " + albumID)
     return this.http.post<number>(this.globalURL+"users/"+userID+"/albums/"+albumID, this.httpOptions)
+  }
+
+  public getAlbumRuntime(albumID: number): Observable<number> {
+    return this.http.get<number>(this.globalURL+"albums/"+albumID+"/total_duration", this.httpOptions)
   }
 
 }
