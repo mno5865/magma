@@ -32,7 +32,7 @@ public class ArtistController {
 
 
     /**
-     * endpoint for returning all albums in db
+     * endpoint for returning all artists in db
      * @return ResponseEntity OK for list of albums, even if empty
      */
     @GetMapping("/artists")

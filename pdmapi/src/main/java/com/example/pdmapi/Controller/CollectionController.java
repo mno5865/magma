@@ -1,3 +1,7 @@
+/**
+ * file: CollectionController.java
+ * authors: Gregory, Melissa, Mildness
+ */
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
@@ -12,7 +16,6 @@ import java.util.List;
 
 /**
  * description: controller that creates the api endpoint for accessing db data related to collection
- * authors:  MAGMA TEAM
  */
 @RestController
 @RequestMapping("/api")
@@ -24,12 +27,22 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    /**
+     * endpoint for returning all collections in db
+     * @return ResponseEntity OK for list of albums, even if empty
+     */
     @CrossOrigin
     @GetMapping("/collections")
     public ResponseEntity<List<Collection>> getCollections() {
         return new ResponseEntity<>(collectionService.getCollections(), HttpStatus.OK);
     }
 
+    /**
+     * endpoint for returning singular collection in db
+     * @param id id of the collection in the collection table
+     * @return ResponseEntity OK if the id given corresponds to an collection
+     *                        NOT_FOUND if it doesn't
+     */
     @CrossOrigin
     @GetMapping("/collections/{id}")
     public ResponseEntity<Collection> getCollection(@PathVariable long id) {
@@ -41,6 +54,16 @@ public class CollectionController {
         }
     }
 
+    /**
+     * gets a collection given title and userid
+     * deprecated: we already have the collection id, so why not use
+     *              that considering that a user may pottentially have
+     *              two collections witht eh same name
+     * @param userID user
+     * @param collectionName name of collection
+     * @return ResponseEntity OK if the id given corresponds to an collection
+     *                        NOT_FOUND if it doesn't
+     */
     @CrossOrigin
     @GetMapping("/users/{userID}/collections/{collectionName}")
     public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
