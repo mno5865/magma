@@ -1,0 +1,44 @@
+<div id="container">
+
+  <button (click)="goBack()">Back</button>
+
+  <h1><b>MAGMAfy</b></h1>
+
+  <h2 id="name"><b> {{collectionTitle}} </b></h2>
+  <div class="modifications" *ngFor="let collection of collectionList">
+    <input type="text" placeholder="Enter New Name" #collectionName required>
+    <button type="submit" (click)="setTitle(collectionName.value)">Rename</button>
+    <br><br>
+    <button id="playCollection" (click)="listenToCollection()">Play Collection</button>
+    <br><br>
+    <button id="delete" (click)="DeleteCollection(collectionID)">Delete Collection</button>
+  </div>
+  <br><br>
+  <h3>Songs: </h3>
+  <div class="songs" *ngFor="let song of songList">
+    <span id="songName"> {{song.title}} </span>
+    <button id="playSong" (click)="listenToSong(song.songId)">Play</button>
+    <button id="deleteSong" (click)="deleteSong(collectionID, song.songId)">Remove</button>
+    <span> Time: </span>
+    <span> {{convertRuntime(durationInfo[song.songId])}} </span>
+    <span> min. </span>
+    <span> Released: </span>
+    <span> {{song.releaseDate}} </span>
+    <br><br>
+  </div>
+  <br><br>
+
+  <h3>Albums: </h3>
+  <div class="songs" *ngFor="let album of albumList">
+    <span id="albumName"> {{album.title}} </span>
+    <button id="playAlbum" (click)="listenToAlbum(album.albumID)">Play</button>
+    <button id="deleteAlbum" (click)="deleteAlbum(collectionID, album.albumID)">Remove</button>
+    <span> Time: </span>
+    <span> {{convertRuntime(albumDurationInfo[album.albumID])}} </span>
+    <span> min. </span>
+    <span> Released: </span>
+    <span> {{album.releaseDate}} </span>
+    <br><br>
+  </div>
+  <br><br>
+</div>

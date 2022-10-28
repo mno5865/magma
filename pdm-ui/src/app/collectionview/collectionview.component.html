@@ -1,0 +1,23 @@
+<div id="container">
+  <h1><b>MAGMAfy Collections</b></h1>
+
+  <button (click)="goBack()">Back</button>
+  <br>
+  <h1><b>MAGMAfy</b></h1>
+
+  <label><b>Create New Collection: </b></label>
+  <input type="text" placeholder="Enter Collection Name" #collectionName required>
+  <button type="submit" (click)="CreateCollection(collectionName.value)">Create</button>
+  <br><br>
+
+  <h2>My Collections</h2>
+  <div class="collections" *ngFor="let collection of collectionList">
+    <button id="name" (click)="OnClick(collection.collectionID)"> {{collection.title}} </button>
+    <span> Songs: </span>
+    <span id="songCount">{{this.songInfo[collection.collectionID]}}</span>
+    <span> Duration: </span>
+    <span id="duration"> {{convertRuntime(this.durationInfo[collection.collectionID])}} </span>
+    <span> min. </span>
+    <br><br>
+  </div>
+</div>
