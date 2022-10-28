@@ -93,8 +93,9 @@ export class CollectionpageComponent implements OnInit {
   }
 
   DeleteCollection(collectionID: number): void {
-    this.collectionService.deleteCollection(collectionID).subscribe()
-    this.redirectToView()
+    this.collectionService.deleteCollection(collectionID).subscribe(val => {
+      this.redirectToView()
+    })
   }
 
   listenToCollection(): void {
