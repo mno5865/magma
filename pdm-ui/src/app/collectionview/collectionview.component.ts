@@ -62,25 +62,4 @@ export class CollectionviewComponent implements OnInit {
       })
     })
   }
-
-  //we aren't using these
-  getSongCount(title: string): void {
-    var collectionID: number
-    this.collectionService.getCollectionByName(this.userID, title)
-      .subscribe(returnCollection => {
-        this.collectionService.getSongCount(returnCollection.collectionID)
-          .subscribe(songCount => this.songCount = songCount)
-      })
-  }
-
-  //we aren't using this rn
-  getDuration(title: string): void {
-    var collectionID: number
-    console.log("TEST TEST")
-    this.collectionService.getCollectionByName(this.userID, title)
-      .subscribe(returnCollection => {
-        this.collectionService.getDuration(returnCollection.collectionID)
-          .subscribe(duration => this.duration = duration / 60) // duration must be in MINUTES
-      })
-  }
 }

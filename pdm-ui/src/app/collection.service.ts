@@ -33,17 +33,27 @@ export class CollectionService {
     return this.http.get<number>(this.globalURL+"collections/"+collectionID+"/total_duration", this.httpOptions)
   }
 
-  public getCollectionByName(userID: number, collectionName: string): Observable<Collection> {
-    return this.http.get<Collection>(this.globalURL+"users/"+userID+"/collections/"+collectionName, this.httpOptions)
-  }
-
   public getCollectionByID(collectionID: number): Observable<Collection> {
     return this.http.get<Collection>(this.globalURL+"collections/"+collectionID, this.httpOptions)
+  }
+
+  public getCollectionByIDAndUserID(userID: number, collectionID: number): Observable<Collection> {
+    return this.http.get<Collection>(this.globalURL+"users/"+userID+"/collections/"+collectionID, this.httpOptions)
   }
 
   public getUserCollections(userID: number): Observable<Collection[]> {
     var collections = this.http.get<Collection[]>(this.globalURL+"users/"+userID+"/collections", this.httpOptions)
     return collections
+  }
+
+  addSongToCollection(collectionID: number, songID: number): Observable<number> {
+    console.log(this.globalURL+"collections/"+collectionID+"/songs/"+songID)
+    return this.http.post<number>(this.globalURL+"collections/"+collectionID+"/songs/"+songID, this.httpOptions)
+  }
+
+  addAlbumToCollection(collectionID: number, albumID: number): Observable<number> {
+    console.log(this.globalURL+"collections/"+collectionID+"/albums/"+albumID)
+    return this.http.post<number>(this.globalURL+"collections/"+collectionID+"/albums/"+albumID, this.httpOptions)
   }
 
   deleteSongFromCollection(collectionID: number, songID: number): Observable<number> {
@@ -76,6 +86,4 @@ export class CollectionService {
   listenToCollection(userID: number, collectionID: number): Observable<number> {
     return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/listens/"+collectionID, this.httpOptions)
   }
-
-
 }

@@ -21,7 +21,6 @@ import { SongbrowserComponent } from './songbrowser/songbrowser.component';
     CreateuserComponent,
     CollectionviewComponent,
     CollectionpageComponent,
-    SearchComponent,
     FriendviewComponent,
     HomepageComponent,
     SongbrowserComponent

@@ -1,6 +1,7 @@
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Song;
+import com.example.pdmapi.Model.SongInView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class SongService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
-            List<Song> songs = new ArrayList();
+            List<Song> songs = new ArrayList<>();
             while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
@@ -101,7 +102,7 @@ public class SongService {
     // UPDATE
     public int updateSong(Long songId, Song songDetails) {
         String stmt = "UPDATE song SET title='%s',runtime=%d,release_date='%tF' WHERE song_id=%d"
-                .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(),songId);
+                .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(), songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -172,5 +173,180 @@ public class SongService {
             }
         }
         return null;
+    }
+
+    // song_view
+    public List<SongInView> getSongsByTitle(String songTitle, int select,String sort) {
+        List<SongInView> songs = new ArrayList<>();
+        songTitle = "%" + songTitle + "%";
+        String q = "refresh materialized view song_view";
+        String p = "refresh view song_view_with_genre";
+        //String query = ("select * from song_view s where upper(s.song_title) like upper('%s') ")
+        //        .formatted(songTitle);
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                "from song_view s left join song_view_with_genre sg on " +
+                "s.song_title=sg.song_title where upper(s.song_title) " +
+                "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(songTitle,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            stmt.executeUpdate(q);
+            ResultSet rs = stmt.executeQuery(query1);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
+    }
+
+    public List<SongInView> getSongsByArtist(String artistName, int select,String sort) {
+        List<SongInView> songs = new ArrayList<>();
+        artistName = "%" + artistName + "%";
+        String q = "refresh materialized view song_view";
+        //String query = ("select * from song_view s where upper(s.artist_name) like upper('%s')").formatted(artistName);
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(s.artist_name) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(artistName,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            stmt.executeUpdate(q);
+            ResultSet rs = stmt.executeQuery(query1);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
+    }
+
+    public List<SongInView> getSongsByAlbum(String albumTitle, int select,String sort) {
+        List<SongInView> songs = new ArrayList<>();
+        albumTitle = "%" + albumTitle + "%";
+        String q = "refresh materialized view song_view";
+        //String query = ("select * from song_view s where upper(s.album_title) like upper('%s')").formatted(albumTitle);
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(s.album_title) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(albumTitle,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort +" ";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            stmt.executeUpdate(q);
+            ResultSet rs = stmt.executeQuery(query1);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
+    }
+
+    //HI SCOTT AND JEREMY
+
+    public List<SongInView> getSongsByGenre(String genre, int select,String sort) {
+        List<SongInView> songs = new ArrayList<>();
+        genre = "%" + genre + "%";
+        //String query= "select * from song_view_with_genre s where upper(s.genre) like upper('%s')".formatted(genre);
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(sg.genre) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(genre,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query1);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
     }
 }

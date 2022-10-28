@@ -1,6 +1,7 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
+import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,61 @@ public class SongController {
             return new ResponseEntity<>(songs,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // song_view
+    @CrossOrigin
+    @GetMapping("/songs/bytitle/{title}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title,@PathVariable int select,
+                                                            @PathVariable String sort) {
+        // (1- song name), (2 - artist name), (3 - genre), (4 - release date) for select
+        // ASC or DESC for sort
+        title = title.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByTitle(title,select,sort);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/byartist/{name}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name,@PathVariable int select,
+                                                             @PathVariable String sort) {
+        name = name.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByArtist(name,select,sort);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/byalbum/{title}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title,@PathVariable int select,
+                                                            @PathVariable String sort) {
+        title = title.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByAlbum(title,select,sort);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/bygenre/{genre}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre,@PathVariable int select,
+                                                            @PathVariable String sort) {
+        genre = genre.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByGenre(genre,select,sort);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
 }
