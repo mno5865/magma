@@ -1,3 +1,8 @@
+/**
+ * File: ApiConfig.java
+ * ApiConfig.java: A public class that gets the Data Source from the API and does error handling.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Config;
 
 import org.ini4j.Ini;
