@@ -2,14 +2,12 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Service.CollectionService;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
 import java.util.List;
 
 @RestController
@@ -35,12 +33,25 @@ public class CollectionController {
         }
     }
 
+    //deprecated
     @CrossOrigin
     @GetMapping("/users/{userID}/collections/{collectionName}")
     public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
                                                                   @PathVariable String collectionName) {
         collectionName = collectionName.replace('-', ' ');
         Collection collection = collectionService.getCollectionByTitleAndUserID(userID, collectionName);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userID}/collections/id/{collectionID}")
+    public ResponseEntity<Collection> getCollectionByCollectionAndUserID(@PathVariable long userID,
+                                                                    @PathVariable long collectionID) {
+        Collection collection = collectionService.getCollectionByCollectionAndUserID(userID, collectionID);
         if (collection != null) {
             return new ResponseEntity<>(collection, HttpStatus.OK);
         } else {
