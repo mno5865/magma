@@ -176,18 +176,25 @@ public class SongService {
     }
 
     // song_view
-    public List<SongInView> getSongsByTitle(String songTitle) {
+    public List<SongInView> getSongsByTitle(String songTitle, int select,String sort) {
         List<SongInView> songs = new ArrayList<>();
         songTitle = "%" + songTitle + "%";
         String q = "refresh materialized view song_view";
-        String query = ("select * from song_view s where upper(s.song_title) like upper('%s')").formatted(songTitle);
+        String p = "refresh view song_view_with_genre";
+        //String query = ("select * from song_view s where upper(s.song_title) like upper('%s') ")
+        //        .formatted(songTitle);
+        String query1 = "select s.song_title,s.artist_name,s.album_title,s.runtime,s.listen_count " +
+                "from song_view s left join song_view_with_genre sg on s.song_title=sg.song_title where upper(s.song_title) like upper('%s') order by case when %d = 1 then s.song_title END ".formatted(songTitle,select)
+                +sort+", case when %d = 2 then s.artist_name END ".formatted(select)
+                +sort+", case when %d = 3 then sg.genre END ".formatted(select)
+                +sort+", case when %d = 4 then s.release_date END ".formatted(select)+sort+" ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             stmt.executeUpdate(q);
-            ResultSet rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(query1);
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongTitle(rs.getString("song_title"));
