@@ -12,7 +12,7 @@ import { Router } from '@angular/router'
 })
 export class UsercollectionsredirectService implements CanActivate {
 
-  constructor(private router: Router, private utilsService : UtilsService) { }
+  constructor (private router: Router, private utilsService : UtilsService) { }
 
   canActivate(): Observable<boolean> {
     var userID: number = this.utilsService.getUserID();
