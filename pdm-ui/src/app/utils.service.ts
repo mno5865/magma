@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { Collection } from './Collection'
 import { Observable } from 'rxjs'
 import { User } from './User'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,13 @@ export class UtilsService {
 
   private collectionList: Collection[] = []
 
-  constructor() { }
+  private userURL = 'http://localhost:8080/api/users';
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+  constructor(private http: HttpClient) { }
 
   public getUsername(): string {
     return this.user.username;
@@ -22,6 +29,14 @@ export class UtilsService {
 
   public getUserID(): number {
     return this.user.userID;
+  }
+
+  public getUserByEmail(email: string): Observable<User> {
+    return this.http.get<User>(this.userURL+"/"+email, this.httpOptions)
+  }
+
+  public getFriends(userID: number): Observable<User[]> {
+    return this.http.get<User[]>(this.userURL+"/"+userID+"/following")
   }
 
   public setUser(user: User): void {
@@ -43,5 +58,4 @@ export class UtilsService {
   public getCollection(): Collection[] {
     return this.collectionList
   }
-
 }
