@@ -12,6 +12,8 @@ import {SearchComponent} from "./search/search.component";
 import { FriendviewComponent } from './friendview/friendview.component'
 import {FriendsredirectService } from './friendsredirect.service'
 import { HomeredirectService } from './homeredirect.service'
+import { SongbrowserComponent } from './songbrowser/songbrowser.component'
+import { SongsredirectService } from './songsredirect.service'
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,6 +30,9 @@ const routes: Routes = [
 
   { path: 'friends', canActivate: [FriendsredirectService], component: FriendviewComponent },
   { path: 'users/:userID/friends', component: FriendviewComponent },
+
+  { path: 'songs', canActivate: [SongsredirectService], component: SongbrowserComponent },
+  { path: 'users/:userID/songs', component: SongbrowserComponent },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'search', component: SearchComponent },

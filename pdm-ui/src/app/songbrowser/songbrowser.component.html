@@ -1,0 +1,36 @@
+<h1><b>MAGMAfy Songs</b></h1>
+
+<form onsubmit="return false">
+  <input type="text" placeholder="Search" #searchTerm required>
+  <button id="submitter" type="submit" (click)="searchForSongs(searchTerm.value, searchBy.value, sortBy.value,
+  ascendDescend.value)">Search</button>
+
+  <span>&nbsp;</span>
+
+  <span>Search by </span>
+  <select #searchBy required>
+    <option value="name">Name</option>
+    <option value="artist">Artist</option>
+    <option value="album">Album</option>
+    <option value="genre">Genre</option>
+  </select>
+
+  <span>&nbsp;</span>
+
+  <span>Sort by </span>
+  <select #sortBy required>
+    <option value="name">Name</option>
+    <option value="artist">Artist</option>
+    <option value="release">Release Year</option>
+    <option value="genre">Genre</option>
+  </select>
+
+  <span>&nbsp;</span>
+
+  <span>Order by </span>
+  <select #ascendDescend required>
+    <option value="ascend">Ascending</option>
+    <option value="descend">Descending</option>
+  </select>
+
+</form>
