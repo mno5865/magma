@@ -183,11 +183,14 @@ public class SongService {
         String p = "refresh view song_view_with_genre";
         //String query = ("select * from song_view s where upper(s.song_title) like upper('%s') ")
         //        .formatted(songTitle);
-        String query1 = "select s.song_title,s.artist_name,s.album_title,s.runtime,s.listen_count " +
-                "from song_view s left join song_view_with_genre sg on s.song_title=sg.song_title where upper(s.song_title) like upper('%s') order by case when %d = 1 then s.song_title END ".formatted(songTitle,select)
-                +sort+", case when %d = 2 then s.artist_name END ".formatted(select)
-                +sort+", case when %d = 3 then sg.genre END ".formatted(select)
-                +sort+", case when %d = 4 then s.release_date END ".formatted(select)+sort+" ";
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                "from song_view s left join song_view_with_genre sg on " +
+                "s.song_title=sg.song_title where upper(s.song_title) " +
+                "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(songTitle,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -197,6 +200,8 @@ public class SongService {
             ResultSet rs = stmt.executeQuery(query1);
             while(rs.next()){
                 SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
                 song.setSongTitle(rs.getString("song_title"));
                 song.setArtistName(rs.getString("artist_name"));
                 song.setAlbumTitle(rs.getString("album_title"));
@@ -221,11 +226,14 @@ public class SongService {
         artistName = "%" + artistName + "%";
         String q = "refresh materialized view song_view";
         //String query = ("select * from song_view s where upper(s.artist_name) like upper('%s')").formatted(artistName);
-        String query1 = "select s.song_title,s.artist_name,s.album_title,s.runtime,s.listen_count " +
-                "from song_view s left join song_view_with_genre sg on s.song_title=sg.song_title where upper(s.artist_name) like upper('%s') order by case when %d = 1 then s.song_title END ".formatted(artistName,select)
-                +sort+", case when %d = 2 then s.artist_name END ".formatted(select)
-                +sort+", case when %d = 3 then sg.genre END ".formatted(select)
-                +sort+", case when %d = 4 then s.release_date END ".formatted(select)+sort+" ";
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(s.artist_name) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(artistName,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -235,6 +243,8 @@ public class SongService {
             ResultSet rs = stmt.executeQuery(query1);
             while(rs.next()){
                 SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
                 song.setSongTitle(rs.getString("song_title"));
                 song.setArtistName(rs.getString("artist_name"));
                 song.setAlbumTitle(rs.getString("album_title"));
@@ -259,11 +269,14 @@ public class SongService {
         albumTitle = "%" + albumTitle + "%";
         String q = "refresh materialized view song_view";
         //String query = ("select * from song_view s where upper(s.album_title) like upper('%s')").formatted(albumTitle);
-        String query1 = "select s.song_title,s.artist_name,s.album_title,s.runtime,s.listen_count " +
-                "from song_view s left join song_view_with_genre sg on s.song_title=sg.song_title where upper(s.album_title) like upper('%s') order by case when %d = 1 then s.song_title END ".formatted(albumTitle,select)
-                +sort+", case when %d = 2 then s.artist_name END ".formatted(select)
-                +sort+", case when %d = 3 then sg.genre END ".formatted(select)
-                +sort+", case when %d = 4 then s.release_date END ".formatted(select)+sort+" ";
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(s.album_title) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(albumTitle,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort +" ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -273,6 +286,8 @@ public class SongService {
             ResultSet rs = stmt.executeQuery(query1);
             while(rs.next()){
                 SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
                 song.setSongTitle(rs.getString("song_title"));
                 song.setArtistName(rs.getString("artist_name"));
                 song.setAlbumTitle(rs.getString("album_title"));
@@ -298,11 +313,14 @@ public class SongService {
         List<SongInView> songs = new ArrayList<>();
         genre = "%" + genre + "%";
         //String query= "select * from song_view_with_genre s where upper(s.genre) like upper('%s')".formatted(genre);
-        String query1 = "select s.song_title,s.artist_name,s.album_title,s.runtime,s.listen_count " +
-                "from song_view s left join song_view_with_genre sg on s.song_title=sg.song_title where upper(sg.genre) like upper('%s') order by case when %d = 1 then s.song_title END ".formatted(genre,select)
-                +sort+", case when %d = 2 then s.artist_name END ".formatted(select)
-                +sort+", case when %d = 3 then sg.genre END ".formatted(select)
-                +sort+", case when %d = 4 then s.release_date END ".formatted(select)+sort+" ";
+        String query1 = ("select s.song_id, s.album_id, s.song_title, " +
+                        "s.artist_name, s.album_title, s.runtime, s.listen_count " +
+                        "from song_view s left join song_view_with_genre sg " +
+                        "on s.song_title=sg.song_title where upper(sg.genre) " +
+                        "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(genre,select)
+                + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
+                + sort +", case when %d = 3 then sg.genre END ".formatted(select)
+                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -311,6 +329,8 @@ public class SongService {
             ResultSet rs = stmt.executeQuery(query1);
             while(rs.next()){
                 SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setAlbumId(rs.getLong("album_id"));
                 song.setSongTitle(rs.getString("song_title"));
                 song.setArtistName(rs.getString("artist_name"));
                 song.setAlbumTitle(rs.getString("album_title"));

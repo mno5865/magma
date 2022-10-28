@@ -3,6 +3,7 @@ package com.example.pdmapi.Model;
 public class SongInView {
 
     long songId;
+    long albumId;
     String songTitle;
     String artistName;
     String albumTitle;
@@ -19,6 +20,14 @@ public class SongInView {
 
     public void setSongId(long songId) {
         this.songId = songId;
+    }
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
     }
 
     public String getSongTitle() {
