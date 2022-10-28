@@ -13,10 +13,13 @@ import * as stream from "stream";
 })
 export class CollectionviewComponent implements OnInit {
   userID: number = 0
-  songInfo: {[key:number]:number;} = {};
+  songInfo: {[key:number]:number} = {} // the song count of a collection [id, count]
+  durationInfo: {[key:number]:number} = {}
   collectionList: Collection[] = []
   songCount: number = 0
-  constructor(private router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
+  duration: number = 0
+  constructor(private router : Router, private collectionService : CollectionService,
+              private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
     })
@@ -26,8 +29,8 @@ export class CollectionviewComponent implements OnInit {
     this.setCollections()
   }
 
-  OnClick(): void {
-    this.router.navigate(['/collection/', this.collectionService.getCollectionID()])
+  OnClick(collectionID: number): void {
+    this.router.navigate(['/users/' + this.userID + '/collections/' + collectionID])
   }
 
   CreateCollection(title: string): void {
@@ -49,17 +52,31 @@ export class CollectionviewComponent implements OnInit {
         this.collectionService.getSongCount(collection.collectionID).subscribe(resultNum => {
           this.songInfo[collection.collectionID] = resultNum
         })
+        this.collectionService.getDuration(collection.collectionID).subscribe(resultNum => {
+          this.durationInfo[collection.collectionID] = parseFloat((resultNum / 60).toFixed(2))
+        })
       })
     })
-    console.log(this.collectionList)
   }
 
+  //we aren't using these
   getSongCount(title: string): void {
     var collectionID: number
     this.collectionService.getCollectionByName(this.userID, title)
       .subscribe(returnCollection => {
         this.collectionService.getSongCount(returnCollection.collectionID)
           .subscribe(songCount => this.songCount = songCount)
+      })
+  }
+
+  //we aren't using this rn
+  getDuration(title: string): void {
+    var collectionID: number
+    console.log("TEST TEST")
+    this.collectionService.getCollectionByName(this.userID, title)
+      .subscribe(returnCollection => {
+        this.collectionService.getDuration(returnCollection.collectionID)
+          .subscribe(duration => this.duration = duration / 60) // duration must be in MINUTES
       })
   }
 }
