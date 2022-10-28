@@ -13,10 +13,13 @@ import * as stream from "stream";
 })
 export class HomepageComponent implements OnInit {
   userID: number = 0
+  currentUser: User = {userID: 0, username: "", password: "", firstName: "", lastName: "", creationDate: new Date(),
+    accessDate: new Date(), email: ""}
 
   constructor(private router : Router, private utilsService: UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
+      this.currentUser.firstName = this.utilsService.getFirstName()
     })
   }
 
