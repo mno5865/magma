@@ -19,6 +19,10 @@ public class Album {
         this.albumId = albumId;
     }
 
+    public long getAlbumID() {
+        return this.albumId;
+    }
+
     public String getTitle() {
         return title;
     }
