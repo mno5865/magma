@@ -32,4 +32,29 @@
     <option value="ASC">Ascending</option>
     <option value="DESC">Descending</option>
   </select>
+
+  <div class="songs" *ngFor="let song of songList">
+    <span id="songTitle">Title: <strong>{{song.songTitle}}</strong> </span>
+    <br>
+    <span id="artistName">Artist: {{song.artistName}} </span>
+    <br>
+    <span id="albumTitle">Album: {{song.albumTitle}} </span>
+    <br>
+    <span id="runtime">Runtime: {{convertRuntime(song.runtime)}}</span>
+    <br>
+    <span id="listenCount">Listens: {{song.listenCount}} </span>
+    <br>
+    <span>Collection: </span>
+    <select id="selectedCollection" #collections (change)="onSelected(collections.value)">
+      <option value="default">----</option>
+      <option *ngFor="let collection of collectionList" value="{{collection.collectionID}}">
+        {{collection.title}}
+      </option>
+    </select>
+    <br>
+    <button id="addSong" type="submit" (click)="addSongToCollection(song.songId)">Add song</button>
+    <button id="addAlbum" type="submit" (click)="addAlbumToCollection(song.albumId)">Add the song's album</button>
+    <br><br>
+  </div>
+
 </form>

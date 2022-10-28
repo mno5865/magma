@@ -5,4 +5,6 @@ export interface SongInView {
   runtime: number
   listenCount: number
   genre: string
+  songId: number
+  albumId: number
 }
