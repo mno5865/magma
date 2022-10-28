@@ -33,7 +33,7 @@ export class HomepageComponent implements OnInit {
   }
 
   goToSongBrowser(): void {
-    this.router.navigate(['/users/' + this.userID + '/songs/g'])
+    this.router.navigate(['/users/' + this.userID + '/songs'])
   }
 
   logout(): void {

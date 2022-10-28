@@ -12,4 +12,7 @@ export class SongbrowserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  searchForSongs(searchTerm: string, searchBy: string, sortBy: string, order: string) {
+    console.log(searchTerm, searchBy, sortBy, order)
+  }
 }
