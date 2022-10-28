@@ -1,6 +1,6 @@
 /**
  * file: AlbumController.java
- * authors:  Gregory, Melissa, Mildness
+ * authors: Gregory, Melissa, Mildness
  */
 package com.example.pdmapi.Controller;
 
@@ -112,10 +112,12 @@ public class AlbumController {
      * creates album_contains_song relationship between album in song
      * @param albumId album
      * @param songId song
+     * @param track track number
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
      */
     @CrossOrigin
-    @PostMapping(value = "/albums/{albumId}/songs/create/{songId}/{track}")
+    @PostMapping(value = "/albums/{albumId}/songs/{songId}/{track}")
     public ResponseEntity<Integer> createAlbumContainsSong(@PathVariable long albumId,
                                                            @PathVariable long songId, @PathVariable int track) {
         int rowsAffected = albumService.createAlbumContainsSong(albumId, songId, track);
@@ -126,6 +128,13 @@ public class AlbumController {
         }
     }
 
+    /**
+     * allows the update of any album details by using the given album id
+     * @param id album id
+     * @param albumDetails album deets
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
+     */
     @CrossOrigin
     @PutMapping(value = "/albums/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
@@ -137,18 +146,31 @@ public class AlbumController {
         }
     }
 
-    //TODO FIX
-    @PutMapping(value = "/albums/{albumId}/song?={songId}/?={trackNumber}")
+    /**
+     * allows the update of any album song relationship by using the given album id and song id
+     * @param albumId album id
+     * @param songId song id
+     * @param trackNumber track number
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
+     */
+    @PutMapping(value = "/albums/{albumId}/song/{songId}/{trackNumber}")
     public ResponseEntity<Integer> updateSongTrackNumberInAlbum
             (@PathVariable long albumId, @PathVariable long songId, @PathVariable int trackNumber) {
         int rowsAffected = albumService.updateSongTrackNumberInAlbum(albumId, songId, trackNumber);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.I_AM_A_TEAPOT);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * deletes album from db
+     * @param id album id
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
+     */
     @CrossOrigin
     @DeleteMapping("/albums/{id}")
     public ResponseEntity<Integer> deleteAlbum(@PathVariable long id) {
@@ -160,8 +182,15 @@ public class AlbumController {
         }
     }
 
+    /**
+     * deletes albumsong relationship  from db given album and song ids
+     * @param albumId album id
+     * @param songId song id
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
+     */
     @CrossOrigin
-    @DeleteMapping("/albums/{albumId}/song?={songId}")
+    @DeleteMapping("/albums/{albumId}/songs/delete/{songId}")
     public ResponseEntity<Integer> deleteAlbumContainsSong(@PathVariable long albumId, @PathVariable long songId) {
         int rowsAffected = albumService.deleteAlbumContainsSong(albumId, songId);
         if (rowsAffected == 1) {
@@ -171,6 +200,11 @@ public class AlbumController {
         }
     }
 
+    /**
+     * gets the albums in a collections
+     * @param collectionId collection id
+     * @return ResponseEntity OK for list of albums, if not present BAD_REQUEST
+     */
     @CrossOrigin
     @GetMapping("/collections/{collectionId}/albums")
     public ResponseEntity<List<Album>> getCollectionAlbums(@PathVariable long collectionId)
@@ -184,6 +218,12 @@ public class AlbumController {
         }
     }
 
+    /**
+     * gets the total runtime of an album
+     * @param album_id album id
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *          if rows affected isn't one, obviously something is wrong
+     */
     @CrossOrigin
     @GetMapping(value = "/albums/{album_id}/total_duration")
     public ResponseEntity<Integer> getTotalRuntimeOfAlbum(@PathVariable long album_id)
