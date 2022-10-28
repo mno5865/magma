@@ -29,12 +29,26 @@ export class FriendviewComponent implements OnInit {
   findFriendByEmail(email: string) {
     this.utilsService.getUserByEmail(email).subscribe(returnUser => {
       this.friendInfo = returnUser
+      const followInfo = document.getElementsByClassName('follow')[0] as HTMLSelectElement;
+      if (followInfo != null) {
+        followInfo.style.display = 'block';
+      }
     })
   }
 
   unfollowUser(userID: number, friendID: number) {
     this.utilsService.unfollowFriend(userID, friendID).subscribe(returnVal => {
       this.ngOnInit()
+    })
+  }
+
+  followUser(userID: number, friendID: number) {
+    this.utilsService.followFriend(userID, friendID).subscribe(returnVal => {
+      this.ngOnInit()
+      const followInfo = document.getElementsByClassName('follow')[0] as HTMLSelectElement;
+      if (followInfo != null) {
+        followInfo.style.display = 'none';
+      }
     })
   }
 }

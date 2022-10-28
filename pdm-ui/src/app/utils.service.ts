@@ -32,7 +32,7 @@ export class UtilsService {
   }
 
   public getUserByEmail(email: string): Observable<User> {
-    return this.http.get<User>(this.userURL+"/"+email, this.httpOptions)
+    return this.http.get<User>(this.userURL+"/email/"+email, this.httpOptions)
   }
 
   public getFriends(userID: number): Observable<User[]> {
@@ -40,7 +40,11 @@ export class UtilsService {
   }
 
   public unfollowFriend(userID: number, friendID: number): Observable<number> {
-    return this.http.delete<number>(this.userURL+"/"+userID+"/following/"+friendID)
+    return this.http.delete<number>(this.userURL+"/"+userID+"/following/"+friendID, this.httpOptions)
+  }
+
+  public followFriend(userID: number, friendID: number): Observable<number> {
+    return this.http.post<number>(this.userURL+"/"+userID+"/following/"+friendID, this.httpOptions)
   }
 
   public setUser(user: User): void {
