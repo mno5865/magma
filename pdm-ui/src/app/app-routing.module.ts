@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'users/:userID/collections', component: CollectionviewComponent},
 
   { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
-  { path: 'collection/:collectionID', component: CollectionpageComponent },
+  { path: 'users/:userID/collections/:collectionID', component: CollectionpageComponent },
 
   { path: 'friends', canActivate: [FriendsredirectService], component: FriendviewComponent },
   { path: 'users/:userID/friends', component: FriendviewComponent },
