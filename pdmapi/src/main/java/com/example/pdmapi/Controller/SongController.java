@@ -102,10 +102,11 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/byartist/{name}")
-    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name) {
+    @GetMapping("/songs/byartist/{name}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name,@PathVariable int select,
+                                                             @PathVariable String sort) {
         name = name.replace('-', ' ');
-        List<SongInView> songs = songService.getSongsByArtist(name);
+        List<SongInView> songs = songService.getSongsByArtist(name,select,sort);
         if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
