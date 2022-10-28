@@ -51,4 +51,8 @@ export class FriendviewComponent implements OnInit {
       }
     })
   }
+
+  goBack(): void {
+    this.router.navigate(['/users/'+this.userID+'/home'])
+  }
 }

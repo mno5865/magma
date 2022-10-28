@@ -93,8 +93,9 @@ export class CollectionpageComponent implements OnInit {
   }
 
   DeleteCollection(collectionID: number): void {
-    this.collectionService.deleteCollection(collectionID).subscribe()
-    this.redirectToView()
+    this.collectionService.deleteCollection(collectionID).subscribe(val => {
+      this.redirectToView()
+    })
   }
 
   listenToCollection(): void {
@@ -108,6 +109,10 @@ export class CollectionpageComponent implements OnInit {
   listenToAlbum(albumID: number): void {
     console.log("PUSHING THE BUTTON ONE LAST TIME")
     this.albumService.listenToAlbum(this.userID, albumID).subscribe()
+  }
+
+  goBack(): void {
+    this.router.navigate(['/users/'+this.userID+'/collections'])
   }
 
 }

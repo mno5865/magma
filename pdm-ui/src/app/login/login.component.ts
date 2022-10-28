@@ -19,15 +19,16 @@ export class LoginComponent implements OnInit {
   }
 
   logInUser(username : string, password : string): void {
-    this.loginService.verifyUser(username).subscribe(userInfo => this.userInfo = userInfo)
-    console.log(this.userInfo)
-    if (password == this.userInfo.password) {
-      this.utilsService.setUser(this.userInfo)
-      this.router.navigate(['/', 'home'])
-    } else {
-      this.userInfo = {userID: -1, username: "", password: "", email: "", firstName: "", lastName: "",
-        creationDate: new Date, accessDate: new Date}
-    }
+    this.loginService.verifyUser(username).subscribe(userInfo => {
+      this.userInfo = userInfo
+      if (password == this.userInfo.password) {
+        this.utilsService.setUser(this.userInfo)
+        this.router.navigate(['/users/'+this.userInfo.userID+'/home'])
+      } else {
+        this.userInfo = {userID: -1, username: "", password: "", email: "", firstName: "", lastName: "",
+          creationDate: new Date, accessDate: new Date}
+      }
+    })
   }
 
   goToCreate(): void {
