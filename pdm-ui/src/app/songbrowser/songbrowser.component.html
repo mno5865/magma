@@ -2,35 +2,34 @@
 
 <form onsubmit="return false">
   <input type="text" placeholder="Search" #searchTerm required>
-  <button id="submitter" type="submit" (click)="searchForSongs(searchTerm.value, searchBy.value, sortBy.value,
+  <button id="submitter" type="submit" (click)="searchForSongs(searchBy.value, searchTerm.value, sortBy.value,
   ascendDescend.value)">Search</button>
 
   <span>&nbsp;</span>
 
   <span>Search by </span>
   <select #searchBy required>
-    <option value="name">Name</option>
-    <option value="artist">Artist</option>
-    <option value="album">Album</option>
-    <option value="genre">Genre</option>
+    <option value="bytitle">Title</option>
+    <option value="byartist">Artist</option>
+    <option value="byalbum">Album</option>
+    <option value="bygenre">Genre</option>
   </select>
 
   <span>&nbsp;</span>
 
   <span>Sort by </span>
   <select #sortBy required>
-    <option value="name">Name</option>
-    <option value="artist">Artist</option>
-    <option value="release">Release Year</option>
-    <option value="genre">Genre</option>
+    <option value="1">Title</option>
+    <option value="2">Artist</option>
+    <option value="3">Release Year</option>
+    <option value="4">Genre</option>
   </select>
 
   <span>&nbsp;</span>
 
   <span>Order by </span>
   <select #ascendDescend required>
-    <option value="ascend">Ascending</option>
-    <option value="descend">Descending</option>
+    <option value="ASC">Ascending</option>
+    <option value="DESC">Descending</option>
   </select>
-
 </form>

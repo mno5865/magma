@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Song } from './Song';
+import { SongInView } from './SongInView'
 import {map, Observable } from 'rxjs';
 
 @Injectable({
@@ -43,4 +44,8 @@ export class SongService {
     return this.http.post<number>(this.globalURL+"users/"+userID+"/songs/"+songId, this.httpOptions)
   }
 
+  getOrderedSongs(searchBy: string, searchTerm: string, sortBy: number, order: string): Observable<SongInView[]> {
+    console.log(this.globalURL+"songs/"+searchBy+"/"+searchTerm+"/"+sortBy+"/"+order)
+    return this.http.get<SongInView[]>(this.globalURL+"songs/"+searchBy+"/"+searchTerm+"/"+sortBy+"/"+order)
+  }
 }
