@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { CollectionService } from '../collection.service'
+import { UtilsService } from '../utils.service'
 import { Collection } from '../Collection'
 import { Observable } from 'rxjs'
 import * as stream from "stream";
@@ -12,9 +13,10 @@ import * as stream from "stream";
 })
 export class CollectionviewComponent implements OnInit {
   userID: number = 0
-  collectionInfo: Collection = {collectionID: -1, title: ""}
+  songInfo: {[key:number]:number;} = {};
   collectionList: Collection[] = []
-  constructor(private router : Router, private collectionService : CollectionService, route: ActivatedRoute) {
+  songCount: number = 0
+  constructor(private router : Router, private collectionService : CollectionService, private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
     })
@@ -41,8 +43,23 @@ export class CollectionviewComponent implements OnInit {
   }
 
   setCollections(): void {
-    this.collectionService.getUserCollections(this.userID).subscribe(collectionList =>
-      this.collectionList = collectionList)
+    this.collectionService.getUserCollections(this.userID).subscribe(collectionList => {
+      this.collectionList = collectionList
+      collectionList.forEach(collection => {
+        this.collectionService.getSongCount(collection.collectionID).subscribe(resultNum => {
+          this.songInfo[collection.collectionID] = resultNum
+        })
+      })
+    })
     console.log(this.collectionList)
+  }
+
+  getSongCount(title: string): void {
+    var collectionID: number
+    this.collectionService.getCollectionByName(this.userID, title)
+      .subscribe(returnCollection => {
+        this.collectionService.getSongCount(returnCollection.collectionID)
+          .subscribe(songCount => this.songCount = songCount)
+      })
   }
 }

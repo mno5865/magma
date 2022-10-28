@@ -25,8 +25,12 @@ export class CollectionService {
     return this.collectionName
   }
 
+  public getSongCount(collectionID: number): Observable<number> {
+    console.log("THE SONG COUNT IS: " + this.http.get<number>(this.globalURL+"collections/"+collectionID+"/song_count"))
+    return this.http.get<number>(this.globalURL+"collections/"+collectionID+"/song_count", this.httpOptions)
+  }
+
   public getCollectionByName(userID: number, collectionName: string): Observable<Collection> {
-    console.log("THE COMMAND IS: " + this.globalURL+"users/"+userID+"/collections/"+collectionName)
     return this.http.get<Collection>(this.globalURL+"users/"+userID+"/collections/"+collectionName, this.httpOptions)
   }
 
