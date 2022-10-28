@@ -27,6 +27,10 @@ export class UtilsService {
     return this.user.username;
   }
 
+  public getFirstName(): string {
+    return this.user.firstName
+  }
+
   public getUserID(): number {
     return this.user.userID;
   }
