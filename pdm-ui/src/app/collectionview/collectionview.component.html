@@ -1,5 +1,8 @@
 <div id="container">
 
+  <button (click)="goBack()">Back</button>
+  <br><br>
+
   <label><b>Create New Collection: </b></label>
   <input type="text" placeholder="Enter Collection Name" #collectionName required>
   <button type="submit" (click)="CreateCollection(collectionName.value)">Create</button>

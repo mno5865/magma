@@ -110,4 +110,8 @@ export class CollectionpageComponent implements OnInit {
     this.albumService.listenToAlbum(this.userID, albumID).subscribe()
   }
 
+  goBack(): void {
+    this.router.navigate(['/users/'+this.userID+'/collections'])
+  }
+
 }

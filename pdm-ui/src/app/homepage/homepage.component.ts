@@ -36,4 +36,8 @@ export class HomepageComponent implements OnInit {
     this.router.navigate(['/users/' + this.userID + '/search/'])
   }
 
+  logout(): void {
+    this.router.navigate(['/login'])
+  }
+
 }

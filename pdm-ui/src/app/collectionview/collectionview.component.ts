@@ -33,6 +33,10 @@ export class CollectionviewComponent implements OnInit {
     this.router.navigate(['/users/' + this.userID + '/collections/' + collectionID])
   }
 
+  goBack(): void {
+    this.router.navigate(['/users/'+this.userID+'/home'])
+  }
+
   CreateCollection(title: string): void {
     if (title != "") {
       title = title.replace(' ', '-')

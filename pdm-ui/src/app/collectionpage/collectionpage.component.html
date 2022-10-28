@@ -1,5 +1,7 @@
 <div id="container">
 
+  <button (click)="goBack()">Back</button>
+
   <h2 id="name"><b> {{collectionTitle}} </b></h2>
   <div class="modifications" *ngFor="let collection of collectionList">
     <input type="text" placeholder="Enter New Name" #collectionName required>
