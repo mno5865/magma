@@ -9,15 +9,23 @@ import { CanActivate } from '@angular/router'
 import { CollectionredirectService } from './collectionredirect.service'
 import {UsercollectionsredirectService } from './usercollectionsredirect.service'
 import {SearchComponent} from "./search/search.component";
+import { FriendviewComponent } from './friendview/friendview.component'
+import {FriendsredirectService } from './friendsredirect.service'
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomepageComponent },
   { path: 'create', component: CreateuserComponent },
+
   { path: 'collections', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
   { path: 'users/:userID/collections', component: CollectionviewComponent},
+
   { path: 'collection', canActivate: [CollectionredirectService], component: CollectionpageComponent },
   { path: 'collection/:collectionID', component: CollectionpageComponent },
+
+  { path: 'friends', canActivate: [FriendsredirectService], component: FriendviewComponent },
+  { path: 'users/:userID/friends', component: FriendviewComponent },
+
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'search', component: SearchComponent },
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
