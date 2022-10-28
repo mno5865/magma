@@ -180,10 +180,6 @@ public class SongService {
         List<SongInView> songs = new ArrayList<>();
         String query1 = "refresh materialized view song_view";
         String query2 = "select * from song_view s where s.song_title='%s'".formatted(songTitle);
-        return SongViewMapping(songs, query1, query2);
-    }
-
-    private List<SongInView> SongViewMapping(List<SongInView> songs, String query1, String query2) {
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -216,14 +212,64 @@ public class SongService {
         List<SongInView> songs = new ArrayList<>();
         String query1 = "refresh materialized view song_view";
         String query2 = "select * from song_view s where s.artist_name='%s'".formatted(artistName);
-        return SongViewMapping(songs, query1, query2);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            stmt.executeQuery(query1);
+            ResultSet rs = stmt.executeQuery(query2);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
     }
 
     public List<SongInView> getSongsByAlbum(String albumTitle) {
         List<SongInView> songs = new ArrayList<>();
         String query1 = "refresh materialized view song_view";
         String query2 = "select * from song_view s where s.album_title='%s'".formatted(albumTitle);
-        return SongViewMapping(songs, query1, query2);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            stmt.executeQuery(query1);
+            ResultSet rs = stmt.executeQuery(query2);
+            while(rs.next()){
+                SongInView song = new SongInView();
+                song.setSongTitle(rs.getString("song_title"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setAlbumTitle(rs.getString("album_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setListenCount(rs.getLong("listen_count"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
     }
 
     public List<SongInView> getSongsByGenre(String genre) {
@@ -238,7 +284,7 @@ public class SongService {
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongTitle(rs.getString("song_title"));
-                song.setArtistName(rs.getString("artist_title"));
+                song.setArtistName(rs.getString("artist_name"));
                 song.setAlbumTitle(rs.getString("album_title"));
                 song.setRuntime(rs.getLong("runtime"));
                 song.setListenCount(rs.getLong("listen_count"));

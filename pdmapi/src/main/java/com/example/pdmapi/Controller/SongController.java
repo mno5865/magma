@@ -87,7 +87,7 @@ public class SongController {
 
     // song_view
     @CrossOrigin
-    @GetMapping("/songs/?st={title}")
+    @GetMapping("/songs/bytitle/{title}")
     public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title) {
         List<SongInView> songs = songService.getSongsByTitle(title);
         if(songs == null) {
@@ -98,7 +98,7 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/?an={name}")
+    @GetMapping("/songs/byartist/{name}")
     public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name) {
         List<SongInView> songs = songService.getSongsByArtist(name);
         if(songs == null) {
@@ -109,7 +109,7 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/?at={title}")
+    @GetMapping("/songs/byalbum/{title}")
     public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title) {
         List<SongInView> songs = songService.getSongsByAlbum(title);
         if(songs == null) {
@@ -120,7 +120,7 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/?g={genre}")
+    @GetMapping("/songs/bygenre/{genre}")
     public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre) {
         List<SongInView> songs = songService.getSongsByGenre(genre);
         if(songs == null) {
