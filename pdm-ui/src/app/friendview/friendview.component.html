@@ -1,0 +1,13 @@
+<input type="text" placeholder="Enter your friend's email" #friendEmail required>
+<button type="submit" (click)="findFriendByEmail(friendEmail.value)">Search</button>
+<br><br>
+<div class="follow">
+  <span>{{friendInfo.username}} </span>
+  <button (click)="followUser(userID, friendInfo.userID)">Follow</button>
+</div>
+<h2>Following</h2>
+<div class="collections" *ngFor="let friend of friendList">
+  <span id="name" > {{friend.username}} </span>
+  <button id="unfollow" (click)="unfollowUser(userID, friend.userID)">Unfollow</button>
+  <br><br>
+</div>
