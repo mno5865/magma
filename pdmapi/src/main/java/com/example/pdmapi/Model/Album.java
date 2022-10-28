@@ -1,9 +1,10 @@
-package com.example.pdmapi.Model;
 /**
  * File: Album.java
  * Album.java: A public class that sets and gets the attributes for an album.
  * @author MAGMA
  */
+package com.example.pdmapi.Model;
+
 
 /**
  * Import Statements.
