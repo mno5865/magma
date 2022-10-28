@@ -135,4 +135,17 @@ public class AlbumController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/albums/{album_id}/total_duration")
+    public ResponseEntity<Integer> getTotalRuntimeOfAlbum(@PathVariable long album_id)
+    {
+        int total_duration = albumService.getTotalRuntimeOfAlbum(album_id);
+        if(total_duration != -1)
+        {
+            return new ResponseEntity<>(total_duration,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
