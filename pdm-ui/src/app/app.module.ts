@@ -5,12 +5,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import {SearchComponent} from "./search/search.component";
-import { HomepageComponent } from './homepage/homepage.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CreateuserComponent } from './createuser/createuser.component';
 import { CollectionviewComponent } from './collectionview/collectionview.component';
 import { CollectionpageComponent } from './collectionpage/collectionpage.component';
 import { FriendviewComponent } from './friendview/friendview.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,8 @@ import { FriendviewComponent } from './friendview/friendview.component';
     CollectionviewComponent,
     CollectionpageComponent,
     SearchComponent,
-    FriendviewComponent
+    FriendviewComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,
