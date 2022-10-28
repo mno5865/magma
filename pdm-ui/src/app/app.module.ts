@@ -11,6 +11,7 @@ import { CollectionviewComponent } from './collectionview/collectionview.compone
 import { CollectionpageComponent } from './collectionpage/collectionpage.component';
 import { FriendviewComponent } from './friendview/friendview.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { SongbrowserComponent } from './songbrowser/songbrowser.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HomepageComponent } from './homepage/homepage.component';
     CollectionpageComponent,
     SearchComponent,
     FriendviewComponent,
-    HomepageComponent
+    HomepageComponent,
+    SongbrowserComponent
   ],
   imports: [
     BrowserModule,
