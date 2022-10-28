@@ -1,4 +1,13 @@
+/**
+ * File: CollectionService.java
+ * CollectionService.java: A public class that sets and gets the attributes for an collection.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
+
+/**
+ * Import Statements
+ */
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
@@ -12,6 +21,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Collection that defines all properties of what Collection should do.
+ */
 @Service
 public class CollectionService {
 

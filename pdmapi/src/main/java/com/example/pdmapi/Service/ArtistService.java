@@ -1,5 +1,13 @@
+/**
+ * File: ArtistService.java
+ * AritstService.java: A public class that sets and gets the attributes for an artist.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
 
+/**
+ * Import Statements
+ */
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Song;
@@ -15,6 +23,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Artist that defines all properties of what an Artist should do.
+ */
 @Service
 public class ArtistService {
 
@@ -22,6 +33,12 @@ public class ArtistService {
     DataSource dataSource;
 
     // CREATE
+
+    /**
+     *
+     * @param artist
+     * @return
+     */
     public int createArtist(Artist artist) {
         String query = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -43,6 +60,11 @@ public class ArtistService {
     }
 
     // READ
+
+    /**
+     *
+     * @return
+     */
     public List<Artist> getArtists() {
         String query = "SELECT * FROM artist";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -70,7 +92,12 @@ public class ArtistService {
         }
         return null;
     }
-    
+
+    /**
+     *
+     * @param artistId
+     * @return
+     */
     public List<Song> getSongsByArtist(long artistId) {
         List<Song> songs = new ArrayList<>();
         String stmt = ("SELECT song.song_id,song.title,song.release_date,song.runtime" +
@@ -105,6 +132,11 @@ public class ArtistService {
         return songs;
     }
 
+    /**
+     *
+     * @param artistId
+     * @return
+     */
     public List<Album> getAlbumsByArtist(long artistId) {
         List<Album> albums = new ArrayList<>();
         String stmt = "SELECT album.album_id,album.title,album.release_date " +
@@ -139,6 +171,11 @@ public class ArtistService {
         return albums;
     }
 
+    /**
+     *
+     * @param artistId
+     * @return
+     */
     public Artist getArtist(Long artistId) {
         String query = "SELECT * FROM artist WHERE artist_id=%d".formatted(artistId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -166,6 +203,13 @@ public class ArtistService {
     }
 
     // UPDATE
+
+    /**
+     *
+     * @param artistId
+     * @param artistDetails
+     * @return
+     */
     public int updateArtist(Long artistId, Artist artistDetails) {
         String query = "UPDATE artist SET name='%s' WHERE artist_id=%d"
                 .formatted(artistDetails.getName(), artistId);
@@ -188,6 +232,12 @@ public class ArtistService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param artistId
+     * @return
+     */
     public int deleteArtist(Long artistId) {
         String query = "DELETE FROM artist WHERE artist_id=%d".formatted(artistId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -210,6 +260,13 @@ public class ArtistService {
     // artists_releases_album RELATIONSHIP
 
     // CREATE
+
+    /**
+     *
+     * @param artistId
+     * @param albumId
+     * @return
+     */
     public int createArtistReleasesAlbum(long artistId, long albumId)
     {
         String stmt = "INSERT INTO artist_releases_album (artist_id, album_id) VALUES (%d,%d)"
@@ -234,6 +291,13 @@ public class ArtistService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param albumId
+     * @param artistId
+     * @return
+     */
     public int deleteArtistReleaseAlbum(long albumId, long artistId) {
         String stmt = "DELETE FROM artist_releases_album WHERE album_id=%d AND artist_id=%d"
                 .formatted(albumId,artistId);
@@ -258,6 +322,13 @@ public class ArtistService {
     // artists_releases_song RELATIONSHIP
 
     // CREATE
+
+    /**
+     *
+     * @param artistId
+     * @param songId
+     * @return
+     */
     public int createArtistReleasesSong(long artistId, long songId)
     {
         String stmt = ("INSERT INTO artist_releases_song (artist_id, song_id) VALUES (%d,%d)")
@@ -282,6 +353,13 @@ public class ArtistService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param songId
+     * @param artistId
+     * @return
+     */
     public int deleteArtistReleaseSong(long songId, long artistId) {
         String stmt = "DELETE FROM artist_releases_song WHERE song_id=%d AND artist_id=%d"
                 .formatted(songId,artistId);
