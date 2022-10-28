@@ -183,7 +183,7 @@ public class AlbumController {
     }
 
     /**
-     * endpoint that deletes album song relationship  from db given album and song ids
+     * endpoint that deletes album song relationship from db given album and song ids
      * @param albumId album id
      * @param songId song id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
@@ -222,7 +222,7 @@ public class AlbumController {
      * endpoint that gets the total runtime of an album
      * @param album_id album id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
-     *          if rows affected isn't one, obviously something is wrong
+     *          if total_duration is -1 obviously something is wrong
      */
     @CrossOrigin
     @GetMapping(value = "/albums/{album_id}/total_duration")
