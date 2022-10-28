@@ -27,4 +27,9 @@ export class FriendviewComponent implements OnInit {
   findFriendByEmail(email: string) {
 
   }
+
+  unfollowUser(userID: number, friendID: number) {
+    console.log(userID + " is the users id and friend is " + friendID)
+    this.utilsService.unfollowFriend(userID, friendID).subscribe()
+  }
 }

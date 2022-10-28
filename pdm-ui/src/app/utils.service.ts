@@ -39,6 +39,10 @@ export class UtilsService {
     return this.http.get<User[]>(this.userURL+"/"+userID+"/following")
   }
 
+  public unfollowFriend(userID: number, friendID: number): Observable<number> {
+    return this.http.delete<number>(this.userURL+"/"+userID+"/following/"+friendID)
+  }
+
   public setUser(user: User): void {
     this.user = user
   }
