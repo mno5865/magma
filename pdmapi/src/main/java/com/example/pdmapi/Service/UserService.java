@@ -359,8 +359,24 @@ public class UserService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
                 .formatted(userId,albumId,(timestamp),userId,albumId);
+        String stmt2 = "SELECT song_id FROM album_contains_song WHERE album_id=%d".formatted(albumId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement2.executeQuery(stmt2);
+            while(rs.next())
+            {
+                timestamp = new Timestamp(System.currentTimeMillis());
+                long songId = rs.getLong("song_id");
+                String stmt3 = "INSERT INTO user_listens_to_song (song_id,user_id,date_time) VALUES (%d,%d,'%tc')"
+                        .formatted(songId,userId,timestamp);
+                Statement statement3 = conn.createStatement(
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+                statement3.executeUpdate(stmt3);
+            }
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -408,11 +424,31 @@ public class UserService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_collection (user_id, collection_id, date_time) VALUES (%d,%d,'%tc')"
                 .formatted(userId, collectionId, (timestamp));
+        String stmt2 = "SELECT album_id FROM collection_holds_album WHERE collection_id=%d".formatted(collectionId);
+        String stmt3 = "SELECT song_id FROM collection_holds_song WHERE collection_id=%d".formatted(collectionId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
+            Statement statement2 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs1 = statement2.executeQuery(stmt2);
+            while(rs1.next())
+            {
+                long albumId = rs1.getLong("album_id");
+                createUserListensToAlbum(userId,albumId);
+            }
+            Statement statement3 = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs2 = statement3.executeQuery(stmt3);
+            while(rs2.next())
+            {
+                long songId = rs2.getLong("song_id");
+                createUserListensToSong(userId,songId);
+            }
             return statement.executeUpdate(stmt);
         } catch (Exception e) {
             e.printStackTrace();

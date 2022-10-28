@@ -24,6 +24,7 @@ export class CollectionpageComponent implements OnInit {
   songList: Song[] = []
   albumList: Album[] = []
   durationInfo: {[key:number]:number} = {}
+  albumDurationInfo: {[key:number]:number} = {}
 
   constructor(private router : Router, private albumService : AlbumService, private songService : SongService,
               private collectionService : CollectionService,
@@ -65,7 +66,12 @@ export class CollectionpageComponent implements OnInit {
   setAlbums(): void {
     this.albumService.getAlbumsFromCollection(this.collectionID).subscribe(albumList => {
       this.albumList = albumList
-      console.log(this.albumList)
+      albumList.forEach(album => {
+        this.albumService.getAlbumRuntime(album.albumID).subscribe(duration => {
+          console.log("THE DURATION IS: " + duration)
+          this.albumDurationInfo[album.albumID] = Math.round((duration / 60) * 100) / 100
+        })
+      })
     })
   }
 
@@ -107,7 +113,6 @@ export class CollectionpageComponent implements OnInit {
   }
 
   listenToAlbum(albumID: number): void {
-    console.log("PUSHING THE BUTTON ONE LAST TIME")
     this.albumService.listenToAlbum(this.userID, albumID).subscribe()
   }
 

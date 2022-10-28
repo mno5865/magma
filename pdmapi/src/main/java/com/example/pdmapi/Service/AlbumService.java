@@ -309,4 +309,35 @@ public class AlbumService {
         }
         return null;
     }
+
+    public int getTotalRuntimeOfAlbum(long albumId)
+    {
+        int i = 0;
+        String stmt = "SELECT sum(song.runtime) AS total_runtime\n" +
+                "FROM song, album_contains_song,album\n" +
+                "WHERE album_contains_song.song_id=song.song_id\n" +
+                "AND album_contains_song.album_id=album.album_id\n" +
+                "AND album.album_id=%d".formatted(albumId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                i = rs.getInt("total_runtime");
+            }
+            return i;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
 }
