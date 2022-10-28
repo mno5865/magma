@@ -1,13 +1,24 @@
 package com.example.pdmapi.Model;
 
 public class SongInView {
+
+    long songId;
     String songTitle;
     String artistName;
     String albumTitle;
     long runtime;
     long listenCount;
 
+
     public SongInView() {
+    }
+
+    public long getSongId() {
+        return songId;
+    }
+
+    public void setSongId(long songId) {
+        this.songId = songId;
     }
 
     public String getSongTitle() {
