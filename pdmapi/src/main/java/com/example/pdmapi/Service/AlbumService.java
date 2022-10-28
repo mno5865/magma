@@ -45,9 +45,9 @@ public class AlbumService {
         return -1;
     }
 
-    public int createAlbumContainsSong(long albumId, long songId){
-        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d)")
-                .formatted(albumId, songId);
+    public int createAlbumContainsSong(long albumId, long songId, int trackNum){
+        String st = ("INSERT INTO album_contains_song(album_id, song_id, track_number) VALUES (%d, %d, %d)")
+                .formatted(albumId, songId, trackNum);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(

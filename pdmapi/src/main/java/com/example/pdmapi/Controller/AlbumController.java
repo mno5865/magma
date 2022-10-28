@@ -39,7 +39,6 @@ public class AlbumController {
         return new ResponseEntity<>(albumService.getAlbums(), HttpStatus.OK);
     }
 
-
     /**
      * endpoint for returning singular album in db
      * @param id id of the album in the album table
@@ -75,7 +74,7 @@ public class AlbumController {
     }
 
     /**
-     * endpoint for getting a song in an album by track number
+     * endpoint for getting a song on an album by track number
      * @param albumId of the album in the album table
      * @param trackNumber of the specific song in the specific album
      * @return ResponseEntity OK if a song is found
@@ -92,6 +91,12 @@ public class AlbumController {
         }
     }
 
+    /**
+     * creates album using formatted json data
+     * @param newAlbum the new album resulting from the data
+     * @return ResponseEntity CREATED with the correctly formatted data
+     *                        BAD_REQUEST if something fails
+     */
     @CrossOrigin
     @PostMapping(value = "/albums", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createAlbum(@RequestBody Album newAlbum) {
@@ -103,10 +108,17 @@ public class AlbumController {
         }
     }
 
+    /**
+     * creates album_contains_song relationship between album in song
+     * @param albumId album
+     * @param songId song
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     */
     @CrossOrigin
-    @PostMapping(value = "/albums/{albumId}/songs?={songId}")
-    public ResponseEntity<Integer> createAlbumContainsSong(@PathVariable long albumId, @PathVariable long songId) {
-        int rowsAffected = albumService.createAlbumContainsSong(albumId, songId);
+    @PostMapping(value = "/albums/{albumId}/songs/create/{songId}/{track}")
+    public ResponseEntity<Integer> createAlbumContainsSong(@PathVariable long albumId,
+                                                           @PathVariable long songId, @PathVariable int track) {
+        int rowsAffected = albumService.createAlbumContainsSong(albumId, songId, track);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
