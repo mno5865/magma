@@ -87,10 +87,13 @@ public class SongController {
 
     // song_view
     @CrossOrigin
-    @GetMapping("/songs/bytitle/{title}")
-    public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title) {
+    @GetMapping("/songs/bytitle/{title}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title,@PathVariable int select,
+                                                            @PathVariable String sort) {
+        // (1- song name), (2 - artist name), (3 - genre), (4 - release date) for select
+        // ASC or DESC for sort
         title = title.replace('-', ' ');
-        List<SongInView> songs = songService.getSongsByTitle(title);
+        List<SongInView> songs = songService.getSongsByTitle(title,select,sort);
         if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -99,10 +102,11 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/byartist/{name}")
-    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name) {
+    @GetMapping("/songs/byartist/{name}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name,@PathVariable int select,
+                                                             @PathVariable String sort) {
         name = name.replace('-', ' ');
-        List<SongInView> songs = songService.getSongsByArtist(name);
+        List<SongInView> songs = songService.getSongsByArtist(name,select,sort);
         if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -111,10 +115,11 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/byalbum/{title}")
-    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title) {
+    @GetMapping("/songs/byalbum/{title}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title,@PathVariable int select,
+                                                            @PathVariable String sort) {
         title = title.replace('-', ' ');
-        List<SongInView> songs = songService.getSongsByAlbum(title);
+        List<SongInView> songs = songService.getSongsByAlbum(title,select,sort);
         if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -123,10 +128,11 @@ public class SongController {
     }
 
     @CrossOrigin
-    @GetMapping("/songs/bygenre/{genre}")
-    public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre) {
+    @GetMapping("/songs/bygenre/{genre}/{select}/{sort}")
+    public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre,@PathVariable int select,
+                                                            @PathVariable String sort) {
         genre = genre.replace('-', ' ');
-        List<SongInView> songs = songService.getSongsByGenre(genre);
+        List<SongInView> songs = songService.getSongsByGenre(genre,select,sort);
         if(songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
