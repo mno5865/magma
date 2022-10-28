@@ -36,6 +36,7 @@ export class SongbrowserComponent implements OnInit {
 
   searchForSongs(searchBy: string, searchTerm: string, sortBy: string, order: string) {
     this.songService.getOrderedSongs(searchBy, searchTerm, parseInt(sortBy) , order).subscribe(returnView => {
+      console.log(returnView)
       this.songList = returnView
     })
   }
@@ -49,7 +50,7 @@ export class SongbrowserComponent implements OnInit {
   }
 
   addAlbumToCollection(albumID: number) {
-    this.collectionService.addSongToCollection(parseInt(this.selected), albumID).subscribe()
+    this.collectionService.addAlbumToCollection(parseInt(this.selected), albumID).subscribe()
   }
 
   setCollections(): void {
