@@ -65,7 +65,6 @@ export class CollectionService {
   }
 
   createUserCollectionRelationship(userID: number, collectionToMakeID: number): Observable<number> {
-    console.log("THE COMMAND IS:" + this.globalURL+"users/"+userID+"/collections/"+collectionToMakeID)
     return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/"+collectionToMakeID, this.httpOptions)
   }
 
@@ -73,4 +72,10 @@ export class CollectionService {
     return this.http.put<Collection>(this.globalURL+"collections/"+collection.collectionID, JSON.stringify(collection),
       this.httpOptions)
   }
+
+  listenToCollection(userID: number, collectionID: number): Observable<number> {
+    return this.http.post<number>(this.globalURL+"users/"+userID+"/collections/listens/"+collectionID, this.httpOptions)
+  }
+
+
 }

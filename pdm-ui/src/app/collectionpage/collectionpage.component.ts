@@ -97,4 +97,13 @@ export class CollectionpageComponent implements OnInit {
     this.redirectToView()
   }
 
+  listenToCollection(): void {
+    this.collectionService.listenToCollection(this.userID, this.collectionID).subscribe()
+  }
+
+  listenToSong(songId: number): void {
+    console.log("PUSHING THE BUTTON")
+    this.songService.listenToSong(this.userID, songId).subscribe()
+  }
+
 }

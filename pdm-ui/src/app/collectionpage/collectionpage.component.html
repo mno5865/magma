@@ -5,7 +5,7 @@
     <input type="text" placeholder="Enter New Name" #collectionName required>
     <button type="submit" (click)="setTitle(collectionName.value)">Rename</button>
     <br><br>
-    <button id="playCollection">Play Collection</button>
+    <button id="playCollection" (click)="listenToCollection()">Play Collection</button>
     <br><br>
     <button id="delete" (click)="DeleteCollection(collectionID)">Delete Collection</button>
   </div>
@@ -13,7 +13,7 @@
   <h3>Songs: </h3>
   <div class="songs" *ngFor="let song of songList">
     <span id="songName"> {{song.title}} </span>
-    <button id="playSong">Play</button>
+    <button id="playSong" (click)="listenToSong(song.songId)">Play</button>
     <button id="deleteSong" (click)="deleteSong(collectionID, song.songId)">Remove</button>
     <span> Time: </span>
     <span> {{durationInfo[song.songId]}} </span>

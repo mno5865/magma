@@ -39,4 +39,9 @@ export class SongService {
     return this.http.get<Song[]>(this.globalURL+"collections/"+collectionID+"/songs", this.httpOptions)
   }
 
+  listenToSong(userID: number, songId: number): Observable<number> {
+    console.log("LISTENING TO: " + songId)
+    return this.http.post<number>(this.globalURL+"users/"+userID+"/songs/"+songId, this.httpOptions)
+  }
+
 }
