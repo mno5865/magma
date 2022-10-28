@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SongService } from '../song.service';
-import { SongInView } from '../SongInView';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../collection.service';
 import { Collection } from '../Collection';
+import { SongInView } from '../SongInView';
 
 @Component({
   selector: 'app-songbrowser',

@@ -57,9 +57,16 @@ export class CollectionviewComponent implements OnInit {
           this.songInfo[collection.collectionID] = resultNum
         })
         this.collectionService.getDuration(collection.collectionID).subscribe(resultNum => {
-          this.durationInfo[collection.collectionID] = parseFloat((resultNum / 60).toFixed(2))
+          this.durationInfo[collection.collectionID] = resultNum
         })
       })
     })
+  }
+
+  convertRuntime(runtime: number): string {
+    if (runtime % 60 < 10) {
+      return Math.floor(runtime/60).toString() + ":0" + runtime % 60
+    }
+    return Math.floor(runtime/60).toString() + ":" + runtime % 60
   }
 }

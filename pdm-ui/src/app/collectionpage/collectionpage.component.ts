@@ -58,7 +58,7 @@ export class CollectionpageComponent implements OnInit {
     this.songService.getSongsFromCollection(this.collectionID).subscribe(songList => {
       this.songList = songList // set the list of songs to display
       songList.forEach(song => {
-        this.durationInfo[song.songId] = parseFloat((song.runtime / 60).toFixed(2))
+        this.durationInfo[song.songId] = song.runtime
       })
     })
   }
@@ -69,7 +69,7 @@ export class CollectionpageComponent implements OnInit {
       albumList.forEach(album => {
         this.albumService.getAlbumRuntime(album.albumID).subscribe(duration => {
           console.log("THE DURATION IS: " + duration)
-          this.albumDurationInfo[album.albumID] = Math.round((duration / 60) * 100) / 100
+          this.albumDurationInfo[album.albumID] = duration
         })
       })
     })
@@ -120,4 +120,10 @@ export class CollectionpageComponent implements OnInit {
     this.router.navigate(['/users/'+this.userID+'/collections'])
   }
 
+  convertRuntime(runtime: number): string {
+    if (runtime % 60 < 10) {
+      return Math.floor(runtime/60).toString() + ":0" + runtime % 60
+    }
+    return Math.floor(runtime/60).toString() + ":" + runtime % 60
+  }
 }

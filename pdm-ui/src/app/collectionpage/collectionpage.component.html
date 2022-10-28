@@ -20,7 +20,7 @@
     <button id="playSong" (click)="listenToSong(song.songId)">Play</button>
     <button id="deleteSong" (click)="deleteSong(collectionID, song.songId)">Remove</button>
     <span> Time: </span>
-    <span> {{durationInfo[song.songId]}} </span>
+    <span> {{convertRuntime(durationInfo[song.songId])}} </span>
     <span> min. </span>
     <span> Released: </span>
     <span> {{song.releaseDate}} </span>
@@ -34,7 +34,7 @@
     <button id="playAlbum" (click)="listenToAlbum(album.albumID)">Play</button>
     <button id="deleteAlbum" (click)="deleteAlbum(collectionID, album.albumID)">Remove</button>
     <span> Time: </span>
-    <span> {{albumDurationInfo[album.albumID]}} </span>
+    <span> {{convertRuntime(albumDurationInfo[album.albumID])}} </span>
     <span> min. </span>
     <span> Released: </span>
     <span> {{album.releaseDate}} </span>
