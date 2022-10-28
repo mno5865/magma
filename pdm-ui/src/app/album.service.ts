@@ -34,4 +34,9 @@ export class AlbumService {
     return this.http.get<Album[]>(this.globalURL+"collections/"+collectionID+"/albums", this.httpOptions)
   }
 
+  listenToAlbum(userID: number, albumID: number): Observable<number> {
+    console.log("LISTENING TO: " + albumID)
+    return this.http.post<number>(this.globalURL+"users/"+userID+"/albums/"+albumID, this.httpOptions)
+  }
+
 }

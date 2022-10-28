@@ -27,7 +27,7 @@
   <h3>Albums: </h3>
   <div class="songs" *ngFor="let album of albumList">
     <span id="albumName"> {{album.title}} </span>
-    <button id="playAlbum">Play</button>
+    <button id="playAlbum" (click)="listenToAlbum(album.albumID)">Play</button>
     <button id="deleteAlbum" (click)="deleteAlbum(collectionID, album.albumID)">Remove</button>
     <span> Released: </span>
     <span> {{album.releaseDate}} </span>

@@ -102,8 +102,12 @@ export class CollectionpageComponent implements OnInit {
   }
 
   listenToSong(songId: number): void {
-    console.log("PUSHING THE BUTTON")
     this.songService.listenToSong(this.userID, songId).subscribe()
+  }
+
+  listenToAlbum(albumID: number): void {
+    console.log("PUSHING THE BUTTON ONE LAST TIME")
+    this.albumService.listenToAlbum(this.userID, albumID).subscribe()
   }
 
 }
