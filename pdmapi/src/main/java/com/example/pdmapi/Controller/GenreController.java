@@ -11,9 +11,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+/**
+ * description: controller that creates the api endpoint for accessing db data related to genre
+ * authors:  MAGMA TEAM
+ */
 @RestController
 @RequestMapping("/api")
 public class GenreController {
+
+    /**
+     * service that provides connection from endpoint to db
+     */
     @Autowired
     private GenreService genreService;
 

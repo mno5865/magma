@@ -2,19 +2,25 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Service.CollectionService;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
 import java.util.List;
 
+/**
+ * description: controller that creates the api endpoint for accessing db data related to collection
+ * authors:  MAGMA TEAM
+ */
 @RestController
 @RequestMapping("/api")
 public class CollectionController {
+
+    /**
+     * service that provides connection from endpoint to db
+     */
     @Autowired
     private CollectionService collectionService;
 

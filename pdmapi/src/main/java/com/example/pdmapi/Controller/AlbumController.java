@@ -1,5 +1,10 @@
+/**
+ * file: AlbumController.java
+ * authors:  Gregory, Melissa, Mildness
+ */
 package com.example.pdmapi.Controller;
 
+//imports
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Service.AlbumService;
@@ -8,21 +13,39 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+/**
+ * description: controller that creates the api endpoint
+ *              for accessing db data related to album
+ */
 @RestController
 @RequestMapping("/api")
 public class AlbumController {
+
+    /**
+     * service that provides connection from endpoint to db
+     */
     @Autowired
     private AlbumService albumService;
 
+    /**
+     * endpoint for returning all albums in db
+     * @return ResponseEntity OK for list of albums, even if empty
+     */
     @CrossOrigin
     @GetMapping("/albums")
     public ResponseEntity<List<Album>> getAlbums() {
         return new ResponseEntity<>(albumService.getAlbums(), HttpStatus.OK);
     }
 
+
+    /**
+     * endpoint for returning singular album in db
+     * @param id id of the album in the album table
+     * @return ResponseEntity OK if the id given corresponds to an album
+     *                        NOT_FOUND if it doesn't
+     */
     @CrossOrigin
     @GetMapping("/albums/{id}")
     public ResponseEntity<Album> getAlbum(@PathVariable long id) {
@@ -34,6 +57,12 @@ public class AlbumController {
         }
     }
 
+    /**
+     * endpoint for returning all songs in a given album
+     * @param albumId of the album in the album table
+     * @return ResponseEntity OK if a not null song list is found
+     *                        NOT_FOUND if it doesn't find a list of songs
+     */
     @CrossOrigin
     @GetMapping("/albums/{albumId}/songs")
     public ResponseEntity<List<Song>> getAlbumSongs(@PathVariable long albumId) {
@@ -45,6 +74,13 @@ public class AlbumController {
         }
     }
 
+    /**
+     * endpoint for getting a song in an album by track number
+     * @param albumId of the album in the album table
+     * @param trackNumber of the specific song in the specific album
+     * @return ResponseEntity OK if a song is found
+     *                        NOT_FOUND if not found
+     */
     @CrossOrigin
     @GetMapping("/albums/{albumId}/songs/{trackNumber}")
     public ResponseEntity<Song> getAlbumSong(@PathVariable long albumId, @PathVariable int trackNumber) {

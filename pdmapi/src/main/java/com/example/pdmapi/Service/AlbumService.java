@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -72,11 +71,11 @@ public class AlbumService {
         String query = "SELECT * FROM album";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
+            List<Album> albums = new ArrayList<>();
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
-            List<Album> albums = new ArrayList<>();
             while(rs.next()) {
                 Album album = new Album();
                 album.setAlbumID(rs.getLong("album_id"));
