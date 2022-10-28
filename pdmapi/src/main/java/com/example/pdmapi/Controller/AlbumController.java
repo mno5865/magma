@@ -92,7 +92,7 @@ public class AlbumController {
     }
 
     /**
-     * creates album using formatted json data
+     * endpoint creates album using formatted json data
      * @param newAlbum the new album resulting from the data
      * @return ResponseEntity CREATED with the correctly formatted data
      *                        BAD_REQUEST if something fails
@@ -109,7 +109,7 @@ public class AlbumController {
     }
 
     /**
-     * creates album_contains_song relationship between album in song
+     * endpoint that creates album_contains_song relationship between album in song
      * @param albumId album
      * @param songId song
      * @param track track number
@@ -129,7 +129,7 @@ public class AlbumController {
     }
 
     /**
-     * allows the update of any album details by using the given album id
+     * endpoint that allows the update of any album details by using the given album id
      * @param id album id
      * @param albumDetails album deets
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
@@ -147,7 +147,7 @@ public class AlbumController {
     }
 
     /**
-     * allows the update of any album song relationship by using the given album id and song id
+     * endpoint that allows the update of any album song relationship by using the given album id and song id
      * @param albumId album id
      * @param songId song id
      * @param trackNumber track number
@@ -166,7 +166,7 @@ public class AlbumController {
     }
 
     /**
-     * deletes album from db
+     * endpoint that deletes album from db
      * @param id album id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
@@ -183,7 +183,7 @@ public class AlbumController {
     }
 
     /**
-     * deletes albumsong relationship  from db given album and song ids
+     * endpoint that deletes album song relationship  from db given album and song ids
      * @param albumId album id
      * @param songId song id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
@@ -201,7 +201,7 @@ public class AlbumController {
     }
 
     /**
-     * gets the albums in a collections
+     * end point that gets the albums in a collections
      * @param collectionId collection id
      * @return ResponseEntity OK for list of albums, if not present BAD_REQUEST
      */
@@ -219,7 +219,7 @@ public class AlbumController {
     }
 
     /**
-     * gets the total runtime of an album
+     * endpoint that gets the total runtime of an album
      * @param album_id album id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *          if rows affected isn't one, obviously something is wrong
