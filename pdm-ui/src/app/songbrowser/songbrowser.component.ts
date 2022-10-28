@@ -58,4 +58,8 @@ export class SongbrowserComponent implements OnInit {
       this.collectionList = collectionList
     })
   }
+
+  goBack(): void {
+    this.router.navigate(['/users/'+this.userID+'/home'])
+  }
 }

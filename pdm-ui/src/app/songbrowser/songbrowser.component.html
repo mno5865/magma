@@ -1,5 +1,8 @@
 <h1><b>MAGMAfy Songs</b></h1>
 
+<button (click)="goBack()">Back</button>
+<br><br>
+
 <form onsubmit="return false">
   <input type="text" placeholder="Search" #searchTerm required>
   <button id="submitter" type="submit" (click)="searchForSongs(searchBy.value, searchTerm.value, sortBy.value,
