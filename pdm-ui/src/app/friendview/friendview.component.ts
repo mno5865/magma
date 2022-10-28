@@ -11,6 +11,8 @@ import { UtilsService } from '../utils.service';
 export class FriendviewComponent implements OnInit {
   userID: number = 0
   friendList: User[] = []
+  friendInfo: User = {userID: -1, username: "", password: "admin", email: "", firstName: "", lastName: "",
+    creationDate: new Date, accessDate: new Date}
 
   constructor(private utilsService : UtilsService, private router : Router, route: ActivatedRoute) {
     route.params.subscribe((params) => {
@@ -25,11 +27,14 @@ export class FriendviewComponent implements OnInit {
   }
 
   findFriendByEmail(email: string) {
-
+    this.utilsService.getUserByEmail(email).subscribe(returnUser => {
+      this.friendInfo = returnUser
+    })
   }
 
   unfollowUser(userID: number, friendID: number) {
-    console.log(userID + " is the users id and friend is " + friendID)
-    this.utilsService.unfollowFriend(userID, friendID).subscribe()
+    this.utilsService.unfollowFriend(userID, friendID).subscribe(returnVal => {
+      this.ngOnInit()
+    })
   }
 }
