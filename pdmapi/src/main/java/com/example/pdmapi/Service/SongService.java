@@ -178,15 +178,15 @@ public class SongService {
     // song_view
     public List<SongInView> getSongsByTitle(String songTitle) {
         List<SongInView> songs = new ArrayList<>();
-        String query1 = "refresh materialized view song_view";
-        String query2 = "select * from song_view s where s.song_title='%s'".formatted(songTitle);
+        songTitle = "%" + songTitle + "%";
+        String query = ("refresh materialized view song_view; " +
+                "select * from song_view s where upper(s.song_title) like upper('%s')").formatted(songTitle);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            stmt.executeQuery(query1);
-            ResultSet rs = stmt.executeQuery(query2);
+            ResultSet rs = stmt.executeQuery(query);
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongTitle(rs.getString("song_title"));
@@ -210,15 +210,15 @@ public class SongService {
 
     public List<SongInView> getSongsByArtist(String artistName) {
         List<SongInView> songs = new ArrayList<>();
-        String query1 = "refresh materialized view song_view";
-        String query2 = "select * from song_view s where s.artist_name='%s'".formatted(artistName);
+        artistName = "%" + artistName + "%";
+        String query = ("refresh materialized view song_view; " +
+                "select * from song_view s where upper(s.artist_name) like upper('%s')").formatted(artistName);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            stmt.executeQuery(query1);
-            ResultSet rs = stmt.executeQuery(query2);
+            ResultSet rs = stmt.executeQuery(query);
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongTitle(rs.getString("song_title"));
@@ -242,15 +242,15 @@ public class SongService {
 
     public List<SongInView> getSongsByAlbum(String albumTitle) {
         List<SongInView> songs = new ArrayList<>();
-        String query1 = "refresh materialized view song_view";
-        String query2 = "select * from song_view s where s.album_title='%s'".formatted(albumTitle);
+        albumTitle = "%" + albumTitle + "%";
+        String query = ("refresh materialized view song_view;" +
+                "select * from song_view s where upper(s.album_title) like upper('%s')").formatted(albumTitle);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            stmt.executeQuery(query1);
-            ResultSet rs = stmt.executeQuery(query2);
+            ResultSet rs = stmt.executeQuery(query);
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongTitle(rs.getString("song_title"));
@@ -274,7 +274,8 @@ public class SongService {
 
     public List<SongInView> getSongsByGenre(String genre) {
         List<SongInView> songs = new ArrayList<>();
-        String query= "select * from song_view_with_genre s where s.genre='%s'".formatted(genre);
+        genre = "%" + genre + "%";
+        String query= "select * from song_view_with_genre s where upper(s.genre) like upper('%s')".formatted(genre);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
