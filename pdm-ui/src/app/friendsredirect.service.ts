@@ -1,3 +1,7 @@
+/// file/component: Friends Redirect Service
+/// description: Redirects users to the correct page
+/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
+
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';

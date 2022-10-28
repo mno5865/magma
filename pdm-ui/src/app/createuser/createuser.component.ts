@@ -1,3 +1,7 @@
+/// file/component: Create User
+/// description: A page for users to sign up and make a new account
+/// author: Adrian Burgos - awb8593
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../login.service';

@@ -1,3 +1,7 @@
+/// file/component: Login Service
+/// description: Handles user verification/creation related HTTP requests
+/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './User';

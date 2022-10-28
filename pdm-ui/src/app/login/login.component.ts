@@ -1,3 +1,7 @@
+/// file/component: Login
+/// description: Allows a user to login to the site
+/// author: Gregory Ojiem - gro3228
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../login.service';

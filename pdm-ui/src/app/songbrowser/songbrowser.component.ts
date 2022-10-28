@@ -1,3 +1,7 @@
+/// file/component: Song Browser
+/// description: Allows a user to search for new songs and add them to collections
+/// author: Gregory Ojiem - gro3228
+
 import { Component, OnInit } from '@angular/core';
 import { SongService } from '../song.service';
 import { ActivatedRoute, Router } from '@angular/router';

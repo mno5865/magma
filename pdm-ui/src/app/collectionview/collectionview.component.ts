@@ -1,3 +1,7 @@
+/// file/component: Collection View
+/// description: Displays a list of collections a user has made
+/// author: Adrian Burgos - awb8593
+
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { CollectionService } from '../collection.service'

@@ -1,3 +1,7 @@
+/// file/component: Friend View
+/// description: Allows a user to follow new users and shows the user a list of people they follow
+/// author: Gregory Ojiem - gro3228
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../User';

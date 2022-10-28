@@ -1,3 +1,7 @@
+/// file/component: Utils Service
+/// description: Handles utility related HTTP requests
+/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
+
 import { Injectable } from '@angular/core'
 import { Collection } from './Collection'
 import { Observable } from 'rxjs'

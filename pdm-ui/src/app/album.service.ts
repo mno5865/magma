@@ -1,3 +1,7 @@
+/// file/component: Album Service
+/// description: Handles album related HTTP requests
+/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Album } from './Album';

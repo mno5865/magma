@@ -1,3 +1,7 @@
+/// file/component: Home Page
+/// description: A home page for users to access different parts of the site
+/// author: Adrian Burgos - awb8593
+
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { CollectionService } from '../collection.service'

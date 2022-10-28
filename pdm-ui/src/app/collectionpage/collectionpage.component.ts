@@ -1,3 +1,7 @@
+/// file/component: Collection Page
+/// description: Displays the songs and albums in a user's collection
+/// author: Adrian Burgos - awb8593
+
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { CollectionService } from '../collection.service'
