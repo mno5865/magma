@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -75,10 +74,9 @@ public class AlbumService {
      * @param songId
      * @return
      */
-    public int createAlbumContainsSong(long albumId, long songId){
-        //
-        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d)")
-                .formatted(albumId, songId);
+    public int createAlbumContainsSong(long albumId, long songId, int trackNum){
+        String st = ("INSERT INTO album_contains_song(album_id, song_id, track_number) VALUES (%d, %d, %d)")
+                .formatted(albumId, songId, trackNum);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         //
@@ -112,11 +110,11 @@ public class AlbumService {
 
         //
         try {
+            List<Album> albums = new ArrayList<>();
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
-            List<Album> albums = new ArrayList<>();
             while(rs.next()) {
                 Album album = new Album();
                 album.setAlbumID(rs.getLong("album_id"));
