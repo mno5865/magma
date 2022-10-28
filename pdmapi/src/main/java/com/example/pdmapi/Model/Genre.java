@@ -9,6 +9,10 @@ public class Genre {
     public Genre() {
     }
 
+    public long getGenreId() {
+        return this.genreId;
+    }
+
     public void setGenreID(long genreId) {
         this.genreId = genreId;
     }

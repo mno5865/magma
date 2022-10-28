@@ -42,6 +42,10 @@ public class User {
     public User() {
     }
 
+    public long getUserID() {
+        return this.userID;
+    }
+
     public void setUserID(long userID) {
         this.userID = userID;
     }
