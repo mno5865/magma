@@ -1,6 +1,7 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
+import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,55 @@ public class SongController {
             return new ResponseEntity<>(songs,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // song_view
+    @CrossOrigin
+    @GetMapping("/songs/bytitle/{title}")
+    public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title) {
+        title = title.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByTitle(title);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/byartist/{name}")
+    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name) {
+        name = name.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByArtist(name);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/byalbum/{title}")
+    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title) {
+        title = title.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByAlbum(title);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/bygenre/{genre}")
+    public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre) {
+        genre = genre.replace('-', ' ');
+        List<SongInView> songs = songService.getSongsByGenre(genre);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
 }
