@@ -144,7 +144,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/albums/{albumId}")
-    public ResponseEntity<Integer> createUserListensTAlbum(@PathVariable long userId, @PathVariable long albumId) {
+    public ResponseEntity<Integer> createUserListensToAlbum(@PathVariable long userId, @PathVariable long albumId) {
         int rowsAffected = userService.createUserListensToAlbum(userId,albumId);
         if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
