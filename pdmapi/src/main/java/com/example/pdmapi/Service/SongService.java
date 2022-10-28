@@ -275,6 +275,8 @@ public class SongService {
         return songs;
     }
 
+    //HI SCOTT AND JEREMY
+
     public List<SongInView> getSongsByGenre(String genre) {
         List<SongInView> songs = new ArrayList<>();
         genre = "%" + genre + "%";
