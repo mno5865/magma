@@ -11,11 +11,14 @@ import {UsercollectionsredirectService } from './usercollectionsredirect.service
 import {SearchComponent} from "./search/search.component";
 import { FriendviewComponent } from './friendview/friendview.component'
 import {FriendsredirectService } from './friendsredirect.service'
+import { HomeredirectService } from './homeredirect.service'
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomepageComponent },
   { path: 'create', component: CreateuserComponent },
+
+  { path: 'home', canActivate: [HomeredirectService], component: HomepageComponent },
+  { path: 'users/:userID/home', component: HomepageComponent},
 
   { path: 'collections', canActivate: [UsercollectionsredirectService], component: CollectionviewComponent },
   { path: 'users/:userID/collections', component: CollectionviewComponent},
