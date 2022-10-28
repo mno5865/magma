@@ -1,5 +1,5 @@
 export interface Album {
-  albumId: number,
+  albumID: number,
   title: string,
   releaseDate: Date
 }

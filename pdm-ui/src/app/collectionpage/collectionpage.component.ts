@@ -6,6 +6,8 @@ import { Collection } from '../Collection'
 import { Observable } from 'rxjs'
 import { Song } from '../Song'
 import { SongService } from '../song.service'
+import { Album } from '../Album'
+import { AlbumService } from '../album.service'
 import * as stream from "stream"
 
 @Component({
@@ -20,9 +22,11 @@ export class CollectionpageComponent implements OnInit {
   songCount: number = 0
   collectionList: Collection[] = []
   songList: Song[] = []
+  albumList: Album[] = []
   durationInfo: {[key:number]:number} = {}
 
-  constructor(private router : Router, private songService : SongService,  private collectionService : CollectionService,
+  constructor(private router : Router, private albumService : AlbumService, private songService : SongService,
+              private collectionService : CollectionService,
               private utilsService : UtilsService, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]
@@ -35,6 +39,7 @@ export class CollectionpageComponent implements OnInit {
       this.collectionTitle = returnCollection.title
       this.collectionList.push(returnCollection)
       this.setSongs()
+      this.setAlbums()
     })
   }
 
@@ -57,9 +62,21 @@ export class CollectionpageComponent implements OnInit {
     })
   }
 
+  setAlbums(): void {
+    this.albumService.getAlbumsFromCollection(this.collectionID).subscribe(albumList => {
+      this.albumList = albumList
+      console.log(this.albumList)
+    })
+  }
+
   deleteSong(collectionID: number, songID: number): void {
-    console.log("I AM DELETING: " + songID + " FROM: " + collectionID)
     this.collectionService.deleteSongFromCollection(collectionID, songID).subscribe()
+    this.redirectToViewSongs()
+  }
+
+  deleteAlbum(collectionID: number, albumID: number): void {
+    console.log("I AM DELETING: " + albumID + " FROM: " + collectionID)
+    this.collectionService.deleteAlbumFromCollection(collectionID, albumID).subscribe()
     this.redirectToViewSongs()
   }
 
