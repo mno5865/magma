@@ -4,13 +4,16 @@
   <div class="modifications" *ngFor="let collection of collectionList">
     <input type="text" placeholder="Enter New Name" #collectionName required>
     <button type="submit" (click)="setTitle(collectionName.value)">Rename</button>
-    <br>
+    <br><br>
+    <button id="playCollection">Play Collection</button>
+    <br><br>
     <button id="delete" (click)="DeleteCollection(collectionID)">Delete Collection</button>
   </div>
   <br><br>
   <h3>Songs: </h3>
   <div class="songs" *ngFor="let song of songList">
-    <button id="songName"> {{song.title}} </button>
+    <span id="songName"> {{song.title}} </span>
+    <button id="playSong">Play</button>
     <button id="deleteSong" (click)="deleteSong(collectionID, song.songId)">Remove</button>
     <span> Time: </span>
     <span> {{durationInfo[song.songId]}} </span>
@@ -20,6 +23,8 @@
     <br><br>
   </div>
   <br><br>
+
+  <h3>Albums: </h3>
 
     <br><br>
   </div>
