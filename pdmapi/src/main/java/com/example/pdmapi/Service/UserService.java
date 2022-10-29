@@ -1,3 +1,9 @@
+/**
+ * file: UserService.java
+ * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * description: A service that runs SQL statements and queries to modify or retrieve from the database
+ */
+
 package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
@@ -13,9 +19,18 @@ import java.util.List;
 
 @Service
 public class UserService {
+
+    /**
+     * Provides the connection to the database
+     */
     @Autowired
     DataSource dataSource;
 
+    /**
+     * Gets a user using their user id
+     * @param userID The id of the user
+     * @return A user object corresponding to the id
+     */
     public User getUser(Long userID) {
         String stmt = "SELECT * FROM \"user\" WHERE user_id=%d".formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -48,6 +63,12 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Gets the last time a user listened to a song, deprecated function
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return A timestamp with the time the user last listened to the song
+     */
     public Timestamp getUserSongLastPlayTime(long userId, long songId)
     {
         Timestamp timestamp = null;
@@ -76,6 +97,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Gets a user with their username
+     * @param username The username of the user
+     * @return A user object corresponding to the username
+     */
     public User getUserByUsername(String username) {
         String stmt = "SELECT * FROM \"user\" WHERE username='%s'".formatted(username);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -108,6 +134,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Gets a user by email
+     * @param email The email of the user
+     * @return A user whose email corresponds to the email given
+     */
     public User getUserByEmail(String email) {
         String stmt = "SELECT * FROM \"user\" WHERE email='%s'".formatted(email);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -140,6 +171,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Creates a new user in the database
+     * @param user The user object that maps to the database user table
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
                 "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
@@ -163,7 +199,12 @@ public class UserService {
         return -1;
     }
 
-    // UPDATE
+    /**
+     * Updates a user's information
+     * @param userId The id of the user whose information is being updated
+     * @param user A user object to replace the old user's information with
+     * @return 1 if successful, -1 otherwise
+     */
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
                 "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
@@ -187,6 +228,12 @@ public class UserService {
         return -1;
     }
 
+    /**
+     * Creates a new user listens to song relationship
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUserListensToSong(long userId, long songId)
     {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -211,31 +258,12 @@ public class UserService {
         return -1;
     }
 
-    public int updateUserListensToSong(long userId, long songId)
-    {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String stmt = "UPDATE user_listens_to_song SET date_time='%tc' WHERE user_id=%d AND song_id=%d"
-                .formatted(timestamp,userId,songId);
-        Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return -1;
-    }
 
-    // DELETE
+    /**
+     * Deletes a user in the database
+     * @param userId The id of the user
+     * @return 1 if successful, -1 otherwise
+     */
     public int deleteUser(Long userId) {
         String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -256,6 +284,12 @@ public class UserService {
         return -1;
     }
 
+    /**
+     * Deletes a user listens to song relationship, deprecated
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return 1 if successful, -1 otherwise
+     */
     public int deleteUserListensToSong(long userId, long songId)
     {
         String stmt = "DELETE FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
@@ -279,6 +313,13 @@ public class UserService {
     }
 
     //UserCreatesCollection RELATIONSHIP
+
+    /**
+     * Ceates a new user creates collection relationship
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUserCreatesCollection(long userId, long collectionId) {
         String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
                 collectionId);
@@ -300,6 +341,11 @@ public class UserService {
         return -1;
     }
 
+    /**
+     * Gets a list of collection that belong to a user
+     * @param userId The id of the user
+     * @return A list of collections belonging to the user
+     */
     public List<Collection> getCollectionsByUserID(long userId) {
         List<Collection> collections = new ArrayList<>();
         String query = ("SELECT collection.collection_id, collection.title "
@@ -333,7 +379,14 @@ public class UserService {
         return collections;
     }
 
-    public int deleteUserCreatesCollection(long userId, long collectionId){
+    //TODO make this also delete the collection automatically?
+    /**
+     * Deletes a user creates collection relationship
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return 1 if successful, -1 otherwise
+     */
+    public int deleteUserCreatesCollection(long userId, long collectionId) {
         String st = ("DELETE FROM user_creates_collection WHERE (user_id=%d AND collection_id=%d)")
                 .formatted(userId, collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -355,6 +408,12 @@ public class UserService {
     }
 
     //user_listens_album RELATIONSHIP
+    /**
+     * Creates a user listens to album relationship
+     * @param userId The id of the user
+     * @param albumId The id of the album
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUserListensToAlbum(long userId, long albumId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_album (user_id, album_id, date_time) VALUES (%d,%d,'%tc')"
@@ -393,33 +452,13 @@ public class UserService {
         return -1;
     }
 
-    public Timestamp getUserAlbumLastPlayTime(long userId, long albumId) {
-        Timestamp timestamp = null;
-        String stmt = "SELECT date_time FROM user_listens_to_album WHERE user_id=%d AND album_id=%d"
-                .formatted(userId,albumId);
-        Connection conn = DataSourceUtils.getConnection(dataSource);
-        try {
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = statement.executeQuery(stmt);
-            while(rs.next()) {
-                timestamp = rs.getTimestamp("date_time");
-            }
-            return timestamp;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return timestamp;
-    }
     //UserListenToCollection RELATIONSHIP
-    //CREATE
+    /**
+     * Creates a user listens to collection relationship, also updating user listens
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUserListensToCollection(long userId, long collectionId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stmt = "INSERT INTO user_listens_to_collection (user_id, collection_id, date_time) VALUES (%d,%d,'%tc')"
@@ -456,29 +495,12 @@ public class UserService {
         return -1;
     }
 
-    // READ
-    public Timestamp getUserCollectionPlayTime(long userId, long collectionId)
-    {
-        Timestamp timestamp = null;
-        String stmt = "SELECT date_time FROM user_listens_to_collection WHERE user_id=%d AND collection_id=%d"
-                .formatted(userId, collectionId);
-        try {
-            Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = statement.executeQuery(stmt);
-            while(rs.next()) {
-                timestamp = rs.getTimestamp("date_time");
-            }
-            return timestamp;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return timestamp;
-    }
-
-    // DELETE
+    /**
+     * Deletes a user listens to collection relationship, deprecated
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return 1 if successful, -1 otherwise
+     */
     public int deleteUserListensToCollection(long userId, long collectionId)
     {
         String stmt = "DELETE FROM user_listens_to_collection WHERE user_id=%d AND collection_id=%d"
@@ -495,6 +517,13 @@ public class UserService {
         return -1;
     }
     //UserFollowersUser RELATIONSHIP
+
+    /**
+     * Creates a user follows user relationship
+     * @param user1Id The id of the user who's following a different user
+     * @param user2Id The id of the user being followed
+     * @return 1 if successful, -1 otherwise
+     */
     public int createUserFollowsUser(long user1Id, long user2Id) {
         String st = ("INSERT INTO user_follows_user(user_one_id, user_two_id) VALUES (%d, %d)").
                 formatted(user1Id, user2Id);
@@ -517,7 +546,11 @@ public class UserService {
         }
     }
 
-    // READ
+    /**
+     * Get a list of the users who a user is following
+     * @param userId The id of the user
+     * @return A list of users
+     */
     public List<User> getUsersFollowing(long userId) {
         List<User> friends = new ArrayList<>();
 
@@ -555,7 +588,12 @@ public class UserService {
         return friends;
     }
 
-    // DELETE
+    /**
+     * Deletes a user follows user relationship
+     * @param user1Id The user who's unfollowing the other user
+     * @param user2Id The user who's being unfollowed
+     * @return 1 if successful, -1 otherwise
+     */
     public int deleteUserFollowsUser(long user1Id, long user2Id) {
         String st = ("DELETE FROM user_follows_user WHERE (user_one_id=%d AND user_two_id=%d)")
                 .formatted(user1Id, user2Id);
