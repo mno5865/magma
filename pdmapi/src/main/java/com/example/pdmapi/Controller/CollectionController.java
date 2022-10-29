@@ -57,29 +57,6 @@ public class CollectionController {
     }
 
     /**
-     * gets a collection given title and userid
-     * deprecated: we already have the collection id, so why not use
-     *              that considering that a user may potentially have
-     *              two collections with the same name
-     * @param userID user
-     * @param collectionName name of collection
-     * @return ResponseEntity OK if the id given corresponds to a collection
-     *                        NOT_FOUND if it doesn't
-     */
-    @CrossOrigin
-    @GetMapping("/users/{userID}/collections/{collectionName}")
-    public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
-                                                                  @PathVariable String collectionName) {
-        collectionName = collectionName.replace('-', ' ');
-        Collection collection = collectionService.getCollectionByTitleAndUserID(userID, collectionName);
-        if (collection != null) {
-            return new ResponseEntity<>(collection, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    /**
      * endpoint creates collection using formatted json data
      * @param newCollection the new album resulting from the data
      * @return ResponseEntity CREATED with the correctly formatted data
@@ -252,7 +229,7 @@ public class CollectionController {
     @CrossOrigin
     @DeleteMapping("/collections/{id}/deleteAll")
     public ResponseEntity<Integer> deleteAllCollectionRelations(@PathVariable long id) {
-        int check = collectionService.deleteAll(id);
+        int check = collectionService.deleteAllSongs(id);
         if(check != -1) {
             return new ResponseEntity<>(check,HttpStatus.OK);
         } else {
