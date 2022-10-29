@@ -284,7 +284,7 @@ public class ArtistService {
      * Creates an Artist who releases an Album
      * @param artistId ID of artist
      * @param albumId ID of an album
-     * @return -1
+     * @return statement.executeUpdate(stmt) or -1
      */
     public int createArtistReleasesAlbum(long artistId, long albumId)
     {
@@ -318,7 +318,7 @@ public class ArtistService {
      * Deletes an Artist who releases an album
      * @param albumId ID of album
      * @param artistId ID of artist
-     * @return -1
+     * @return  statement.executeUpdate(stmt) or -1
      */
     public int deleteArtistReleaseAlbum(long albumId, long artistId) {
         //String that prints a message to delete artist from album release
@@ -352,7 +352,7 @@ public class ArtistService {
      * Creates an artist who releases a new song
      * @param artistId ID of artist
      * @param songId ID of song
-     * @return -1
+     * @return statement.executeUpdate(stmt) or -1
      */
     public int createArtistReleasesSong(long artistId, long songId)
     {
@@ -386,7 +386,7 @@ public class ArtistService {
      * Deletes an artist who releases a song
      * @param songId ID of song
      * @param artistId ID of artist
-     * @return -1
+     * @return statement.executeUpdate(stmt) or -1
      */
     public int deleteArtistReleaseSong(long songId, long artistId) {
         //String that prints a message to delete an artist
