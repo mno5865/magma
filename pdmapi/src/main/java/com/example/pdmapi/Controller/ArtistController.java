@@ -1,6 +1,8 @@
 /**
  * file: ArtistController.java
- * authors:  Gregory, Melissa, Mildness
+ * authors: Gregory Ojiem gro3228,
+ *          Melissa Burisky mpb8984,
+ *          Mildness Onyekwere mno5865
  */
 package com.example.pdmapi.Controller;
 

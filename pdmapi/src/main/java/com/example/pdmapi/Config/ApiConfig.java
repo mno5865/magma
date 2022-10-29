@@ -1,10 +1,11 @@
 /**
  * File: ApiConfig.java
- * ApiConfig.java: A public class that gets the Data Source from the API and does error handling.
- * @author MAGMA
+ * ApiConfig.java: A public class that configures the Data Source from the initial ssh connection
+ * @author Mildness Onyekwere mno5856
  */
 package com.example.pdmapi.Config;
 
+//imports
 import org.ini4j.Ini;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;

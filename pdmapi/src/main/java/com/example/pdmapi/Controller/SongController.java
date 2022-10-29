@@ -1,6 +1,8 @@
 /**
- * description: controller that creates the api endpoint for accessing db data related to song
- * authors:  Gregory, Melissa, Mildness
+ * file: SongController.java
+ * authors: Gregory Ojiem gro3228,
+ *          Melissa Burisky mpb8984,
+ *          Mildness Onyekwere mno5865
  */
 package com.example.pdmapi.Controller;
 
