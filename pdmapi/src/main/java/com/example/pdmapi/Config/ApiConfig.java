@@ -1,7 +1,7 @@
 /**
  * File: ApiConfig.java
  * ApiConfig.java: A public class that configures the Data Source from the initial ssh connection
- * @author Mildness Onyekwere mno5856
+ * @author Mildness Onyekwere - mno5856
  */
 package com.example.pdmapi.Config;
 
@@ -19,6 +19,10 @@ import java.util.Scanner;
 @Configuration
 public class ApiConfig {
 
+    /**
+     * Gets an ini file holding our verification information, and initializes the datasource
+     * @return The DataSource we initialize
+     */
     @Bean
     public DataSource getDataSource() {
         String user;

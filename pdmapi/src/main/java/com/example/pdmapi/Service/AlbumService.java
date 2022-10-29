@@ -1,7 +1,7 @@
 /**
  * File: AlbumService.java
  * AlbumService.java: A public class that sets and gets the attributes for an album.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
  */
 package com.example.pdmapi.Service;
 

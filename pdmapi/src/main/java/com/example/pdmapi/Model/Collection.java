@@ -1,7 +1,7 @@
 /**
  * File: Collection.java
  * Collection.java: A public class that sets and gets the attributes for a collection.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228
  */
 package com.example.pdmapi.Model;
 
@@ -13,16 +13,10 @@ import javax.persistence.*;
 /**
  * Class Collection that defines all properties of an Collection.
  */
-@Entity
-@Table(name = "collection", schema = "p32001_08")
 public class Collection {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "collection_id")
     private long collectionId;
 
-    @Column(name = "title")
     private String title;
 
     /**

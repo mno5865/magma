@@ -1,7 +1,7 @@
 /**
  * File: Album.java
  * Album.java: A public class that sets and gets the attributes for an album.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228
  */
 package com.example.pdmapi.Model;
 

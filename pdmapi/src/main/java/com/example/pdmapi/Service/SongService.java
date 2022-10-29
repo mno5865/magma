@@ -1,7 +1,7 @@
 /**
  * File: SongService.java
  * SongService.java: A public class that sets and gets the attributes for songservice.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
  */
 package com.example.pdmapi.Service;
 
