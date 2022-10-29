@@ -1,7 +1,7 @@
 /**
  * File: Genre.java
  * Genre.java: A public class that sets and gets the attributes for a genre.
- * @author MAGMA
+ * @author Mildness Onyekwere - mno5865
  */
 package com.example.pdmapi.Model;
 

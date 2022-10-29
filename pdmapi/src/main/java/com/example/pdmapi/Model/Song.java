@@ -1,7 +1,7 @@
 /**
  * File: Song.java
  * Song.java: A public class that sets and gets the attributes for a song.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228
  */
 package com.example.pdmapi.Model;
 

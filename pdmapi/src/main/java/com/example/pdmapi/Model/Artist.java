@@ -1,7 +1,7 @@
 /**
  * File: Artist.java
  * Artist.java: A public class that sets and gets the attributes for an artist.
- * @author MAGMA
+ * @author Gregory Ojiem - gro3228
  */
 package com.example.pdmapi.Model;
 
@@ -47,7 +47,7 @@ public class Artist {
     }
 
     /**
-     * Takes an instance and sets the name for the Artist.
+     * Sets the name for the Artist.
      * @param name name of the artist.
      */
     public void setName(String name) {
