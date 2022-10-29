@@ -35,7 +35,7 @@ public class SongService {
     /**
      * Creates a song within the databse
      * @param song song in the database
-     * @return -1
+     * @return  e.printStackTrace() or -1
      */
     public int createSong(Song song) {
 
@@ -145,7 +145,7 @@ public class SongService {
      * Updates song wtihin the database its ID and details
      * @param songId ID of the song
      * @param songDetails details of the song
-     * @return -1
+     * @return statement.executeUpdate(stmt) or -1
      */
     public int updateSong(Long songId, Song songDetails) {
         //String that prints a message to update a song
@@ -176,7 +176,7 @@ public class SongService {
     /**
      * Deletes a song in the database
      * @param songId ID of song
-     * @return -1
+     * @return statement.executeUpdate(stmt) or -1
      */
     public int deleteSong(Long songId) {
         //String that prints a message to delete the song
