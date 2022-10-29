@@ -1,3 +1,7 @@
+/**
+ * description: controller that creates the api endpoint for accessing db data related to song
+ * authors:  Gregory, Melissa, Mildness
+ */
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
@@ -11,10 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 /**
- * description: controller that creates the api endpoint for accessing db data related to song
- * authors:  MAGMA TEAM
+ * description: controller that creates the api
+ * endpoint for accessing db data related to genre
  */
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,10 @@ public class SongController {
     @Autowired
     private SongService songService;
 
+    /**
+     * endpoint for returning all songs in db
+     * @return ResponseEntity OK for list of songs, even if empty
+     */
     @CrossOrigin
     @GetMapping("/songs")
     public ResponseEntity<List<Song>> getSongs() {
@@ -37,6 +44,12 @@ public class SongController {
         }
     }
 
+    /**
+     * endpoint for returning singular song in db
+     * @param id id of the artist in the artist table
+     * @return ResponseEntity OK if the id given corresponds to an artist
+     *                        NOT_FOUND if it doesn't
+     */
     @CrossOrigin
     @GetMapping("/songs/{id}")
     public ResponseEntity<Song> getSong(@PathVariable long id) {
@@ -48,6 +61,12 @@ public class SongController {
         }
     }
 
+    /**
+     * endpoint creates song using formatted json data
+     * @param newSong the new artist resulting from the data
+     * @return ResponseEntity CREATED with the correctly formatted data
+     *                        BAD_REQUEST if something fails
+     */
     @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
@@ -59,6 +78,13 @@ public class SongController {
         }
     }
 
+    /**
+     * endpoint that allows the update of any song details by using the given song id
+     * @param id genre id
+     * @param songDetails song deets
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *         if rows affected isn't one, obviously something is wrong
+     */
     @CrossOrigin
     @PutMapping(value = "/songs/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateSong(@PathVariable long id, @RequestBody Song songDetails) {
@@ -69,6 +95,7 @@ public class SongController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @CrossOrigin
     @DeleteMapping("/songs/{id}")

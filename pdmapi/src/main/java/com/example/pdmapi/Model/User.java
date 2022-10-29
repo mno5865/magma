@@ -18,36 +18,22 @@ import java.sql.Timestamp;
 /**
  * Class User that defines all properties of the user.
  */
-@Entity
-@Table(name = "user", schema = "p32001_08")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UserID")
     private long userID;
 
-    //@Unique
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
     private String password;
 
-    //@Unique
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "creation_date")
     private Date creationDate;
 
-    @Column(name = "access_date")
     private Timestamp accessDate;
 
     /**
