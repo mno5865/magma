@@ -47,7 +47,7 @@ public class SongController {
     /**
      * endpoint for returning singular song in db
      * @param id id of the artist in the artist table
-     * @return ResponseEntity OK if the id given corresponds to an artist
+     * @return ResponseEntity OK if the id given corresponds to a song
      *                        NOT_FOUND if it doesn't
      */
     @CrossOrigin
@@ -64,14 +64,14 @@ public class SongController {
     /**
      * endpoint creates song using formatted json data
      * @param newSong the new artist resulting from the data
-     * @return ResponseEntity CREATED with the correctly formatted data
-     *                        BAD_REQUEST if something fails
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *      *         if rows affected isnt one, obviously something is wrong
      */
     @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
         int rowsAffected = songService.createSong(newSong);
-        if (rowsAffected == -1) {
+        if (rowsAffected == 1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -83,38 +83,48 @@ public class SongController {
      * @param id genre id
      * @param songDetails song deets
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
-     *         if rows affected isn't one, obviously something is wrong
+     *         if rows affected isnt one, obviously something is wrong
      */
     @CrossOrigin
     @PutMapping(value = "/songs/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateSong(@PathVariable long id, @RequestBody Song songDetails) {
         int rowsAffected = songService.updateSong(id, songDetails);
-        if (rowsAffected != -1) {
+        if (rowsAffected == 1) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-
+    /**
+     * endpoint deletes song using formatted json data
+     * @param id
+     * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
+     *          if rows affected isnt one, obviously something is wrong
+     */
     @CrossOrigin
     @DeleteMapping("/songs/{id}")
     public ResponseEntity<Integer> deleteSong(@PathVariable long id) {
         int rowsAffected = songService.deleteSong(id);
-        if(rowsAffected != -1) {
+        if(rowsAffected == 1) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+
+    /**
+     * get all the songs in a collection given collection id
+     * @param collectionId
+     * @return ResponseEntity OK os a list of songs is not null
+     *                          BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @GetMapping("/collections/{collectionId}/songs")
-    public ResponseEntity<List<Song>> getCollectionsSongs(@PathVariable long collectionId)
-    {
+    public ResponseEntity<List<Song>> getCollectionsSongs(@PathVariable long collectionId) {
         List<Song> songs = songService.getCollectionSongs(collectionId);
-        if(songs != null)
-        {
+        if(songs != null) {
             return new ResponseEntity<>(songs,HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -122,6 +132,13 @@ public class SongController {
     }
 
     // song_view
+    /**
+     * endpoint that gets a specific song view by title if title of song contains the string
+     * @param title
+     * @param select
+     * @param sort
+     * @return ResponseEntity of the songs in a view
+     */
     @CrossOrigin
     @GetMapping("/songs/bytitle/{title}/{select}/{sort}")
     public ResponseEntity<List<SongInView>> getSongsByTitle(@PathVariable String title,@PathVariable int select,
@@ -137,9 +154,17 @@ public class SongController {
         }
     }
 
+
+    /**
+     * endpoint that gets a specific song view by artist if artist of song contains the string
+     * @param name
+     * @param select
+     * @param sort
+     * @return ResponseEntity of the songs in a view
+     */
     @CrossOrigin
     @GetMapping("/songs/byartist/{name}/{select}/{sort}")
-    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name,@PathVariable int select,
+    public ResponseEntity<List<SongInView>> getSongsByArtist(@PathVariable String name, @PathVariable int select,
                                                              @PathVariable String sort) {
         name = name.replace('-', ' ');
         List<SongInView> songs = songService.getSongsByArtist(name,select,sort);
@@ -150,9 +175,17 @@ public class SongController {
         }
     }
 
+
+    /**
+     * endpoint that gets a specific song view by album title if title of song contains the string
+     * @param title
+     * @param select
+     * @param sort
+     * @return ResponseEntity of the songs in a view
+     */
     @CrossOrigin
     @GetMapping("/songs/byalbum/{title}/{select}/{sort}")
-    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title,@PathVariable int select,
+    public ResponseEntity<List<SongInView>> getSongsByAlbum(@PathVariable String title, @PathVariable int select,
                                                             @PathVariable String sort) {
         title = title.replace('-', ' ');
         List<SongInView> songs = songService.getSongsByAlbum(title,select,sort);
@@ -163,6 +196,13 @@ public class SongController {
         }
     }
 
+    /**
+     * endpoint that gets a specific song view by genre if genre of song contains the string
+     * @param genre
+     * @param select
+     * @param sort
+     * @return ResponseEntity of the songs in a view
+     */
     @CrossOrigin
     @GetMapping("/songs/bygenre/{genre}/{select}/{sort}")
     public ResponseEntity<List<SongInView>> getSongsByGenre(@PathVariable String genre,@PathVariable int select,
