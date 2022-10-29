@@ -43,7 +43,7 @@ public class AlbumService {
     /**
      * Creates an album in the database
      * @param album an album in the database
-     * @return -1
+     * @return stmt.executeUpdate(st) or -1
      */
     public int createAlbum(Album album) {
         // String that prints a message to insert an album
@@ -72,7 +72,7 @@ public class AlbumService {
      * Makes an album in the database with a song in album.
      * @param albumId ID of the album
      * @param songId ID of the song
-     * @return -1
+     * @return stmt.executeUpdate(st); or -1
      */
     public int createAlbumContainsSong(long albumId, long songId, int track) {
         // String that prints a message to insert a song in album
@@ -270,7 +270,7 @@ public class AlbumService {
      * Updates the Album id and details
      * @param albumId ID of Album
      * @param albumDetails Details of the Album
-     * @return -1
+     * @return stmt.executeUpdate(st); or -1
      */
     public int updateAlbum(long albumId, Album albumDetails) {
         //String that prints a message to update the album id and details
@@ -298,11 +298,11 @@ public class AlbumService {
 
 
     /**
-     *
-     * @param albumId
-     * @param songId
-     * @param trackNumber
-     * @return
+     * Updates a song based on track number
+     * @param albumId ID of Album
+     * @param songId ID of song
+     * @param trackNumber tracknumber
+     * @return stmt.executeUpdate(st) or -1
      */
     public int updateSongTrackNumberInAlbum(long albumId, long songId, int trackNumber) {
         //String that prints a message to update a song by tracking number
@@ -333,7 +333,7 @@ public class AlbumService {
     /**
      * Deletes album within the database.
      * @param albumId ID of an album
-     * @return -1
+     * @return stmt.executeUpdate(st) or -1
      */
     public int deleteAlbum(long albumId) {
         // String that prints a message to insert a song in albumdelete album
@@ -362,7 +362,7 @@ public class AlbumService {
      * Deletes Album that has a specific song
      * @param albumId ID of album
      * @param songId ID of song
-     * @return -1
+     * @return stmt.executeUpdate(st) or -1
      */
     public int deleteAlbumContainsSong(long albumId, long songId){
         //String that prints a message to delete an album with a specific song
@@ -434,7 +434,7 @@ public class AlbumService {
     /**
      * Recieves total rutime for the Album
      * @param albumId ID of Album
-     * @return -1
+     * @return i or -1
      */
     public int getTotalRuntimeOfAlbum(long albumId)
     {
