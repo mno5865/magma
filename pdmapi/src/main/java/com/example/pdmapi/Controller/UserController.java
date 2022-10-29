@@ -1,3 +1,9 @@
+/**
+ * file: UserController.java
+ * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * description: A controller that maps HTTP requests to our services that run the database commands
+ */
+
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
@@ -15,18 +21,22 @@ import java.util.List;
 
 /**
  * description: controller that creates the api endpoint for accessing db data related to user
- * authors:  MAGMA TEAM
  */
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
     /**
-     * service that provides connection from endpoint to db
+     * description: controller that creates the api endpoint for accessing db data related to user
      */
     @Autowired
     private UserService userService;
 
+    /**
+     * Gets a user using their id
+     * @param id The id of the use
+     * @return HTTP OK and the user
+     */
     @CrossOrigin
     @GetMapping("/users/id/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
@@ -34,6 +44,11 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * Finds a user by their username
+     * @param username The username of the user to find
+     * @return An HTTP response OK and the user
+     */
     @CrossOrigin
     @GetMapping("/users/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
@@ -41,6 +56,11 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * Finds a user by their email
+     * @param email The email of the user to find
+     * @return An HTTP response OK and the user
+     */
     @CrossOrigin
     @GetMapping("/users/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
@@ -48,6 +68,12 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * Returns the last time a user has listened to a song
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return An HTTP OK if the timestamp isn't null along with the timestamp, BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @GetMapping(value = "/users/{userId}/songs/{songId}")
     public ResponseEntity<Timestamp> getUserSongLastPlayTime(@PathVariable long userId, @PathVariable long songId)
@@ -62,6 +88,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a new user entity in the database
+     * @param newUser A model of the user to create
+     * @return HTTP CREATED response
+     */
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User newUser) {
@@ -69,6 +100,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * Updates a user in the database to match the updatedUser param
+     * @param id The id of the user to update
+     * @param updatedUser The new user information
+     * @return An HTTP OK response
+     */
     @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
@@ -76,6 +113,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Creates a new listens to relationship between a user and a song
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return HTTP OK if successful, BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/songs/{songId}")
     public ResponseEntity<Integer> createUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
@@ -87,17 +130,11 @@ public class UserController {
         }
     }
 
-    @CrossOrigin
-    @PutMapping(value = "/users/{userId}/songs/{songId}")
-    public ResponseEntity<Integer> updateUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
-        int rowsAffected = userService.updateUserListensToSong(userId,songId);
-        if(rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
-        }
-    }
-
+    /**
+     * Deletes a user in the database
+     * @param id The id of the user to delete
+     * @return HTTP OK response
+     */
     @CrossOrigin
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable long id) {
@@ -105,6 +142,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Deletes a user listens to song relationship, deprecated
+     * @param userId The id of the user
+     * @param songId The id of the song
+     * @return HTTP OK if successful, HTTP BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @DeleteMapping(value = "/users/{userId}/songs/{songId}")
     public ResponseEntity<Integer> deleteUserListensToSong(@PathVariable long userId, @PathVariable long songId) {
@@ -117,6 +160,13 @@ public class UserController {
     }
 
     //UserCreatesCollection RELATIONSHIP
+
+    /**
+     * Creates a user creates collection relationship
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return HTTP CREATED if successful, HTTP BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/{collectionId}")
     public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
@@ -128,6 +178,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets a list of collections that belong to a certain user
+     * @param userId The id of the user
+     * @return HTTP OK if successful and the list of collections, HTTP NOT_FOUND otherwise
+     */
     @CrossOrigin
     @GetMapping("/users/{userId}/collections")
     public ResponseEntity<List<Collection>> getCollectionsByUserID(@PathVariable long userId) {
@@ -139,6 +194,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes a users creates collection relationship
+     * @param userId The user id of the user
+     * @param collectionId The collection id of the collection
+     * @return HTTP OK if successful, and BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @DeleteMapping("/users/{userId}/collections/{collectionId}")
     public ResponseEntity<Integer> deleteUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
@@ -150,6 +211,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a user listens to album relationship, marking where the user listened to the album, and adding a user
+     * listens to song relationship for every song on the album
+     * @param userId The user id of the user
+     * @param albumId The album id of the album
+     * @return HTTP OK if successful, and BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/albums/{albumId}")
     public ResponseEntity<Integer> createUserListensToAlbum(@PathVariable long userId, @PathVariable long albumId) {
@@ -161,18 +229,15 @@ public class UserController {
         }
     }
 
-    @CrossOrigin
-    @GetMapping(value = "/users/{userId}/albums/{albumId}")
-    public ResponseEntity<Timestamp> getUserAlbumLastPlayTime(@PathVariable long userId, @PathVariable long albumId) {
-        Timestamp timestamp = userService.getUserAlbumLastPlayTime(userId,albumId);
-        if(timestamp != null) {
-            return new ResponseEntity<>(timestamp,HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     //UserListensToCollection RELATIONSHIP
+
+    /**
+     * Creates a user listens to collection relationship, and also updates the user listens to relationships for
+     * the albums and songs in the collection
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return HTTP OK if successful, and BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/listens/{collectionId}")
     public ResponseEntity<Integer> createUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
@@ -184,17 +249,12 @@ public class UserController {
         }
     }
 
-    @CrossOrigin
-    @GetMapping(value = "/users/{userId}/collections/listens/{collectionId}")
-    public ResponseEntity<Timestamp> getUserCollectionPlayTime(@PathVariable long userId, @PathVariable long collectionId) {
-        Timestamp timestamp = userService.getUserCollectionPlayTime(userId,collectionId);
-        if(timestamp != null) {
-            return new ResponseEntity<>(timestamp, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
+    /**
+     * Deletes user listens to collection relationship, deprecatd
+     * @param userId The id of the user
+     * @param collectionId The id of the collection
+     * @return HTTP OK if successful, and BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @DeleteMapping(value = "/users/{userId}/collections/listens/{collectionId}")
     public ResponseEntity<Integer> deleteUserListensToCollection(@PathVariable long userId, @PathVariable long collectionId) {
@@ -207,6 +267,12 @@ public class UserController {
     }
 
     //UserFollowersUser RELATIONSHIP
+
+    /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
     @CrossOrigin
     @GetMapping("/users/{userId}/following")
     public ResponseEntity<List<User>> getUsersFollowing(@PathVariable long userId) {
@@ -218,6 +284,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a user follows user relationship
+     * @param userId The id of the user
+     * @param friendId The id of the friend
+     * @return HTTP CREATED if successful, HTTP BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/following/{friendId}")
     public ResponseEntity createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
@@ -229,17 +301,19 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes a user follows user relationship
+     * @param userId The id of the user who's unfollowing another
+     * @param friendId The id of the user who the user is unfollowing
+     * @return HTTP OK if successful, HTTP BAD_REQUEST otherwise
+     */
     @CrossOrigin
     @DeleteMapping("/users/{userId}/following/{friendId}")
     public ResponseEntity<Integer> deleteUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
         int rowsAffected = userService.deleteUserFollowsUser(userId, friendId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
-        } else  {
-            rowsAffected = userService.deleteUserFollowsUser(friendId, userId);
-            if (rowsAffected == 1) {
-                return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
-            }
+        } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
