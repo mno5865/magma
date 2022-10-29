@@ -11,7 +11,7 @@ package com.example.pdmapi.Model;
 import javax.persistence.*;
 
 /**
- * Class Collection that defines all properties of an Collection.
+ * Collection class that defines the properties of an Album matching with the album table in the database
  */
 public class Collection {
 

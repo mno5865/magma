@@ -6,7 +6,7 @@
 package com.example.pdmapi.Model;
 
 /**
- * Class Genre that defines all properties of genres.
+ * Genre class that defines the properties of an Genre matching with the genre table in the database
  */
 public class Genre {
 

@@ -7,7 +7,7 @@ package com.example.pdmapi.Model;
 
 
 /**
- * Class Artist that defines all properties of an Artist.
+ * Artist class that defines the properties of an Artist, matches the artist table in the database
  */
 public class Artist {
 

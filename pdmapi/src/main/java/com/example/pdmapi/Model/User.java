@@ -16,7 +16,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
- * Class User that defines all properties of the user.
+ * User class that defines the properties of an User matching with the user table in the database
  */
 public class User {
 

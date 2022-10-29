@@ -5,16 +5,12 @@
  */
 package com.example.pdmapi.Model;
 
-
-/**
- * Import Statements.
- */
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
 
 /**
- * Class Album that defines all properties of an Album.
+ * Album class that defines the properties of an Album, matches the album table in the database
  */
 public class Album {
 

@@ -6,7 +6,8 @@
 package com.example.pdmapi.Model;
 
 /**
- * Class SongInView that defines all properties of the view.
+ * SongInView class that defines the properties of an SongInView matching with the materialized
+ * view song_view in the database
  */
 public class SongInView {
     String songTitle;
