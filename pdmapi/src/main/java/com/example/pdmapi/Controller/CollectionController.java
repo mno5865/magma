@@ -56,6 +56,32 @@ public class CollectionController {
         }
     }
 
+    //deprecated
+    @CrossOrigin
+    @GetMapping("/users/{userID}/collections/{collectionName}")
+    public ResponseEntity<Collection> getCollectionByTitleAndUserID(@PathVariable long userID,
+                                                                  @PathVariable String collectionName) {
+        collectionName = collectionName.replace('-', ' ');
+        Collection collection = collectionService.getCollectionByTitleAndUserID(userID, collectionName);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userID}/collections/id/{collectionID}")
+    public ResponseEntity<Collection> getCollectionByCollectionAndUserID(@PathVariable long userID,
+                                                                    @PathVariable long collectionID) {
+        Collection collection = collectionService.getCollectionByCollectionAndUserID(userID, collectionID);
+        if (collection != null) {
+            return new ResponseEntity<>(collection, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     /**
      * endpoint creates collection using formatted json data
      * @param newCollection the new album resulting from the data

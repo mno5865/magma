@@ -58,6 +58,7 @@ public class CollectionService {
         return new int[2];
     }
 
+    //READ
     /**
      * Gets all collections in the database
      * @return All collections in the database
@@ -129,6 +130,64 @@ public class CollectionService {
      * @param collectionDetails The new collection information
      * @return 1 if successful, -1 otherwise
      */
+    //deprecated
+    public Collection getCollectionByTitleAndUserID(long userID, String title) {
+        String stmt = ("SELECT * FROM collection " +
+                "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
+                "WHERE user_id=%d AND title='%s'").formatted(userID, title);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Collection collection = new Collection();
+            while(rs.next()) {
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+            }
+            return collection;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public Collection getCollectionByCollectionAndUserID(long userID, long collectionId) {
+        String stmt = ("SELECT * FROM collection " +
+                "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
+                "WHERE user_id=%d AND collection_id='%s'").formatted(userID, collectionId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Collection collection = new Collection();
+            while(rs.next()) {
+                collection.setCollectionID(rs.getLong("collection_id"));
+                collection.setTitle(rs.getString("title"));
+            }
+            return collection;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    // UPDATE
     public int updateCollection(Long collectionId, Collection collectionDetails) {
         String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -315,12 +374,10 @@ public class CollectionService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs1 = statement1.executeQuery(stmt1);
             ResultSet rs2 = statement2.executeQuery(stmt2);
-            while(rs1.next())
-            {
+            while(rs1.next()) {
                 i = i + rs1.getInt("total_songs");
             }
-            while(rs2.next())
-            {
+            while(rs2.next()) {
                 i = i + rs2.getInt("total_songs");
             }
             return i;
@@ -341,8 +398,7 @@ public class CollectionService {
      * @param collectionId The id of the collection
      * @return The runtime of the collection
      */
-    public int getTotalCollectionRuntime(long collectionId)
-    {
+    public int getTotalCollectionRuntime(long collectionId) {
         int i = 0;
         String stmt1 = "SELECT sum(song.runtime) as total_runtime\n" +
                 "FROM song,collection_holds_song,collection\n" +
@@ -367,24 +423,19 @@ public class CollectionService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs1 = statement1.executeQuery(stmt1);
             ResultSet rs2 = statement2.executeQuery(stmt2);
-            while(rs1.next())
-            {
+            while(rs1.next()) {
                 i = i + rs1.getInt("total_runtime");
             }
-            while(rs2.next())
-            {
+            while(rs2.next()) {
                 i = i + rs2.getInt("total_runtime");
             }
             return i;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
+        } finally {
+            try {
                 conn.close();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -396,8 +447,7 @@ public class CollectionService {
      * @param collectionId The id of the collection
      * @return 1+ if successful, -1 otherwise
      */
-    public int deleteAllSongs(long collectionId)
-    {
+    public int deleteAllSongs(long collectionId) {
         String stmt1 = "SELECT song_id from collection_holds_song WHERE collection_id=%d"
                 .formatted(collectionId);
         String stmt2 = "SELECT album_id from collection_holds_album WHERE collection_id=%d"
@@ -407,8 +457,7 @@ public class CollectionService {
         String stmt4 = "DELETE FROM user_listens_to_collection WHERE collection_id=%d"
                 .formatted(collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        try
-        {
+        try {
             Statement statement1 = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -422,14 +471,12 @@ public class CollectionService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs1 = statement1.executeQuery(stmt1);
-            while(rs1.next())
-            {
+            while(rs1.next()) {
                 int i = deleteCollectionHoldsSong(collectionId,rs1.getLong("song_id"));
                 if(i == -1) {return -1;}
             }
             ResultSet rs2 = statement2.executeQuery(stmt2);
-            while(rs2.next())
-            {
+            while(rs2.next()) {
                 int i = deleteCollectionHoldsAlbum(collectionId,rs2.getLong("album_id"));
                 if(i == -1) {return -1;}
             }
@@ -442,13 +489,10 @@ public class CollectionService {
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
+        } finally {
+            try {
                 conn.close();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
