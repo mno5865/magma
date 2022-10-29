@@ -1,5 +1,13 @@
+/**
+ * File: SongService.java
+ * SongService.java: A public class that sets and gets the attributes for songservice.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
 
+/**
+ * Import Statements
+ */
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.SongInView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +21,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Song that defines all properties of what Song should do.
+ */
 @Service
 public class SongService {
 
@@ -20,6 +31,12 @@ public class SongService {
     DataSource dataSource;
 
     // CREATE
+
+    /**
+     *
+     * @param song
+     * @return
+     */
     public int createSong(Song song) {
         String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s',%d,'%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -41,6 +58,11 @@ public class SongService {
     }
 
     // READ
+
+    /**
+     *
+     * @return
+     */
     public List<Song> getSongs() {
         String stmt = "SELECT * FROM song";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -71,6 +93,11 @@ public class SongService {
         return null;
     }
 
+    /**
+     *
+     * @param songId
+     * @return
+     */
     public Song getSong(Long songId) {
         String stmt = "SELECT * FROM song WHERE song_id=%d".formatted(songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -100,6 +127,13 @@ public class SongService {
     }
 
     // UPDATE
+
+    /**
+     *
+     * @param songId
+     * @param songDetails
+     * @return
+     */
     public int updateSong(Long songId, Song songDetails) {
         String stmt = "UPDATE song SET title='%s',runtime=%d,release_date='%tF' WHERE song_id=%d"
                 .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(), songId);
@@ -122,6 +156,12 @@ public class SongService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param songId
+     * @return
+     */
     public int deleteSong(Long songId) {
         String stmt = "DELETE FROM song WHERE song_id=%d".formatted(songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -142,6 +182,11 @@ public class SongService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public List<Song> getCollectionSongs(long collectionId) {
         String stmt = "SELECT song.song_id,song.title,song.runtime,song.release_date\n" +
                 "FROM song,collection_holds_song\n" +
@@ -176,6 +221,14 @@ public class SongService {
     }
 
     // song_view
+
+    /**
+     *
+     * @param songTitle
+     * @param select
+     * @param sort
+     * @return
+     */
     public List<SongInView> getSongsByTitle(String songTitle, int select,String sort) {
         List<SongInView> songs = new ArrayList<>();
         songTitle = "%" + songTitle + "%";
@@ -216,6 +269,13 @@ public class SongService {
         return songs;
     }
 
+    /**
+     *
+     * @param artistName
+     * @param select
+     * @param sort
+     * @return
+     */
     public List<SongInView> getSongsByArtist(String artistName, int select,String sort) {
         List<SongInView> songs = new ArrayList<>();
         artistName = "%" + artistName + "%";
@@ -254,6 +314,13 @@ public class SongService {
         return songs;
     }
 
+    /**
+     *
+     * @param albumTitle
+     * @param select
+     * @param sort
+     * @return
+     */
     public List<SongInView> getSongsByAlbum(String albumTitle, int select,String sort) {
         List<SongInView> songs = new ArrayList<>();
         albumTitle = "%" + albumTitle + "%";
@@ -294,6 +361,13 @@ public class SongService {
 
     //HI SCOTT AND JEREMY
 
+    /**
+     *
+     * @param genre
+     * @param select
+     * @param sort
+     * @return
+     */
     public List<SongInView> getSongsByGenre(String genre, int select,String sort) {
         List<SongInView> songs = new ArrayList<>();
         genre = "%" + genre + "%";

@@ -1,5 +1,13 @@
+/**
+ * File: GenreService.java
+ * GenreService.java: A public class that sets and gets the attributes for genreservice.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
 
+/**
+ * Import Statements
+ */
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Genre;
 import com.example.pdmapi.Model.Song;
@@ -14,16 +22,29 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Genre that defines all properties of what Genre should do.
+ */
 @Service
 public class GenreService {
     final
     DataSource dataSource;
 
+    /**
+     *
+     * @param dataSource
+     */
     public GenreService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     // CREATE
+
+    /**
+     *
+     * @param genre
+     * @return
+     */
     public int createGenre(Genre genre) {
         String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -44,6 +65,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     *
+     * @param genreId
+     * @param songId
+     * @return
+     */
     public int createSongHasGenre(long genreId, long songId) {
         String st = ("INSERT INTO song_has_genre (genre_id, song_id) VALUES (%d, %d)").formatted(genreId, songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -64,6 +91,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     *
+     * @param genreId
+     * @param albumId
+     * @return
+     */
     public int createAlbumHasGenre(long genreId, long albumId) {
         String st = ("INSERT INTO album_has_genre (genre_id, album_id) VALUES (%d, %d)").formatted(genreId, albumId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -85,6 +118,12 @@ public class GenreService {
     }
 
     // READ
+
+    /**
+     *
+     * @param genreID
+     * @return
+     */
     public Genre getGenre(Long genreID) {
         String stmt = "SELECT * FROM genre WHERE genre_id=%d".formatted(genreID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -111,6 +150,10 @@ public class GenreService {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Genre> getGenres() {
         String stmt = "SELECT * FROM genre";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -139,6 +182,11 @@ public class GenreService {
         return null;
     }
 
+    /**
+     *
+     * @param genreId
+     * @return
+     */
     public List<Song> getSongsByGenre(long genreId) {
         List<Song> songs = new ArrayList<>();
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -173,6 +221,11 @@ public class GenreService {
         return songs;
     }
 
+    /**
+     *
+     * @param genreId
+     * @return
+     */
     public List<Album> getAlbumsByGenre(long genreId) {
         List<Album> albums = new ArrayList<>();
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -207,6 +260,13 @@ public class GenreService {
     }
 
     // UPDATE
+
+    /**
+     *
+     * @param genreId
+     * @param genreDetails
+     * @return
+     */
     public int updateGenre(Long genreId, Genre genreDetails) {
         String stmt = "UPDATE genre SET name='%s' WHERE genre_id=%d".formatted(genreDetails.getName(), genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -228,6 +288,12 @@ public class GenreService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param genreId
+     * @return
+     */
     public int deleteGenre(Long genreId) {
         String stmt = "DELETE FROM genre WHERE genre_id=%d".formatted(genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -248,6 +314,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     *
+     * @param songId
+     * @param genreId
+     * @return
+     */
     public int deleteSongHasGenre(long songId, long genreId){
         String st = ("DELETE FROM song_has_genre WHERE (song_id=%d AND genre_id=%d)")
                 .formatted(songId, genreId);
@@ -269,6 +341,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     *
+     * @param albumId
+     * @param genreId
+     * @return
+     */
     public int deleteAlbumHasGenre(long albumId, long genreId){
         String st = ("DELETE FROM album_has_genre WHERE (album_id=%d AND genre_id=%d)")
                 .formatted(albumId, genreId);

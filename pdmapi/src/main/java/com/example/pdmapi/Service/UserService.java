@@ -1,5 +1,13 @@
+/**
+ * File: UserService.java
+ * UserService.java: A public class that sets and gets the attributes for userservice.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
 
+/**
+ * Import Statements
+ */
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +19,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service User that defines all properties of what User should do.
+ */
 @Service
 public class UserService {
     @Autowired
@@ -48,6 +59,12 @@ public class UserService {
         return null;
     }
 
+    /**
+     *
+     * @param userId
+     * @param songId
+     * @return
+     */
     public Timestamp getUserSongLastPlayTime(long userId, long songId)
     {
         Timestamp timestamp = null;
@@ -76,6 +93,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     public User getUserByUsername(String username) {
         String stmt = "SELECT * FROM \"user\" WHERE username='%s'".formatted(username);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -108,6 +130,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
     public User getUserByEmail(String email) {
         String stmt = "SELECT * FROM \"user\" WHERE email='%s'".formatted(email);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -140,6 +167,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public int createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
                 "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
@@ -164,6 +196,13 @@ public class UserService {
     }
 
     // UPDATE
+
+    /**
+     *
+     * @param userId
+     * @param user
+     * @return
+     */
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
                 "username='%s', password='%s', email='%s', first_name='%s', last_name='%s', creation_date='%tF'," +
@@ -187,6 +226,12 @@ public class UserService {
         return -1;
     }
 
+    /**
+     *
+     * @param userId
+     * @param songId
+     * @return
+     */
     public int createUserListensToSong(long userId, long songId)
     {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -211,6 +256,12 @@ public class UserService {
         return -1;
     }
 
+    /**
+     *
+     * @param userId
+     * @param songId
+     * @return
+     */
     public int updateUserListensToSong(long userId, long songId)
     {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -236,6 +287,12 @@ public class UserService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public int deleteUser(Long userId) {
         String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -256,6 +313,12 @@ public class UserService {
         return -1;
     }
 
+    /**
+     *
+     * @param userId
+     * @param songId
+     * @return
+     */
     public int deleteUserListensToSong(long userId, long songId)
     {
         String stmt = "DELETE FROM user_listens_to_song WHERE user_id=%d AND song_id=%d"
@@ -279,6 +342,13 @@ public class UserService {
     }
 
     //UserCreatesCollection RELATIONSHIP
+
+    /**
+     *
+     * @param userId
+     * @param collectionId
+     * @return
+     */
     public int createUserCreatesCollection(long userId, long collectionId) {
         String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
                 collectionId);
@@ -300,6 +370,11 @@ public class UserService {
         return -1;
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public List<Collection> getCollectionsByUserID(long userId) {
         List<Collection> collections = new ArrayList<>();
         String query = ("SELECT collection.collection_id, collection.title "
@@ -333,6 +408,12 @@ public class UserService {
         return collections;
     }
 
+    /**
+     *
+     * @param userId
+     * @param collectionId
+     * @return
+     */
     public int deleteUserCreatesCollection(long userId, long collectionId){
         String st = ("DELETE FROM user_creates_collection WHERE (user_id=%d AND collection_id=%d)")
                 .formatted(userId, collectionId);
