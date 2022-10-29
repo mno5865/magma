@@ -1,4 +1,13 @@
+/**
+ * File: CollectionService.java
+ * CollectionService.java: A public class that sets and gets the attributes for an collection.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Service;
+
+/**
+ * Import Statements
+ */
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
@@ -12,6 +21,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Collection that defines all properties of what Collection should do.
+ */
 @Service
 public class CollectionService {
 
@@ -19,6 +31,12 @@ public class CollectionService {
     DataSource dataSource;
 
     // CREATE
+
+    /**
+     *
+     * @param collection
+     * @return
+     */
     public int[] createCollection(Collection collection) {
         String stmt = "INSERT INTO collection(title) VALUES ('%s')".formatted(collection.getTitle());
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -45,6 +63,11 @@ public class CollectionService {
     }
 
     // READ
+
+    /**
+     *
+     * @return
+     */
     public List<Collection> getCollections() {
         String stmt = "SELECT * FROM collection";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -74,6 +97,11 @@ public class CollectionService {
         return null;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public Collection getCollection(Long collectionId) {
         String stmt = "SELECT * FROM collection WHERE collection_id=%d".formatted(collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -101,6 +129,12 @@ public class CollectionService {
         return null;
     }
 
+    /**
+     *
+     * @param userID
+     * @param title
+     * @return
+     */
     public Collection getCollectionByTitleAndUserID(long userID, String title) {
         String stmt = ("SELECT * FROM collection " +
                 "INNER JOIN user_creates_collection ucc on collection.collection_id = ucc.collection_id " +
@@ -130,6 +164,13 @@ public class CollectionService {
     }
 
     // UPDATE
+
+    /**
+     *
+     * @param collectionId
+     * @param collectionDetails
+     * @return
+     */
     public int updateCollection(Long collectionId, Collection collectionDetails) {
         String stmt = "UPDATE collection SET title='%s' WHERE collection_id=%d".formatted(collectionDetails.getTitle(),collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -151,6 +192,12 @@ public class CollectionService {
     }
 
     // DELETE
+
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public int deleteCollection(Long collectionId) {
         String stmt = "DELETE FROM collection WHERE collection_id=%d".formatted(collectionId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -172,6 +219,13 @@ public class CollectionService {
     }
 
     //CollectionHoldsSong RELATIONSHIP
+
+    /**
+     *
+     * @param collectionId
+     * @param songId
+     * @return
+     */
     public int createCollectionHoldsSong(long collectionId, long songId) {
         String st = ("INSERT INTO collection_holds_song (collection_id, song_id) VALUES (%d, %d)")
                 .formatted(collectionId, songId);
@@ -193,6 +247,12 @@ public class CollectionService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @param songId
+     * @return
+     */
     public int deleteCollectionHoldsSong(long collectionId, long songId){
         String st = ("DELETE FROM collection_holds_song WHERE (collection_id=%d AND song_id=%d)")
                 .formatted(collectionId, songId);
@@ -214,6 +274,13 @@ public class CollectionService {
         return -1;
     }
     //CollectionHoldsAlbum RELATIONSHIP
+
+    /**
+     *
+     * @param collectionId
+     * @param albumId
+     * @return
+     */
     public int createCollectionHoldsAlbum(long collectionId, long albumId) {
         String st = ("INSERT INTO collection_holds_album (collection_id, album_id) VALUES (%d, %d)")
                 .formatted(collectionId, albumId);
@@ -235,6 +302,12 @@ public class CollectionService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @param albumId
+     * @return
+     */
     public int deleteCollectionHoldsAlbum(long collectionId, long albumId){
         String st = ("DELETE FROM collection_holds_album WHERE (collection_id=%d AND album_id=%d)")
                 .formatted(collectionId, albumId);
@@ -256,6 +329,11 @@ public class CollectionService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public int getSongCountFromCollection(long collectionId)
     {
         int i = 0;
@@ -303,6 +381,11 @@ public class CollectionService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public int getTotalCollectionRuntime(long collectionId)
     {
         int i = 0;
@@ -353,6 +436,11 @@ public class CollectionService {
         return -1;
     }
 
+    /**
+     *
+     * @param collectionId
+     * @return
+     */
     public int deleteAll(long collectionId)
     {
         String stmt1 = "SELECT song_id from collection_holds_song WHERE collection_id=%d"

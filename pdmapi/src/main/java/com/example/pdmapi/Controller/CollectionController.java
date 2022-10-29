@@ -1,6 +1,8 @@
 /**
  * file: CollectionController.java
- * authors: Gregory, Melissa, Mildness
+ * authors: Gregory Ojiem gro3228,
+ *          Melissa Burisky mpb8984,
+ *          Mildness Onyekwere mno5865
  */
 package com.example.pdmapi.Controller;
 
@@ -57,11 +59,11 @@ public class CollectionController {
     /**
      * gets a collection given title and userid
      * deprecated: we already have the collection id, so why not use
-     *              that considering that a user may pottentially have
-     *              two collections witht eh same name
+     *              that considering that a user may potentially have
+     *              two collections with the same name
      * @param userID user
      * @param collectionName name of collection
-     * @return ResponseEntity OK if the id given corresponds to an collection
+     * @return ResponseEntity OK if the id given corresponds to a collection
      *                        NOT_FOUND if it doesn't
      */
     @CrossOrigin
@@ -207,7 +209,7 @@ public class CollectionController {
      * endpoint that gets the song count of a collection
      * @param collection_id collection id
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
-     *          if total_duration is -1 obviously something is wrong
+     *          if count is -1 obviously something is wrong
      */
     @CrossOrigin
     @GetMapping(value = "/collections/{collection_id}/song_count")

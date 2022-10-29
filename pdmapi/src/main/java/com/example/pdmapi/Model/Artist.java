@@ -1,23 +1,55 @@
+/**
+ * File: Artist.java
+ * Artist.java: A public class that sets and gets the attributes for an artist.
+ * @author MAGMA
+ */
 package com.example.pdmapi.Model;
 
+
+/**
+ * Class Artist that defines all properties of an Artist.
+ */
 public class Artist {
 
     private long artistID;
 
     private String name;
 
+    /**
+     *  Constructor for Artist.
+     */
     public Artist() {
     }
 
-    public long getArtistID() {
+    /**
+     * Gets the id for Artist.
+     * @return the id for the artist.
+     */
+    public long getArtistID()
+    {
         return artistID;
     }
-    public void setArtistID(long artistID) {
+
+    /**
+     * Takes artist and sets the ID.
+     * @param artistID id for the artist.
+     */
+    public void setArtistID(long artistID){
         this.artistID = artistID;
     }
+
+    /**
+     * Gets the name of the artist.
+     * @return name of the artist.
+     */
     public String getName() {
         return name;
     }
+
+    /**
+     * Takes an instance and sets the name for the Artist.
+     * @param name name of the artist.
+     */
     public void setName(String name) {
         this.name = name;
     }
