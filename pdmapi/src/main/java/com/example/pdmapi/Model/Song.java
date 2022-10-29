@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 /**
- *  Song class that defines the properties of an Song matching with the song table in the database
+ *  Song class that defines the properties of a Song matching with the song table in the database
  */
 public class Song {
 

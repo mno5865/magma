@@ -45,7 +45,7 @@ public class Genre {
     }
 
     /**
-     * Takes an instance and sets the username for the genre.
+     * Creates an instance and sets the username for the genre.
      * @param username username for genre.
      */
     public void setName(String username) {

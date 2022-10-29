@@ -174,7 +174,7 @@ public class UserService {
     /**
      * Creates a new user in the database
      * @param user The user object that maps to the database user table
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
@@ -203,7 +203,7 @@ public class UserService {
      * Updates a user's information
      * @param userId The id of the user whose information is being updated
      * @param user A user object to replace the old user's information with
-     * @return 1 if successful, 2 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int updateUser(Long userId, User user) {
         String stmt = ("UPDATE \"user\" SET " +
@@ -232,7 +232,7 @@ public class UserService {
      * Creates a new user listens to song relationship
      * @param userId The id of the user
      * @param songId The id of the song
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUserListensToSong(long userId, long songId)
     {
@@ -262,7 +262,7 @@ public class UserService {
     /**
      * Deletes a user in the database
      * @param userId The id of the user
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int deleteUser(Long userId) {
         String stmt = "DELETE FROM \"user\" WHERE user_id=%d".formatted(userId);
@@ -288,7 +288,7 @@ public class UserService {
      * Deletes a user listens to song relationship, deprecated
      * @param userId The id of the user
      * @param songId The id of the song
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int deleteUserListensToSong(long userId, long songId)
     {
@@ -318,7 +318,7 @@ public class UserService {
      * Ceates a new user creates collection relationship
      * @param userId The id of the user
      * @param collectionId The id of the collection
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUserCreatesCollection(long userId, long collectionId) {
         String st = ("INSERT INTO user_creates_collection (user_id, collection_id) VALUES (%d, %d)").formatted(userId,
@@ -384,7 +384,7 @@ public class UserService {
      * Deletes a user creates collection relationship
      * @param userId The id of the user
      * @param collectionId The id of the collection
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int deleteUserCreatesCollection(long userId, long collectionId) {
         String st = ("DELETE FROM user_creates_collection WHERE (user_id=%d AND collection_id=%d)")
@@ -412,7 +412,7 @@ public class UserService {
      * Creates a user listens to album relationship
      * @param userId The id of the user
      * @param albumId The id of the album
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUserListensToAlbum(long userId, long albumId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -457,7 +457,7 @@ public class UserService {
      * Creates a user listens to collection relationship, also updating user listens
      * @param userId The id of the user
      * @param collectionId The id of the collection
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUserListensToCollection(long userId, long collectionId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -499,7 +499,7 @@ public class UserService {
      * Deletes a user listens to collection relationship, deprecated
      * @param userId The id of the user
      * @param collectionId The id of the collection
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int deleteUserListensToCollection(long userId, long collectionId)
     {
@@ -522,7 +522,7 @@ public class UserService {
      * Creates a user follows user relationship
      * @param user1Id The id of the user who's following a different user
      * @param user2Id The id of the user being followed
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int createUserFollowsUser(long user1Id, long user2Id) {
         String st = ("INSERT INTO user_follows_user(user_one_id, user_two_id) VALUES (%d, %d)").
@@ -592,7 +592,7 @@ public class UserService {
      * Deletes a user follows user relationship
      * @param user1Id The user who's unfollowing the other user
      * @param user2Id The user who's being unfollowed
-     * @return 1 if successful, 0 otherwise
+     * @return 1 if successful, -1 otherwise
      */
     public int deleteUserFollowsUser(long user1Id, long user2Id) {
         String st = ("DELETE FROM user_follows_user WHERE (user_one_id=%d AND user_two_id=%d)")
