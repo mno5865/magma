@@ -13,16 +13,10 @@ import javax.persistence.*;
 /**
  * Class Collection that defines all properties of an Collection.
  */
-@Entity
-@Table(name = "collection", schema = "p32001_08")
 public class Collection {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "collection_id")
     private long collectionId;
 
-    @Column(name = "title")
     private String title;
 
     /**
