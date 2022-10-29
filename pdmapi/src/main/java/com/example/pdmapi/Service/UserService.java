@@ -1,6 +1,6 @@
 /**
  * file: UserService.java
- * authors: Gregory Ojiem, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
  * description: A service that runs SQL statements and queries to modify or retrieve from the database
  */
 
