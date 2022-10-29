@@ -79,12 +79,13 @@ public class ArtistController {
      * @param artistDetails artist deets
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
+     *
      */
     @PutMapping(value = "/artists/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateArtist(@PathVariable long id, @RequestBody Artist artistDetails) {
         int rowsAffected = artistService.updateArtist(id, artistDetails);
         if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }

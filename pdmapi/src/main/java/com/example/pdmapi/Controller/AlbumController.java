@@ -140,7 +140,7 @@ public class AlbumController {
     public ResponseEntity<Integer> updateAlbum(@PathVariable long id, @RequestBody Album albumDetails) {
         int rowsAffected = albumService.updateAlbum(id, albumDetails);
         if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
@@ -159,7 +159,7 @@ public class AlbumController {
             (@PathVariable long albumId, @PathVariable long songId, @PathVariable int trackNumber) {
         int rowsAffected = albumService.updateSongTrackNumberInAlbum(albumId, songId, trackNumber);
         if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
