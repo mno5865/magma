@@ -1,3 +1,10 @@
+/**
+ * File: PdmApiApplication.java
+ * Our main spring file, initializes our session and connection and starts the
+ * application
+ * @author Mildness Onyekwere - mno5856, Gregory Ojiem - gro3228
+ */
+
 package com.example.pdmapi;
 
 import com.jcraft.jsch.*;
