@@ -15,22 +15,14 @@ import java.sql.Time;
 /**
  *  Class Song that defines all properties of songs.
  */
-@Entity
-@Table(name = "song", schema = "p32001_08")
 public class Song {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "song_id")
     private long songId;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "runtime")
     private long runtime;
 
-    @Column(name = "release_date")
     private Date releaseDate;
 
     /**
