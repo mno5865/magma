@@ -29,6 +29,9 @@ import java.util.List;
 @Service
 public class GenreService {
 
+    /**
+     * dependency injection
+     */
     @Autowired
     DataSource dataSource;
 
@@ -93,7 +96,7 @@ public class GenreService {
 
     /**
      * opens connection
-     * updates table by executing insert statement to add a
+     * updates table by executing insert statement to add an
      * album_has_genre relationship.
      * closes connection
      * @param genreId refers to the genre in the genre table
@@ -137,7 +140,7 @@ public class GenreService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Genre genre = new Genre();
-            //maps the result to the object
+            //maps the result to the genre
             while(rs.next()) {
                 genre.setGenreID(rs.getLong("genre_id"));
                 genre.setName(rs.getString("name"));
@@ -170,7 +173,7 @@ public class GenreService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             List<Genre> genres = new ArrayList<>();
-            //maps the results to the object
+            //maps the results to the genre
             while(rs.next()) {
                 Genre genre = new Genre();
                 genre.setGenreID(rs.getLong("genre_id"));
@@ -211,7 +214,7 @@ public class GenreService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
-            //maps the results to the object
+            //maps the results to the song
             while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
@@ -234,7 +237,7 @@ public class GenreService {
 
     /**
      * opens connection
-     * queries and returns genre results from genre table
+     * queries and returns album results from album table
      * given genre substring
      * closes connection
      * @param genreId refers to the genre in the genre table
@@ -253,7 +256,7 @@ public class GenreService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
-
+            //maps results to album object
             while(rs.next()) {
                 Album album = new Album();
                 album.setAlbumID(rs.getLong("album_id"));
@@ -274,7 +277,14 @@ public class GenreService {
     }
 
     // UPDATE
-    public int updateGenre(Long genreId, Genre genreDetails) {
+    /**
+     * opens connection
+     * updates the attributes of the genre table for a row with details from a genre object
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
+     */
+    public int updateGenre(long genreId, Genre genreDetails) {
         String stmt = "UPDATE genre SET name='%s' WHERE genre_id=%d".formatted(genreDetails.getName(), genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
@@ -295,7 +305,14 @@ public class GenreService {
     }
 
     // DELETE
-    public int deleteGenre(Long genreId) {
+    /**
+     * opens connection
+     * deletes a genre entry from the table
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
+     */
+    public int deleteGenre(long genreId) {
         String stmt = "DELETE FROM genre WHERE genre_id=%d".formatted(genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
@@ -315,6 +332,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     * deletes row containing a song has genre relationship
+     * @param songId refers to the song in the song table
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
+     */
     public int deleteSongHasGenre(long songId, long genreId){
         String st = ("DELETE FROM song_has_genre WHERE (song_id=%d AND genre_id=%d)")
                 .formatted(songId, genreId);
@@ -336,6 +359,12 @@ public class GenreService {
         return -1;
     }
 
+    /**
+     * deletes row containing a song has genre relationship
+     * @param albumId refers to the album in the album table
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
+     */
     public int deleteAlbumHasGenre(long albumId, long genreId){
         String st = ("DELETE FROM album_has_genre WHERE (album_id=%d AND genre_id=%d)")
                 .formatted(albumId, genreId);
