@@ -74,10 +74,10 @@ public class AlbumService {
      * @param songId ID of the song
      * @return -1
      */
-    public int createAlbumContainsSong(long albumId, long songId){
+    public int createAlbumContainsSong(long albumId, long songId, int track) {
         // String that prints a message to insert a song in album
-        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d)")
-                .formatted(albumId, songId);
+        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d, %d)")
+                .formatted(albumId, songId, track);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         // Try Catch Error Checking if song can be contained in album

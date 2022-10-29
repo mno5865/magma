@@ -133,7 +133,7 @@ public class AlbumController {
     /**
      * endpoint that allows the update of any album details by using the given album id
      * @param id album id
-     * @param albumDetails album deets
+     * @param albumDetails The details of the album
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
      */
