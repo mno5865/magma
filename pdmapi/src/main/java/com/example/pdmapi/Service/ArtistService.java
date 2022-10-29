@@ -362,10 +362,12 @@ public class ArtistService {
     // DELETE
 
     /**
+     * open connection
      * Deletes an artist who releases a song
+     * closed connection
      * @param songId ID of song
      * @param artistId ID of artist
-     * @return statement.executeUpdate(stmt) or -1
+     * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
     public int deleteArtistReleaseSong(long songId, long artistId) {
         String stmt = "DELETE FROM artist_releases_song WHERE song_id=%d AND artist_id=%d"
