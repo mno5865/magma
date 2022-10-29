@@ -1,16 +1,16 @@
 /**
- * File: GenreService.java
- * GenreService.java: A public class that sets and gets the attributes for genreservice.
- * @author MAGMA
+ * file: GenreService.java
+ * authors: Gregory Ojiem gro3228,
+ *          Melissa Burisky mpb8984,
+ *          Mildness Onyekwere mno5865
  */
 package com.example.pdmapi.Service;
 
-/**
- * Import Statements
- */
+//imports
 import com.example.pdmapi.Model.Album;
 import com.example.pdmapi.Model.Genre;
 import com.example.pdmapi.Model.Song;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,27 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service Genre that defines all properties of what Genre should do.
+ * description: sets up connection to genre related db tables
+ *              and performs queries/updates/deletes
  */
 @Service
 public class GenreService {
-    final
-    DataSource dataSource;
 
-    /**
-     *
-     * @param dataSource
-     */
-    public GenreService(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    @Autowired
+    DataSource dataSource;
 
     // CREATE
 
     /**
-     *
-     * @param genre
-     * @return
+     * opens connection
+     * updates table by executing insert statement to add a
+     * genre to the table.
+     * closes connection
+     * @param genre model that db info is tied to
+     * @return return the genre object
      */
     public int createGenre(Genre genre) {
         String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
@@ -66,10 +63,13 @@ public class GenreService {
     }
 
     /**
-     *
-     * @param genreId
-     * @param songId
-     * @return
+     * opens connection
+     * updates table by executing insert statement to add a
+     * song_has_genre relationship.
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @param songId refers to the song in the song table
+     * @return the amount of rows affected by this insert statement
      */
     public int createSongHasGenre(long genreId, long songId) {
         String st = ("INSERT INTO song_has_genre (genre_id, song_id) VALUES (%d, %d)").formatted(genreId, songId);
@@ -92,10 +92,13 @@ public class GenreService {
     }
 
     /**
-     *
-     * @param genreId
-     * @param albumId
-     * @return
+     * opens connection
+     * updates table by executing insert statement to add a
+     * album_has_genre relationship.
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @param albumId refers to the album in the album table
+     * @return the amount of rows affected by this insert statement
      */
     public int createAlbumHasGenre(long genreId, long albumId) {
         String st = ("INSERT INTO album_has_genre (genre_id, album_id) VALUES (%d, %d)").formatted(genreId, albumId);
@@ -118,14 +121,15 @@ public class GenreService {
     }
 
     // READ
-
     /**
-     *
-     * @param genreID
-     * @return
+     * opens connection
+     * queries and returns specific genre result from genre table
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
      */
-    public Genre getGenre(Long genreID) {
-        String stmt = "SELECT * FROM genre WHERE genre_id=%d".formatted(genreID);
+    public Genre getGenre(long genreId) {
+        String stmt = "SELECT * FROM genre WHERE genre_id=%d".formatted(genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -133,6 +137,7 @@ public class GenreService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Genre genre = new Genre();
+            //maps the result to the object
             while(rs.next()) {
                 genre.setGenreID(rs.getLong("genre_id"));
                 genre.setName(rs.getString("name"));
@@ -151,8 +156,10 @@ public class GenreService {
     }
 
     /**
-     *
-     * @return
+     * opens connection
+     * queries and returns all genre results from genre table
+     * closes connection
+     * @return the amount of rows affected by this insert statement
      */
     public List<Genre> getGenres() {
         String stmt = "SELECT * FROM genre";
@@ -163,6 +170,7 @@ public class GenreService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             List<Genre> genres = new ArrayList<>();
+            //maps the results to the object
             while(rs.next()) {
                 Genre genre = new Genre();
                 genre.setGenreID(rs.getLong("genre_id"));
@@ -183,9 +191,12 @@ public class GenreService {
     }
 
     /**
-     *
-     * @param genreId
-     * @return
+     * opens connection
+     * queries and returns song results from song table
+     * given genre substring
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
      */
     public List<Song> getSongsByGenre(long genreId) {
         List<Song> songs = new ArrayList<>();
@@ -200,7 +211,7 @@ public class GenreService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
-
+            //maps the results to the object
             while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
@@ -222,9 +233,12 @@ public class GenreService {
     }
 
     /**
-     *
-     * @param genreId
-     * @return
+     * opens connection
+     * queries and returns genre results from genre table
+     * given genre substring
+     * closes connection
+     * @param genreId refers to the genre in the genre table
+     * @return the amount of rows affected by this insert statement
      */
     public List<Album> getAlbumsByGenre(long genreId) {
         List<Album> albums = new ArrayList<>();
@@ -260,13 +274,6 @@ public class GenreService {
     }
 
     // UPDATE
-
-    /**
-     *
-     * @param genreId
-     * @param genreDetails
-     * @return
-     */
     public int updateGenre(Long genreId, Genre genreDetails) {
         String stmt = "UPDATE genre SET name='%s' WHERE genre_id=%d".formatted(genreDetails.getName(), genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -288,12 +295,6 @@ public class GenreService {
     }
 
     // DELETE
-
-    /**
-     *
-     * @param genreId
-     * @return
-     */
     public int deleteGenre(Long genreId) {
         String stmt = "DELETE FROM genre WHERE genre_id=%d".formatted(genreId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -314,12 +315,6 @@ public class GenreService {
         return -1;
     }
 
-    /**
-     *
-     * @param songId
-     * @param genreId
-     * @return
-     */
     public int deleteSongHasGenre(long songId, long genreId){
         String st = ("DELETE FROM song_has_genre WHERE (song_id=%d AND genre_id=%d)")
                 .formatted(songId, genreId);
@@ -341,12 +336,6 @@ public class GenreService {
         return -1;
     }
 
-    /**
-     *
-     * @param albumId
-     * @param genreId
-     * @return
-     */
     public int deleteAlbumHasGenre(long albumId, long genreId){
         String st = ("DELETE FROM album_has_genre WHERE (album_id=%d AND genre_id=%d)")
                 .formatted(albumId, genreId);
