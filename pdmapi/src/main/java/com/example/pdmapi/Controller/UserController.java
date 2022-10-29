@@ -27,7 +27,7 @@ import java.util.List;
 public class UserController {
 
     /**
-     * description: controller that creates the api endpoint for accessing db data related to user
+     * service that provides connection from endpoint to db
      */
     @Autowired
     private UserService userService;

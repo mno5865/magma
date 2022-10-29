@@ -25,6 +25,7 @@ import java.util.List;
 @Service
 public class AlbumService {
 
+    /** field injection of datasource from ssh connection */
     @Autowired
     DataSource dataSource;
 
@@ -97,7 +98,7 @@ public class AlbumService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             List<Album> albums = new ArrayList<>();
-
+            // maps results to album object
             while(rs.next()) {
                 Album album = new Album();
                 album.setAlbumID(rs.getLong("album_id"));
@@ -132,7 +133,7 @@ public class AlbumService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             Album album = new Album();
-
+            //maps results to album object
             while(rs.next()) {
                 album.setAlbumID(rs.getLong("album_id"));
                 album.setTitle(rs.getString("title"));
@@ -152,8 +153,9 @@ public class AlbumService {
     }
 
     /**
-     * opens
+     * opens connection
      * Gets the list of songs in a specific Album in a database.
+     * closes connection
      * @param albumId ID of the album
      * @return a list of Songs in Album
      */
@@ -166,7 +168,7 @@ public class AlbumService {
                 + "INNER JOIN album on album_contains_song.album_id = album.album_id "
                 + "WHERE album.album_id=%d").formatted(albumId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        try{
+        try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
@@ -265,7 +267,6 @@ public class AlbumService {
         }
         return -1;
     }
-
 
     /**
      * open connection
