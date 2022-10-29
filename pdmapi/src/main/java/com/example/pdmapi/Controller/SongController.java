@@ -11,9 +11,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+/**
+ * description: controller that creates the api endpoint for accessing db data related to song
+ * authors:  MAGMA TEAM
+ */
 @RestController
 @RequestMapping("/api")
 public class SongController {
+
+    /**
+     * service that provides connection from endpoint to db
+     */
     @Autowired
     private SongService songService;
 

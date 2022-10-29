@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,7 +35,6 @@ public class AlbumService {
      * @param dataSource connects users to the data for albums.
      */
     public AlbumService(DataSource dataSource) {
-
         this.dataSource = dataSource;
     }
 
