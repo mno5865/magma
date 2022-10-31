@@ -616,6 +616,13 @@ public class UserService {
             }
         }
     }
+
+    /**
+     * A function that hashes a string and compares it to a given already hashed string
+     * @param pass The password that isn't hashed
+     * @param hashedPass The already hashed password
+     * @return True if they hash to the same value, false otherwise
+     */
     public boolean verifyPassword(String pass, String hashedPass) {
         return Hashing.sha256().hashString(pass, StandardCharsets.UTF_8).toString().equals(hashedPass);
     }

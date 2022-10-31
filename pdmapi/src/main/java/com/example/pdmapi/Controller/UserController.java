@@ -318,8 +318,15 @@ public class UserController {
         }
     }
 
+    /**
+     * A function that verifies passwords a user has entered, calls a function that hashes the string with SHA-256 and
+     * compares it to the hashed string passed in
+     * @param pass The password the user entered
+     * @param hashedPass The hashed password that belongs to the account associated with the user
+     * @return True if the passwords match, false otherwise
+     */
     @CrossOrigin
-    @GetMapping("/verify/{hashedPass}/{pass}")
+    @GetMapping("/users/verify/{hashedPass}/{pass}")
     public ResponseEntity<Boolean> verifyPassword(@PathVariable String hashedPass, @PathVariable String pass) {
         return new ResponseEntity<>(userService.verifyPassword(pass, hashedPass), HttpStatus.OK);
     }
