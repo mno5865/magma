@@ -8,11 +8,13 @@ package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -613,6 +615,9 @@ public class UserService {
                 e.printStackTrace();
             }
         }
+    }
+    public boolean verifyPassword(String pass, String hashedPass) {
+        return Hashing.sha256().hashString(pass, StandardCharsets.UTF_8).toString().equals(hashedPass);
     }
 
 }

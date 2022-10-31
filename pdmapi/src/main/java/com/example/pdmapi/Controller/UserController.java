@@ -318,4 +318,9 @@ public class UserController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping("/verify/{hashedPass}/{pass}")
+    public ResponseEntity<Boolean> verifyPassword(@PathVariable String hashedPass, @PathVariable String pass) {
+        return new ResponseEntity<>(userService.verifyPassword(pass, hashedPass), HttpStatus.OK);
+    }
 }
