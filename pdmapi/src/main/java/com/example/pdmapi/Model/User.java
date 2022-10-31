@@ -5,7 +5,8 @@
  */
 package com.example.pdmapi.Model;
 
-//import org.checkerframework.common.aliasing.qual.Unique;
+import org.ini4j.Ini;
+import com.google.guava.*;
 
 /**
  * Import Statements
@@ -40,6 +41,18 @@ public class User {
      * Constructor for User.
      */
     public User() {
+    }
+
+    public User(long userID, String username, String password, String email, String firstName, String lastName,
+                Date creationDate, Timestamp accessDate) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.creationDate = creationDate;
+        this.accessDate = accessDate;
     }
 
     /**
