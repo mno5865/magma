@@ -46,19 +46,6 @@ public class User {
     public User() {
     }
 
-    @JsonCreator
-    public User(long userID, String username, String password, String email, String firstName, String lastName,
-                Date creationDate, Timestamp accessDate) {
-        this.userID = userID;
-        this.username = username;
-        this.password = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.creationDate = creationDate;
-        this.accessDate = accessDate;
-    }
-
     /**
      * Takes user and gets the ID.
      * @return id for the user.

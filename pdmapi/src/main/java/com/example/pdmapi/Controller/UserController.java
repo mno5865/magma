@@ -9,14 +9,17 @@ package com.example.pdmapi.Controller;
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.UserService;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -89,15 +92,27 @@ public class UserController {
     }
 
     /**
-     * Creates a new user entity in the database
+     * Creates a new user entity in the database, and then updates their password to a hashed version based on
+     * thee user's ID
      * @param newUser A model of the user to create
      * @return HTTP CREATED response
      */
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User newUser) {
-        userService.createUser(newUser);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        int[] results = userService.createUser(newUser);
+        User createdUser = userService.getUser((long) results[1]);
+        Random rand = new Random(createdUser.getUserID());
+        int randInt = rand.nextInt(1000000000);
+        String hashedPass = Hashing.sha256().hashString(createdUser.getPassword()+randInt, StandardCharsets.UTF_8)
+                .toString();
+        createdUser.setPassword(hashedPass);
+        userService.updateUser((long) results[1], createdUser);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -319,15 +334,16 @@ public class UserController {
     }
 
     /**
-     * A function that verifies passwords a user has entered, calls a function that hashes the string with SHA-256 and
-     * compares it to the hashed string passed in
+     * Used to verify a user's password using SHA-256
+     * @param userID The ID of the user
+     * @param hashedPass The user's hashed password stored in the database
      * @param pass The password the user entered
-     * @param hashedPass The hashed password that belongs to the account associated with the user
-     * @return True if the passwords match, false otherwise
+     * @return True if the password matches the hashed password false otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/verify/{hashedPass}/{pass}")
-    public ResponseEntity<Boolean> verifyPassword(@PathVariable String hashedPass, @PathVariable String pass) {
-        return new ResponseEntity<>(userService.verifyPassword(pass, hashedPass), HttpStatus.OK);
+    @GetMapping("/users/{userID}/verify/{hashedPass}/{pass}")
+    public ResponseEntity<Boolean> verifyPassword(@PathVariable long userID, @PathVariable String hashedPass,
+                                                  @PathVariable String pass) {
+        return new ResponseEntity<>(userService.verifyPassword(userID, pass, hashedPass), HttpStatus.OK);
     }
 }

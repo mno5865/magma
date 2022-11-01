@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   logInUser(username : string, password : string): void {
     this.loginService.loginUser(username).subscribe(userInfo => {
       this.userInfo = userInfo
-      this.loginService.verifyUser(password, userInfo.password).subscribe(returnValue => {
+      this.loginService.verifyUser(userInfo.userID, password, userInfo.password).subscribe(returnValue => {
         if (returnValue) {
           this.utilsService.setUser(this.userInfo)
           this.router.navigate(['/users/'+this.userInfo.userID+'/home'])

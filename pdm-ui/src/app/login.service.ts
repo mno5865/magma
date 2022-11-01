@@ -22,8 +22,8 @@ export class LoginService {
     return this.http.get<User>(this.userURL+"/"+username, this.httpOptions)
   }
 
-  verifyUser(pass: string, hashedPass: string): Observable<Boolean> {
-    return this.http.get<Boolean>(this.userURL+"/verify/"+hashedPass+"/"+pass, this.httpOptions)
+  verifyUser(userID: number, pass: string, hashedPass: string): Observable<Boolean> {
+    return this.http.get<Boolean>(this.userURL+"/"+userID+"/verify/"+hashedPass+"/"+pass, this.httpOptions)
   }
 
   createUser(user: User): Observable<User> {
