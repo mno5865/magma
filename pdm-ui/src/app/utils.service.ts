@@ -55,6 +55,8 @@ export class UtilsService {
     return this.http.post<number>(this.userURL+"/"+userID+"/following/"+friendID, this.httpOptions)
   }
 
+  //TODO add endpoints for getting counts and other stuff
+
   public setUser(user: User): void {
     this.user = user
   }
