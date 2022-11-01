@@ -5,12 +5,16 @@
  */
 package com.example.pdmapi.Model;
 
-//import org.checkerframework.common.aliasing.qual.Unique;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.google.common.hash.Hashing;
+import org.ini4j.Ini;
+
 
 /**
  * Import Statements
  */
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -40,6 +44,19 @@ public class User {
      * Constructor for User.
      */
     public User() {
+    }
+
+    @JsonCreator
+    public User(long userID, String username, String password, String email, String firstName, String lastName,
+                Date creationDate, Timestamp accessDate) {
+        this.userID = userID;
+        this.username = username;
+        this.password = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.creationDate = creationDate;
+        this.accessDate = accessDate;
     }
 
     /**
