@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -174,21 +175,26 @@ public class UserService {
     }
 
     /**
-     * Creates a new user in the database
+     * Creates a new user in the database UPDATE THIS
      * @param user The user object that maps to the database user table
      * @return 1 if successful, -1 otherwise
      */
-    public int createUser(User user) {
+    public int[] createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
                 "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
-                user.getUsername(),  user.getPassword(), user.getFirstName(), user.getLastName(),
+                user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName(),
                 user.getCreationDate(), user.getAccessDate());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(8);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -198,7 +204,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     /**
@@ -317,7 +323,7 @@ public class UserService {
     //UserCreatesCollection RELATIONSHIP
 
     /**
-     * Ceates a new user creates collection relationship
+     * Creates a new user creates collection relationship
      * @param userId The id of the user
      * @param collectionId The id of the collection
      * @return 1 if successful, -1 otherwise
@@ -616,8 +622,21 @@ public class UserService {
             }
         }
     }
-    public boolean verifyPassword(String pass, String hashedPass) {
-        return Hashing.sha256().hashString(pass, StandardCharsets.UTF_8).toString().equals(hashedPass);
+
+    /**
+     * Verifies a user's password by using the user's ID as the seed for a random number generator, appending it
+     * to the password they entered to act as a salt, and then hashing it, and then comparing it to a string stored
+     * in the database that has gone through the same process
+     * @param userID The ID of the user
+     * @param pass The password the user entered
+     * @param hashedPass The hashed password stored in the database
+     * @return True if the passwords match, false otherwise
+     */
+    public boolean verifyPassword(long userID, String pass, String hashedPass) {
+        Random rand = new Random(userID);
+        int randInt = rand.nextInt(1000000000);
+        return Hashing.sha256().hashString(pass+randInt, StandardCharsets.UTF_8).toString()
+                .equals(hashedPass);
     }
 
 }
