@@ -341,7 +341,7 @@ public class UserController {
      * @return True if the password matches the hashed password false otherwise
      */
     @CrossOrigin
-    @GetMapping("/verify/{userID}/{hashedPass}/{pass}")
+    @GetMapping("/users/{userID}/verify/{hashedPass}/{pass}")
     public ResponseEntity<Boolean> verifyPassword(@PathVariable long userID, @PathVariable String hashedPass,
                                                   @PathVariable String pass) {
         return new ResponseEntity<>(userService.verifyPassword(userID, pass, hashedPass), HttpStatus.OK);
