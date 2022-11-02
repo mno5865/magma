@@ -615,21 +615,50 @@ public class UserService {
         }
     }
 
+    /**
+     *
+     * @param userID
+     */
     public void countCollectionsByUserID(long userID){
 
     }
+
+    /**
+     *
+     * @param userID
+     */
     public void countNumOfFollowers(long userID){
 
     }
+
+    /**
+     *
+     * @param userID
+     */
     public void countNumOfFollowing(long userID){
 
     }
+
+    /**
+     *
+     * @param userID
+     */
     public void topTenArtistsByPlays(long userID){
 
     }
+
+    /**
+     *
+     * @param userID
+     */
     public void topTenArtistsByCollections(long userID){
 
     }
+
+    /**
+     *
+     * @param userID
+     */
     public void topTenArtistsByPlaysAndCollections(long userID){
 
     }
