@@ -616,48 +616,48 @@ public class UserService {
     }
 
     /**
-     *
-     * @param userID
+     * Returns the number of Collections based off the User logged in.
+     * @param userID The id of the user
      */
     public void countCollectionsByUserID(long userID){
 
     }
 
     /**
-     *
-     * @param userID
+     * Returns the number of Followers based off the User logged in.
+     * @param userID The id of the user
      */
     public void countNumOfFollowers(long userID){
 
     }
 
     /**
-     *
-     * @param userID
+     * Returns the number of Following based off the User logged in.
+     * @param userID The id of the user
      */
     public void countNumOfFollowing(long userID){
 
     }
 
     /**
-     *
-     * @param userID
+     * Returns the top ten artists played by the User logged in.
+     * @param userID The id of the user
      */
     public void topTenArtistsByPlays(long userID){
 
     }
 
     /**
-     *
-     * @param userID
+     * Returns the top ten artists by collections played by the User logged in.
+     * @param userID The id of the user
      */
     public void topTenArtistsByCollections(long userID){
 
     }
 
     /**
-     *
-     * @param userID
+     * Returns the top ten artists by plays and collections played by the User logged in.
+     * @param userID The id of the user
      */
     public void topTenArtistsByPlaysAndCollections(long userID){
 
