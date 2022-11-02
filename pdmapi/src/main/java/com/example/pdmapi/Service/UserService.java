@@ -626,5 +626,4 @@ public class UserService {
     public boolean verifyPassword(String pass, String hashedPass) {
         return Hashing.sha256().hashString(pass, StandardCharsets.UTF_8).toString().equals(hashedPass);
     }
-
 }
