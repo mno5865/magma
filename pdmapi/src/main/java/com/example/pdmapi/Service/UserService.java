@@ -619,7 +619,28 @@ public class UserService {
      * Returns the number of Collections based off the User logged in.
      * @param userID The id of the user
      */
-    public void countCollectionsByUserID(long userID){
+    public int countCollectionsByUserID(long userID){
+        String query = ("SELECT COUNT(collection_id) as num_colls FROM user_creates_collection WHERE user_id = $id").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                numColls = rs.getInt("num_colls");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return numColls;
 
     }
 
@@ -627,15 +648,56 @@ public class UserService {
      * Returns the number of Followers based off the User logged in.
      * @param userID The id of the user
      */
-    public void countNumOfFollowers(long userID){
-
+    public int countNumOfFollowers(long userID){
+        String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_two_id = $id").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                numColls = rs.getInt("num");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return numColls;
     }
 
     /**
      * Returns the number of Following based off the User logged in.
      * @param userID The id of the user
      */
-    public void countNumOfFollowing(long userID){
+    public int countNumOfFollowing(long userID){
+        String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = $id").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                numColls = rs.getInt("num");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return numColls;
 
     }
 
