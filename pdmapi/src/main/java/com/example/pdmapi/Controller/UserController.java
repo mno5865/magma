@@ -100,14 +100,16 @@ public class UserController {
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody User newUser) {
-        int[] results = userService.createUser(newUser);
-        User createdUser = userService.getUser((long) results[1]);
-        Random rand = new Random(createdUser.getUserID());
+        User nullUser = new User();
+        int[] results = userService.createUser(nullUser);
+        //GENERATING RANDOM VALUE
+        Random rand = new Random(results[1]);
         int randInt = rand.nextInt(1000000000);
-        String hashedPass = Hashing.sha256().hashString(createdUser.getPassword()+randInt, StandardCharsets.UTF_8)
+        String hashedPass = Hashing.sha256().hashString(newUser.getPassword()+randInt, StandardCharsets.UTF_8)
                 .toString();
-        createdUser.setPassword(hashedPass);
-        userService.updateUser((long) results[1], createdUser);
+        //UPDATING USER PASSWORD TO HASHED VAL
+        newUser.setPassword(hashedPass);
+        userService.updateUser((long) results[1], newUser);
         if (results[0] == 1 && results[1] != 0) {
             return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
