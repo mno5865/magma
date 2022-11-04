@@ -218,6 +218,11 @@ public class SongController {
         }
     }
 
+    /**
+     * endpoint that gets song recommendations based on following activity
+     * @param userId (long) the user's identification number
+     * @return ResponseEntity noting the outcome of the request and list of songs
+     */
     @CrossOrigin
     @GetMapping("/songs/topoffollowing/{userId}")
     public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)

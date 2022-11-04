@@ -458,6 +458,12 @@ public class SongService {
         return songs;
     }
 
+    /**
+     * Gets a user's top 50 recommended songs based on the
+     * songs the people they follows listen to.
+     * @param userId (long) the user's identification number
+     * @return A list of the recommended songs
+     */
     public List<Song> topFiftySongsOfFollowing(long userId)
     {
         List<Song> songs = new ArrayList<>();
