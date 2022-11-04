@@ -7,6 +7,7 @@
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -346,6 +347,41 @@ public class UserController {
         }
     }
 
+//    /**
+//     *
+//     * @param userId
+//     * @return
+//     */
+//    @CrossOrigin
+//    @GetMapping("/users/{userId}/songs/top50Songs/friends")
+//    public ResponseEntity<List<SongInView>> getTopFiftySongsOfFollowing(@PathVariable long userId) {
+//        User user = userService.getUser(userId);
+//        if (user != null){
+//            List<SongInView> top50Songs  = userService.getTopFiftySongsOfFollowing(userId);
+//            return new ResponseEntity<>(top50Songs, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+//    /**
+//     *
+//     * @param userId
+//     * @return
+//    */
+//    @CrossOrigin
+//    @GetMapping("/users/{userId}/reccomended/songs")
+//    public ResponseEntity<List<SongInView>> reccomendedSongs(@PathVariable long userId) {
+//        User user = userService.getUser(userId);
+//        if (user != null){
+//            List<SongInView> reccomendedSongs  = userService.reccomendedSongs(userId);
+//            return new ResponseEntity<>(reccomendedSongs, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    /**
     /**
      * Deletes a user follows user relationship
      * @param userId The id of the user who's unfollowing another

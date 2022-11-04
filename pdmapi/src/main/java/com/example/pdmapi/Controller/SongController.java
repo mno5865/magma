@@ -8,6 +8,7 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.SongInView;
+import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -218,5 +219,17 @@ public class SongController {
         }
     }
 
+    /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+//    @CrossOrigin
+//    @GetMapping("/songs/top50Songs/last30Days")
+//    public ResponseEntity<List<SongInView>> getTopFiftySongsLastThirtyDays() {
+//        List<SongInView> top50Songs  = songService.getTop50Songs();
+//        return new ResponseEntity<>(top50Songs, HttpStatus.OK);
+//
+//    }
 
 }
