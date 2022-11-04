@@ -212,6 +212,22 @@ public class UserController {
     }
 
     /**
+     * Gets a count of collections that belong to a certain user
+     * @param userId The id of the user
+     * @return HTTP OK if successful and the list of collections, HTTP BAD_REQUEST otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections")
+    public ResponseEntity<Integer> getCollectionCountByUserId(@PathVariable long userId) {
+        int count = userService.getCollectionCountByUserId(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
      * Deletes a users creates collection relationship
      * @param userId The user id of the user
      * @param collectionId The collection id of the collection
