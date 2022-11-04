@@ -507,17 +507,22 @@ public class UserService {
     /**
      * counts the number of collections that user has associated with their account
      * @param userId id of user
-     * @return number of rows affected by the sql statement or -1. -1 indicates and error
+     * @return number of collections found by the sql statement or -1. -1 indicates and error
      */
     public int getCollectionCountByUserId(long userId){
-        String stmt = ("SELECT COUNT(ucc) as collection_count from user_creates_collection ucc"
+        String query = ("SELECT COUNT(ucc) as collection_count from user_creates_collection ucc "
                 + "WHERE ucc.user_id=%d").formatted(userId);
         try {
             Connection conn = DataSourceUtils.getConnection(dataSource);
-            Statement statement = conn.createStatement(
+            Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            ResultSet rs = stmt.executeQuery(query);
+            int count = 0;
+            while(rs.next()){
+                count = rs.getInt("collection_count");
+            }
+            return count;
         } catch (Exception e) {
             e.printStackTrace();
         }

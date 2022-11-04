@@ -225,7 +225,7 @@ public class UserController {
      * @return HTTP OK if successful and the list of collections, HTTP BAD_REQUEST otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/collections/count/")
+    @GetMapping("/users/{userId}/collections/count")
     public ResponseEntity<Integer> getCollectionCountByUserId(@PathVariable long userId) {
         int count = userService.getCollectionCountByUserId(userId);
         if (count != -1) {
