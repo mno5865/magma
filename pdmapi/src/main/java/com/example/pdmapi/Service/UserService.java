@@ -770,7 +770,6 @@ public class UserService {
             }
         }
         return result;
-
     }
 
     /**
@@ -778,7 +777,28 @@ public class UserService {
      * @param userID The id of the user
      */
     public void topTenArtistsByPlaysAndCollections(long userID){
-
+        List<String> result = new ArrayList<>();
+        String query = ("");
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                result.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 }
