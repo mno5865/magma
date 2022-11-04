@@ -621,7 +621,7 @@ public class UserService {
      * @param userID The id of the user
      */
     public int countCollectionsByUserID(long userID){
-        String query = ("SELECT COUNT(collection_id) as num_colls FROM user_creates_collection WHERE user_id = $id").formatted(userID);
+        String query = ("SELECT COUNT(collection_id) as num_colls FROM user_creates_collection WHERE user_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         int numColls=0;
         try {
@@ -650,16 +650,16 @@ public class UserService {
      * @param userID The id of the user
      */
     public int countNumOfFollowers(long userID){
-        String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_two_id = $id").formatted(userID);
+        String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_two_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
+        int numofFollowers=0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                numColls = rs.getInt("num");
+                numofFollowers = rs.getInt("num");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -670,7 +670,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return numColls;
+        return numofFollowers;
     }
 
     /**
@@ -678,16 +678,16 @@ public class UserService {
      * @param userID The id of the user
      */
     public int countNumOfFollowing(long userID){
-        String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = $id").formatted(userID);
+        String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
+        int numofFollowing=0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                numColls = rs.getInt("num");
+                numofFollowing = rs.getInt("num");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -698,7 +698,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return numColls;
+        return numofFollowing;
 
     }
 
@@ -715,7 +715,6 @@ public class UserService {
                 "ORDER BY Count(s.song_id) DESC\n" +
                 "LIMIT 10").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -744,14 +743,13 @@ public class UserService {
     public List<String> topTenArtistsByCollections(long userID){
         List<String> result = new ArrayList<>();
         String query = ("SELECT  a3.name as name , Count(a2.song_id) as count FROM user_creates_collection as s\n" +
-                "JOIN collection_holds_song as a on a.collection_id = s.collection_id AND s.user_id = $id\n" +
+                "JOIN collection_holds_song as a on a.collection_id = s.collection_id AND s.user_id = %d\n" +
                 "Join artist_releases_song as a2 on a2.song_id = a.song_id\n" +
                 "JOIN artist as a3 on a3.artist_id = a2.artist_id\n" +
                 "GROUP BY a3.name\n" +
                 "ORDER BY count DESC\n" +
                 "LIMIT 10").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -776,11 +774,10 @@ public class UserService {
      * Returns the top ten artists by plays and collections played by the User logged in.
      * @param userID The id of the user
      */
-    public List topTenArtistsByPlaysAndCollections(long userID){
+    public List<String> topTenArtistsByPlaysAndCollections(long userID){
         List<String> result = new ArrayList<>();
         String query = ("");
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,

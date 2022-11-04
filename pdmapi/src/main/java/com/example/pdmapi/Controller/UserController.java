@@ -250,6 +250,23 @@ public class UserController {
     }
 
     /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections/count")
+    public ResponseEntity<Integer> countCollectionsByUserID(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            int numCollections  = userService.countNumOfFollowing(userId);
+            return new ResponseEntity<>(numCollections, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Deletes user listens to collection relationship, deprecatd
      * @param userId The id of the user
      * @param collectionId The id of the collection
@@ -285,6 +302,23 @@ public class UserController {
     }
 
     /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/numFollowing")
+    public ResponseEntity<Integer> countNumOfFollowing(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            int numFollowing  = userService.countNumOfFollowing(userId);
+            return new ResponseEntity<>(numFollowing, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Creates a user follows user relationship
      * @param userId The id of the user
      * @param friendId The id of the friend
@@ -298,6 +332,17 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @CrossOrigin
+    @GetMapping("/users/{userId}/numFollowers")
+    public ResponseEntity<Integer> countNumOfFollowers(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            int numFollowers  = userService.countNumOfFollowers(userId);
+            return new ResponseEntity<>(numFollowers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -315,6 +360,58 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/topTenArtistsByPlays")
+    public ResponseEntity<List<String>> topTenArtistsByPlays(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            List<String> topTenArtists  = userService.topTenArtistsByPlays(userId);
+            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/topTenArtistsByCollections")
+    public ResponseEntity<List<String>> topTenArtistsByCollections(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            List<String> topTenArtists  = userService.topTenArtistsByCollections(userId);
+            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Gets the list of the users that a user is following
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/topTenArtistsByPlaysAndCollections")
+    public ResponseEntity<List<String>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
+        User user = userService.getUser(userId);
+        if (user != null){
+            List<String> topTenArtists  = userService.topTenArtistsByPlaysAndCollections(userId);
+            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
