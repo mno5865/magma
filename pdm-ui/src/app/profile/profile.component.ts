@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
     creationDate: new Date, accessDate: new Date}
   followersCount: number = 0;
   followingCount: number = 0;
+  collectionCount: number = 0;
 
 
   constructor(private router : Router, route : ActivatedRoute, private utilService : UtilsService) {
@@ -30,6 +31,10 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
+  }
+
+  goToCollections(): void {
+    this.router.navigate(['/users/' + this.userID + '/collections'])
   }
 
   goBack(): void {
