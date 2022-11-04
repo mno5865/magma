@@ -776,7 +776,7 @@ public class UserService {
      * Returns the top ten artists by plays and collections played by the User logged in.
      * @param userID The id of the user
      */
-    public void topTenArtistsByPlaysAndCollections(long userID){
+    public List topTenArtistsByPlaysAndCollections(long userID){
         List<String> result = new ArrayList<>();
         String query = ("");
         Connection conn = DataSourceUtils.getConnection(dataSource);
