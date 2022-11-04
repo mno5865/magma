@@ -6,6 +6,7 @@
 
 package com.example.pdmapi.Service;
 
+import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -705,7 +706,34 @@ public class UserService {
      * Returns the top ten artists played by the User logged in.
      * @param userID The id of the user
      */
-    public void topTenArtistsByPlays(long userID){
+    public List<String> topTenArtistsByPlays(long userID){
+        List<String> result = new ArrayList<>();
+        String query = ("SELECT  a2.name as name, Count(s.song_id) as count FROM user_listens_to_song as s\n" +
+                "JOIN artist_releases_song as a on a.song_id = s.song_id AND s.user_id = 2\n" +
+                "JOIN artist as a2 on a.artist_id = a2.artist_id\n" +
+                "GROUP BY a2.name\n" +
+                "ORDER BY Count(s.song_id) DESC\n" +
+                "LIMIT 10").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                result.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
 
     }
 
@@ -713,7 +741,35 @@ public class UserService {
      * Returns the top ten artists by collections played by the User logged in.
      * @param userID The id of the user
      */
-    public void topTenArtistsByCollections(long userID){
+    public List<String> topTenArtistsByCollections(long userID){
+        List<String> result = new ArrayList<>();
+        String query = ("SELECT  a3.name as name , Count(a2.song_id) as count FROM user_creates_collection as s\n" +
+                "JOIN collection_holds_song as a on a.collection_id = s.collection_id AND s.user_id = $id\n" +
+                "Join artist_releases_song as a2 on a2.song_id = a.song_id\n" +
+                "JOIN artist as a3 on a3.artist_id = a2.artist_id\n" +
+                "GROUP BY a3.name\n" +
+                "ORDER BY count DESC\n" +
+                "LIMIT 10").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int numColls=0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                result.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
 
     }
 
