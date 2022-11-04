@@ -260,7 +260,7 @@ public class UserController {
     public ResponseEntity<Integer> countCollectionsByUserID(@PathVariable long userId) {
         User user = userService.getUser(userId);
         if (user != null){
-            int numCollections  = userService.countNumOfFollowing(userId);
+            int numCollections  = userService.countCollectionsByUserID(userId);
             return new ResponseEntity<>(numCollections, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -303,17 +303,32 @@ public class UserController {
     }
 
     /**
-     * Gets the list of the users that a user is following
+     * endpoint that gets the count of the users followers
      * @param userId The id of the user
-     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     * @return HTTP OK and the count of followers if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/numFollowing")
-    public ResponseEntity<Integer> countNumOfFollowing(@PathVariable long userId) {
-        User user = userService.getUser(userId);
-        if (user != null){
-            int numFollowing  = userService.countNumOfFollowing(userId);
-            return new ResponseEntity<>(numFollowing, HttpStatus.OK);
+    @GetMapping("/users/{userId}/following/count")
+    public ResponseEntity<Integer> getFollowersCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowersCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint that gets the count of the users following
+     * @param userId id of user
+     * @return HTTP OK and the count of following if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/followers/count")
+    public ResponseEntity<Integer> getFollowingCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowingCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -335,17 +350,7 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-    @CrossOrigin
-    @GetMapping("/users/{userId}/numFollowers")
-    public ResponseEntity<Integer> countNumOfFollowers(@PathVariable long userId) {
-        User user = userService.getUser(userId);
-        if (user != null){
-            int numFollowers  = userService.countNumOfFollowers(userId);
-            return new ResponseEntity<>(numFollowers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+
 
 //    /**
 //     *

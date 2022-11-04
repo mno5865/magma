@@ -1,6 +1,7 @@
 /**
  * file: UserService.java
- * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984,
+ *          Mildness Onyekwere - mno5865, Ananya Misra - TBA
  * description: A service that runs SQL statements and queries to modify or retrieve from the database
  */
 
@@ -646,21 +647,23 @@ public class UserService {
     }
 
     /**
-     * Returns the number of Followers based off the User logged in.
+     * Returns the number of people following a specific user
      * @param userID The id of the user
+     * @return follower count, but if there is a problem -1
      */
-    public int countNumOfFollowers(long userID){
+    public int getFollowersCountByUserID(long userID){
         String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_two_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numofFollowers=0;
+        int followerCount = 0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                numofFollowers = rs.getInt("num");
+               followerCount = rs.getInt("num");
             }
+            return followerCount;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -670,25 +673,27 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return numofFollowers;
+        return -1;
     }
 
     /**
      * Returns the number of Following based off the User logged in.
      * @param userID The id of the user
+     * @return following count, but if there is a problem -1
      */
-    public int countNumOfFollowing(long userID){
+    public int getFollowingCountByUserID(long userID){
         String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numofFollowing=0;
+        int followingCount = 0;
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                numofFollowing = rs.getInt("num");
+                followingCount = rs.getInt("num");
             }
+            return followingCount;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -698,8 +703,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return numofFollowing;
-
+        return -1;
     }
 
     /**
@@ -760,7 +764,7 @@ public class UserService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 conn.close();
             } catch (SQLException e) {
