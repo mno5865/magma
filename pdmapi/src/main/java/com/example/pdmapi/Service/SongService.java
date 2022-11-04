@@ -457,4 +457,47 @@ public class SongService {
         }
         return songs;
     }
+
+    public List<Song> topFiftySongsOfFollowing(long userId)
+    {
+        List<Song> songs = new ArrayList<>();
+        String stmt = "SELECT song.song_id,song.title,song.release_date,song.runtime,listen_count " +
+                "from song inner join " +
+                "(SELECT s.song_id,COUNT(*) as listen_count " +
+                "FROM (SELECT song_id " +
+                "FROM user_listens_to_song " +
+                "WHERE user_id in ( " +
+                "SELECT user_two_id as user_id " +
+                "FROM user_follows_user " +
+                "WHERE user_one_id=%d)) as s ".formatted(userId) +
+                "group by s.song_id) as sg " +
+                "on sg.song_id = song.song_id " +
+                "order by sg.listen_count DESC " +
+                "limit 50";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            while(rs.next())
+            {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setRuntime(rs.getLong("runtime"));
+                songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
+    }
 }

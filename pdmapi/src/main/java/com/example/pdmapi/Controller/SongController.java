@@ -217,4 +217,16 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/songs/topoffollowing/{userId}")
+    public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
+    {
+        List<Song> songs = songService.topFiftySongsOfFollowing(userId);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
 }
