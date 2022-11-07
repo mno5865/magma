@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
-import {LoginService} from "../login.service";
 import {User} from "../User";
 import {UtilsService} from "../utils.service";
 
@@ -11,7 +10,7 @@ import {UtilsService} from "../utils.service";
 })
 
 export class ProfileComponent implements OnInit {
-  private userID: number = 0;
+  userID: number = 0;
   userInfo: User = {userID: -1, username: "", password: "admin", email: "", firstName: "", lastName: "",
     creationDate: new Date, accessDate: new Date}
   followersCount: number = 0;
@@ -24,14 +23,27 @@ export class ProfileComponent implements OnInit {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
       this.userInfo.firstName = utilService.getFirstName();
-      this.followersCount = 0;
-      this.followingCount = 0;
+      utilService.getCollectionCount(this.userID).subscribe(count => {
+        this.collectionCount = count;
+      })
+      utilService.getFollowersCount(this.userID).subscribe(count => {
+        this.followersCount = count;
+      })
+      utilService.getFollowingCount(this.userID).subscribe(count => {
+        this.followingCount = count;
+      })
     })
   }
 
 
   ngOnInit(): void {
   }
+
+  // getCollection(): number {
+  //   return utilService.getCollectionCount(this.userID).subscribe(count => {
+  //     this.collectionCount = count;
+  //   })
+  // }
 
   goToCollections(): void {
     this.router.navigate(['/users/' + this.userID + '/collections'])

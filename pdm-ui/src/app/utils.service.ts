@@ -56,6 +56,17 @@ export class UtilsService {
   }
 
   //TODO add endpoints for getting counts and other stuff
+  public getCollectionCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/collections/count", this.httpOptions)
+  }
+
+  public getFollowersCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/followers/count", this.httpOptions)
+  }
+
+  public getFollowingCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/following/count", this.httpOptions)
+  }
 
   public setUser(user: User): void {
     this.user = user
