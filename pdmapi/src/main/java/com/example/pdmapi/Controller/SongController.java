@@ -217,4 +217,17 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
+
+    /**
+     * endpoint that gets the 50 songs with the most listens in the past 30 days
+     * @return ResponseEntity containing the list of top 50 songs
+     */
+    public ResponseEntity<List<SongInView>> getTop50Songs() {
+        List<SongInView> songs = songService.getTop50Songs();
+        if (songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
 }
