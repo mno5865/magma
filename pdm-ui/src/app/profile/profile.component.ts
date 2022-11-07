@@ -39,12 +39,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // getCollection(): number {
-  //   return utilService.getCollectionCount(this.userID).subscribe(count => {
-  //     this.collectionCount = count;
-  //   })
-  // }
-
   goToCollections(): void {
     this.router.navigate(['/users/' + this.userID + '/collections'])
   }
