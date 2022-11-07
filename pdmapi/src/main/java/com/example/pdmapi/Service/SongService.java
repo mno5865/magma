@@ -488,6 +488,7 @@ public class SongService {
                 songInView.setSongTitle(rs.getString("title"));
                 songInView.setArtistName(rs.getString("name"));
                 songInView.setListenCount(rs.getLong("listen_count"));
+                songs.add(songInView);
             }
         } catch (Exception e) {
             e.printStackTrace();

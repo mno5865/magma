@@ -223,7 +223,7 @@ public class SongController {
      * @return ResponseEntity containing the list of top 50 songs
      */
     @CrossOrigin
-    @GetMapping("/songs/top50")
+    @GetMapping("/songs/top-50")
     public ResponseEntity<List<SongInView>> getTop50Songs() {
         List<SongInView> songs = songService.getTop50Songs();
         if (songs == null) {
