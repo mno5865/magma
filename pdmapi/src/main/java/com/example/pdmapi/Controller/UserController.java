@@ -93,13 +93,13 @@ public class UserController {
 
     /**
      * Creates a new user entity in the database, and then updates their password to a hashed version based on
-     * thee user's ID
+     * the user's ID
      * @param newUser A model of the user to create
      * @return HTTP CREATED response
      */
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User newUser) {
+    public ResponseEntity<Integer> createUser(@RequestBody User newUser) {
         User nullUser = new User();
         int[] results = userService.createUser(nullUser);
         //GENERATING RANDOM VALUE
@@ -125,9 +125,13 @@ public class UserController {
      */
     @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
-        userService.updateUser(id, updatedUser);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> updateUser(@PathVariable long id, @RequestBody User updatedUser) {
+        int rowsAffected = userService.updateUser(id, updatedUser);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -154,9 +158,13 @@ public class UserController {
      */
     @CrossOrigin
     @DeleteMapping("/users/{id}")
-    public ResponseEntity deleteUser(@PathVariable long id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> deleteUser(@PathVariable long id) {
+        int rowsAffected = userService.deleteUser(id);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -186,7 +194,7 @@ public class UserController {
      */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/{collectionId}")
-    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+    public ResponseEntity<Integer> createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -208,6 +216,22 @@ public class UserController {
             return new ResponseEntity<>(collections, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Gets a count of collections that belong to a certain user
+     * @param userId The id of the user
+     * @return HTTP OK if successful and the list of collections, HTTP BAD_REQUEST otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections/count")
+    public ResponseEntity<Integer> getCollectionCountByUserId(@PathVariable long userId) {
+        int count = userService.getCollectionCountByUserId(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -267,7 +291,7 @@ public class UserController {
     }
 
     /**
-     * Deletes user listens to collection relationship, deprecatd
+     * Deletes user listens to collection relationship, deprecated
      * @param userId The id of the user
      * @param collectionId The id of the collection
      * @return HTTP OK if successful, and BAD_REQUEST otherwise
@@ -309,7 +333,7 @@ public class UserController {
      */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/following/{friendId}")
-    public ResponseEntity createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
+    public ResponseEntity<Integer> createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
         int rowsAffected = userService.createUserFollowsUser(userId, friendId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);

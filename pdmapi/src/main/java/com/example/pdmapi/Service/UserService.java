@@ -505,6 +505,31 @@ public class UserService {
     }
 
     /**
+     * counts the number of collections that user has associated with their account
+     * @param userId id of user
+     * @return number of collections found by the sql statement or -1. -1 indicates and error
+     */
+    public int getCollectionCountByUserId(long userId){
+        String query = ("SELECT COUNT(ucc) as collection_count from user_creates_collection ucc "
+                + "WHERE ucc.user_id=%d").formatted(userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            int count = 0;
+            while(rs.next()){
+                count = rs.getInt("collection_count");
+            }
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
      * Deletes a user listens to collection relationship, deprecated
      * @param userId The id of the user
      * @param collectionId The id of the collection
