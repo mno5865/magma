@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -181,9 +182,9 @@ public class UserService {
      */
     public int[] createUser(User user) {
         String stmt = ("INSERT INTO \"user\"(email, username, password, first_name, last_name, creation_date, " +
-                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%tF', '%tc')").formatted(user.getEmail(),
+                "access_date) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s')").formatted(user.getEmail(),
                 user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName(),
-                user.getCreationDate(), user.getAccessDate());
+                "1991-01-01", "1991-01-01T02:10:44.361+00:00");
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
@@ -497,6 +498,31 @@ public class UserService {
                 createUserListensToSong(userId,songId);
             }
             return statement.executeUpdate(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * counts the number of collections that user has associated with their account
+     * @param userId id of user
+     * @return number of collections found by the sql statement or -1. -1 indicates and error
+     */
+    public int getCollectionCountByUserId(long userId){
+        String query = ("SELECT COUNT(ucc) as collection_count from user_creates_collection ucc "
+                + "WHERE ucc.user_id=%d").formatted(userId);
+        try {
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            int count = 0;
+            while(rs.next()){
+                count = rs.getInt("collection_count");
+            }
+            return count;
         } catch (Exception e) {
             e.printStackTrace();
         }

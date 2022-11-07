@@ -219,6 +219,23 @@ public class SongController {
     }
 
     /**
+     * endpoint that gets song recommendations based on following activity
+     * @param userId (long) the user's identification number
+     * @return ResponseEntity noting the outcome of the request and list of songs
+     */
+    @CrossOrigin
+    @GetMapping("/songs/topoffollowing/{userId}")
+    public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
+    {
+        List<Song> songs = songService.topFiftySongsOfFollowing(userId);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+    
+     /**
      * endpoint that gets the 50 songs with the most listens in the past 30 days
      * @return ResponseEntity containing the list of top 50 songs
      */
