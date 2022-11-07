@@ -1,7 +1,7 @@
 /**
  * File: SongService.java
  * SongService.java: A public class that sets and gets the attributes for songservice.
- * @author Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * @author Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865, Adrian Burgos - awb8593
  */
 package com.example.pdmapi.Service;
 
@@ -457,8 +457,8 @@ public class SongService {
         }
         return songs;
     }
-
-    /**
+    
+        /**
      * Gets a user's top 50 recommended songs based on the
      * songs the people they follows listen to.
      * @param userId (long) the user's identification number
@@ -494,6 +494,50 @@ public class SongService {
                 song.setReleaseDate(rs.getDate("release_date"));
                 song.setRuntime(rs.getLong("runtime"));
                 songs.add(song);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return songs;
+    }
+    
+        /**
+     * Get the 50 songs with the most listens in the past 30 days
+     * @return a list of SongInViews containing the top 50 songs' title, artist, and listen count
+     */
+    public List<SongInView> getTop50Songs() {
+        List<SongInView> songs = new ArrayList<>();
+
+        String query = ("SELECT topInfo.title, topInfo.name, listen_count FROM\n" +
+                "(select distinct on (s.title) s.song_id, s.title, s.runtime, s.release_date, art.name,\n" +
+                "       (select count(c) from song as c\n" +
+                "        inner join user_listens_to_song ults on c.song_id = ults.song_id\n" +
+                "        where c.song_id = s.song_id and ults.date_time >= CURRENT_TIMESTAMP - interval '30 days') as listen_count, s.release_date as song_release_date\n" +
+                "from song as s\n" +
+                "left outer join artist_releases_song ars on s.song_id = ars.song_id\n" +
+                "left outer join artist art on ars.artist_id = art.artist_id) topInfo\n" +
+                "order by listen_count desc\n" +
+                "limit 50;");
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            //If song does not exist in that genre create a song and its details in the genre.
+            while (rs.next()) {
+                SongInView songInView = new SongInView();
+                songInView.setSongTitle(rs.getString("title"));
+                songInView.setArtistName(rs.getString("name"));
+                songInView.setListenCount(rs.getLong("listen_count"));
+                songs.add(songInView);
             }
         } catch (Exception e) {
             e.printStackTrace();
