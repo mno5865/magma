@@ -6,6 +6,7 @@
 
 package com.example.pdmapi.Controller;
 
+import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Model.User;
@@ -411,12 +412,11 @@ public class UserController {
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/topTenArtistsByPlays")
-    public ResponseEntity<List<String>> topTenArtistsByPlays(@PathVariable long userId) {
-        User user = userService.getUser(userId);
-        if (user != null){
-            List<String> topTenArtists  = userService.topTenArtistsByPlays(userId);
-            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+    @GetMapping("/users/{userId}/top-ten-artists/by-plays")
+    public ResponseEntity<List<Artist>> topTenArtistsByPlays(@PathVariable long userId) {
+        List<Artist> artists = userService.getTopTenArtistsByPlays(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

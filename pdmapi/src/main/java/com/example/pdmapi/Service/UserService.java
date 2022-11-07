@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UserService {
@@ -706,17 +707,21 @@ public class UserService {
         return -1;
     }
 
+    // top ten artists
     /**
      * Returns the top ten artists played by the User logged in.
      * @param userID The id of the user
+     * @return return list of artists
      */
-    public List<String> topTenArtistsByPlays(long userID){
-        List<String> result = new ArrayList<>();
-        String query = ("SELECT  a2.name as name, Count(s.song_id) as count FROM user_listens_to_song as s\n" +
-                "JOIN artist_releases_song as a on a.song_id = s.song_id AND s.user_id = 2\n" +
-                "JOIN artist as a2 on a.artist_id = a2.artist_id\n" +
-                "GROUP BY a2.name\n" +
-                "ORDER BY Count(s.song_id) DESC\n" +
+    public List<Artist> getTopTenArtistsByPlays(long userID){
+        List<Artist> artists = new ArrayList<>();
+        String query = ("SELECT a.name, a.artist_id, " +
+                "COUNT(uls.song_id) as count FROM user_listens_to_song as uls " +
+                "INNER JOIN artist_releases_song as ars on ars.song_id = uls.song_id " +
+                "INNER JOIN artist as a on a.artist_id = ars.artist_id " +
+                "WHERE uls.user_id=%d " +
+                "GROUP BY a.name, a.artist_id " +
+                "ORDER BY COUNT(uls.song_id) DESC " +
                 "LIMIT 10").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
@@ -725,27 +730,30 @@ public class UserService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                result.add(rs.getString("name"));
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return result;
-
+        return artists;
     }
 
     /**
      * Returns the top ten artists by collections played by the User logged in.
      * @param userID The id of the user
+     * @return list of artist names
      */
-    public List<String> topTenArtistsByCollections(long userID){
-        List<String> result = new ArrayList<>();
+    public List<Artist> getTopTenArtistsByCollections(long userID){
+        List<Artist> artists = new ArrayList<>();
         String query = ("SELECT  a3.name as name , Count(a2.song_id) as count FROM user_creates_collection as s\n" +
                 "JOIN collection_holds_song as a on a.collection_id = s.collection_id AND s.user_id = %d\n" +
                 "Join artist_releases_song as a2 on a2.song_id = a.song_id\n" +
@@ -760,7 +768,10 @@ public class UserService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                result.add(rs.getString("name"));
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -771,14 +782,14 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        return result;
+        return artists;
     }
 
     /**
      * Returns the top ten artists by plays and collections played by the User logged in.
      * @param userID The id of the user
      */
-    public List<String> topTenArtistsByPlaysAndCollections(long userID){
+    public List<String> getTopTenArtistsByPlaysAndCollections(long userID){
         List<String> result = new ArrayList<>();
         String query = ("");
         Connection conn = DataSourceUtils.getConnection(dataSource);
