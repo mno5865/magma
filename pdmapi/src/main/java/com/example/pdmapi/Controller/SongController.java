@@ -222,6 +222,8 @@ public class SongController {
      * endpoint that gets the 50 songs with the most listens in the past 30 days
      * @return ResponseEntity containing the list of top 50 songs
      */
+    @CrossOrigin
+    @GetMapping("/songs/top50")
     public ResponseEntity<List<SongInView>> getTop50Songs() {
         List<SongInView> songs = songService.getTop50Songs();
         if (songs == null) {
