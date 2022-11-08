@@ -385,4 +385,45 @@ public class GenreService {
         }
         return -1;
     }
+
+    /**
+     * Get the top 5 genres that were played since the 1st of this month
+     * @return a list of 5 Genres
+     */
+    public List<Genre> getTop5Genres() {
+        List<Genre> genres = new ArrayList<>();
+
+        String query = ("SELECT genre.name, count(\"name\") AS top FROM user_listens_to_song\n" +
+                "INNER JOIN song ON song.song_id=user_listens_to_song.song_id\n" +
+                "INNER JOIN song_has_genre ON song.song_id=song_has_genre.song_id\n" +
+                "INNER JOIN genre ON song_has_genre.genre_id=genre.genre_id\n" +
+                "WHERE  date_part('month', user_listens_to_song.date_time) = date_part('month', (SELECT current_timestamp))\n" +
+                "AND date_part('year', user_listens_to_song.date_time) = date_part('year', (SELECT current_timestamp))\n" +
+                "GROUP BY (genre.name)\n" +
+                "ORDER BY top desc\n" +
+                "limit 5;");
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Genre genre = new Genre();
+                genre.setName(rs.getString("name"));
+                genres.add(genre);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return genres;
+    }
 }

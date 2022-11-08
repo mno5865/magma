@@ -10,6 +10,7 @@ package com.example.pdmapi.Controller;
 //imports
 import com.example.pdmapi.Model.Genre;
 import com.example.pdmapi.Model.Song;
+import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -215,6 +216,21 @@ public class GenreController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * endpoint that gets the 5 genres that were played since the first of the month
+     * @return ResponseEntity containing the list of top 5 genres
+     */
+    @CrossOrigin
+    @GetMapping("/genres/top-5")
+    public ResponseEntity<List<Genre>> getTop5Genres() {
+        List<Genre> genres = genreService.getTop5Genres();
+        if (genres == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(genres, HttpStatus.OK);
         }
     }
 }
