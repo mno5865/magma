@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -754,11 +753,11 @@ public class UserService {
      */
     public List<Artist> getTopTenArtistsByCollections(long userID){
         List<Artist> artists = new ArrayList<>();
-        String query = ("SELECT  a3.name as name , Count(a2.song_id) as count FROM user_creates_collection as s\n" +
-                "JOIN collection_holds_song as a on a.collection_id = s.collection_id AND s.user_id = %d\n" +
-                "Join artist_releases_song as a2 on a2.song_id = a.song_id\n" +
-                "JOIN artist as a3 on a3.artist_id = a2.artist_id\n" +
-                "GROUP BY a3.name\n" +
+        String query = ("SELECT  a.name as name, ars.artist_id as id , Count(ars.song_id) as count FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id = %d\n" +
+                "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "JOIN artist as a on a.artist_id = ars.artist_id\n" +
+                "GROUP BY a.name, ars.artist_id\n" +
                 "ORDER BY count DESC\n" +
                 "LIMIT 10").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -789,17 +788,48 @@ public class UserService {
      * Returns the top ten artists by plays and collections played by the User logged in.
      * @param userID The id of the user
      */
-    public List<String> getTopTenArtistsByPlaysAndCollections(long userID){
-        List<String> result = new ArrayList<>();
-        String query = ("");
+    public List<Artist> getTopTenArtistsByPlaysAndCollections(long userID){
+        List<Artist> result = new ArrayList<>();
+        String query = ("SELECT topTenArtistsByPlay.name as pname, topTenArtistsByCollection.name as cname, topTenArtistsByPlay.count as pcount, topTenArtistsByCollection.count as ccount, topTenArtistsByCollection.id as id  FROM\n" +
+                "(SELECT  a.name as name, ars.artist_id as id, Count(uls.song_id) as count FROM user_listens_to_song as uls\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = uls.song_id AND uls.user_id = %d\n" +
+                "JOIN artist as a on ars.artist_id = a.artist_id\n" +
+                "GROUP BY a.name, ars.artist_id\n" +
+                "ORDER BY Count(uls.song_id) DESC\n" +
+                "LIMIT 10) as topTenArtistsByPlay\n" +
+                "    FULL OUTER JOIN\n" +
+                "(SELECT  a.name as name, ars.artist_id as id , Count(ars.song_id) as count FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id = %d\n" +
+                "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "JOIN artist as a on a.artist_id = ars.artist_id\n" +
+                "GROUP BY a.name, ars.artist_id\n" +
+                "ORDER BY count DESC\n" +
+                "LIMIT 10) as topTenArtistsByCollection on topTenArtistsByCollection.name = topTenArtistsByPlay.name;").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
+        TreeSet<Artist> artists = new TreeSet<>();
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                result.add(rs.getString("name"));
+                String name = rs.getString("pname");
+                if( name == null || name.equals("") ){
+                    name = rs.getString("cname");
+                }
+                Artist artist = new Artist(name, rs.getLong("id"));
+                artist.setCollectionCount(rs.getInt("ccount"));
+                artist.setPlayCount(rs.getInt("pcount"));
+                artists.add(artist);
+            }
+            int currRank = -1;
+            for(Artist a : artists){
+                if(result.size() <= 10 || a.rankBasedOnPlayAndCollections() == currRank){
+                    result.add(a);
+                    currRank = a.rankBasedOnPlayAndCollections();
+                }else{
+                    break;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -812,5 +842,4 @@ public class UserService {
         }
         return result;
     }
-
 }

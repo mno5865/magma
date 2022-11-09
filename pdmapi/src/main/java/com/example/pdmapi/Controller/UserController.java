@@ -429,11 +429,11 @@ public class UserController {
      */
     @CrossOrigin
     @GetMapping("/users/{userId}/topTenArtistsByCollections")
-    public ResponseEntity<List<String>> topTenArtistsByCollections(@PathVariable long userId) {
+    public ResponseEntity<List<Artist>> topTenArtistsByCollections(@PathVariable long userId) {
         User user = userService.getUser(userId);
         if (user != null){
-            List<String> topTenArtists  = userService.topTenArtistsByCollections(userId);
-            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+            List<Artist> artists  = userService.getTopTenArtistsByCollections(userId);
+            return new ResponseEntity<>(artists, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -446,11 +446,10 @@ public class UserController {
      */
     @CrossOrigin
     @GetMapping("/users/{userId}/topTenArtistsByPlaysAndCollections")
-    public ResponseEntity<List<String>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
-        User user = userService.getUser(userId);
-        if (user != null){
-            List<String> topTenArtists  = userService.topTenArtistsByPlaysAndCollections(userId);
-            return new ResponseEntity<>(topTenArtists, HttpStatus.OK);
+    public ResponseEntity<List<Artist>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
+        List<Artist> artists  = userService.getTopTenArtistsByPlaysAndCollections(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

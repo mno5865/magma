@@ -9,17 +9,42 @@ package com.example.pdmapi.Model;
 /**
  * Artist class that defines the properties of an Artist, matches the artist table in the database
  */
-public class Artist {
+public class Artist implements Comparable<Artist> {
 
     private long artistID;
 
+    public int getCollectionCount() {
+        return collectionCount;
+    }
+
+    public void setCollectionCount(int collectionCount) {
+        this.collectionCount = collectionCount;
+    }
+
+    public int getPlayCount() {
+        return playCount;
+    }
+
+    public void setPlayCount(int playCount) {
+        this.playCount = playCount;
+    }
+
     private String name;
+
+    private int collectionCount;
+    private int playCount;
 
     /**
      *  Constructor for Artist.
      */
     public Artist() {
     }
+
+    public Artist(String name , long artistID){
+        this.artistID = artistID;
+        this.name = name;
+    }
+
 
     /**
      * Gets the id for Artist.
@@ -52,5 +77,19 @@ public class Artist {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int rankBasedOnPlayAndCollections(){
+        return collectionCount+playCount;
+    }
+
+
+    @Override
+    public int compareTo(Artist o) {
+        int diff = o.getCollectionCount() - this.getCollectionCount();
+        if(diff == 0){
+            diff = name.compareTo(name);
+        }
+        return diff;
     }
 }
