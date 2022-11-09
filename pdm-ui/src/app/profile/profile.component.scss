@@ -1,0 +1,85 @@
+* {
+  font-family: Varela, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background-image: linear-gradient(to bottom, black, red);
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #F3A738;
+  color: #1B0906;
+  border-radius: 10px;
+}
+
+.nav-links a {
+  color: #1B0906;
+}
+
+/* navbar menu */
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 20px;
+}
+
+/* artist and info grid */
+.content {
+  margin-top: 10px;
+  display: flex;
+  color: black;
+  border-bottom: 0px;
+  height: 600%;
+}
+
+.artists {
+  text-align: center;
+  background-color: #F29125;
+  border-radius: 10px;
+  margin-right: 2%;
+  width: 60%;
+}
+
+.toggler {
+  button {
+    border-radius: 10px;
+  }
+}
+
+.info {
+  text-align: center;
+  background-color: #F29125;
+  border-radius: 10px;
+  width: 45%;
+}
+
+
+
+@font-face {
+  font-family: Varela;
+  src: url(VarelaRound-Regular.ttf);
+}
+
+div {
+  font-family: Varela, sans-serif;
+}
+
+
+
+

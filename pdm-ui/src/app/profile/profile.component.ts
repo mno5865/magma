@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
-import {User} from "../User";
-import {UtilsService} from "../utils.service";
+import { User } from "../User";
+import { UtilsService } from "../utils.service";
+import {faFire} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.scss']
 })
 
 export class ProfileComponent implements OnInit {
@@ -16,6 +17,8 @@ export class ProfileComponent implements OnInit {
   followersCount: number = 0;
   followingCount: number = 0;
   collectionCount: number = 0;
+
+  faFire = faFire;
 
 
   constructor(private router : Router, route : ActivatedRoute, private utilService : UtilsService) {

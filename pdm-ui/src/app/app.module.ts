@@ -12,6 +12,7 @@ import { FriendviewComponent } from './friendview/friendview.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SongbrowserComponent } from './songbrowser/songbrowser.component';
 import { ProfileComponent } from './profile/profile.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
