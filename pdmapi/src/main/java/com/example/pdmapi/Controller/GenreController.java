@@ -112,18 +112,6 @@ public class GenreController {
     }
 
     /**
-     * Gets the list of the users that a user is following
-     * @param userId The id of the user
-     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
-     */
-//    @CrossOrigin
-//    @GetMapping("/genres/top5genres")
-//    public ResponseEntity<List<Genre>> getTopFiveGenresOfTheMonth() {
-//        List<Genre> top5genres  = genreService.getTopFiveGenresOfTheMonth();
-//        return new ResponseEntity<>(top5genres, HttpStatus.OK);
-//    }
-
-    /**
      * endpoint that creates song has genre relationship between song and genre
      * @param genreId genre
      * @param songId song

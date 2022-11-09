@@ -1,7 +1,7 @@
 /**
  * file: UserService.java
  * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984,
- *          Mildness Onyekwere - mno5865, Ananya Misra - TBA
+ *           Ananya Misra - am4063, Mildness Onyekwere - mno5865
  * description: A service that runs SQL statements and queries to modify or retrieve from the database
  */
 

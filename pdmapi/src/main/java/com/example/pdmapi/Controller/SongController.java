@@ -116,7 +116,6 @@ public class SongController {
         }
     }
 
-
     /**
      * get all the songs in a collection given collection id
      * @param collectionId
@@ -157,7 +156,6 @@ public class SongController {
         }
     }
 
-
     /**
      * endpoint that gets a specific song view by artist if artist of song contains the string
      * @param name
@@ -177,7 +175,6 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
-
 
     /**
      * endpoint that gets a specific song view by album title if title of song contains the string
@@ -218,18 +215,4 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
-
-    /**
-     * Gets the list of the users that a user is following
-     * @param userId The id of the user
-     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
-     */
-//    @CrossOrigin
-//    @GetMapping("/songs/top50Songs/last30Days")
-//    public ResponseEntity<List<SongInView>> getTopFiftySongsLastThirtyDays() {
-//        List<SongInView> top50Songs  = songService.getTop50Songs();
-//        return new ResponseEntity<>(top50Songs, HttpStatus.OK);
-//
-//    }
-
 }

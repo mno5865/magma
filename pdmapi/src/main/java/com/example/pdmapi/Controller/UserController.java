@@ -352,41 +352,6 @@ public class UserController {
         }
     }
 
-
-//    /**
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    @CrossOrigin
-//    @GetMapping("/users/{userId}/songs/top50Songs/friends")
-//    public ResponseEntity<List<SongInView>> getTopFiftySongsOfFollowing(@PathVariable long userId) {
-//        User user = userService.getUser(userId);
-//        if (user != null){
-//            List<SongInView> top50Songs  = userService.getTopFiftySongsOfFollowing(userId);
-//            return new ResponseEntity<>(top50Songs, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param userId
-//     * @return
-//    */
-//    @CrossOrigin
-//    @GetMapping("/users/{userId}/reccomended/songs")
-//    public ResponseEntity<List<SongInView>> reccomendedSongs(@PathVariable long userId) {
-//        User user = userService.getUser(userId);
-//        if (user != null){
-//            List<SongInView> reccomendedSongs  = userService.reccomendedSongs(userId);
-//            return new ResponseEntity<>(reccomendedSongs, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     /**
     /**
      * Deletes a user follows user relationship
@@ -404,7 +369,6 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
         }
     }
-
 
     /**
      * Gets the list of the users that a user is following
@@ -428,7 +392,7 @@ public class UserController {
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/topTenArtistsByCollections")
+    @GetMapping("/users/{userId}/top-ten-artists/by-collections")
     public ResponseEntity<List<Artist>> topTenArtistsByCollections(@PathVariable long userId) {
         User user = userService.getUser(userId);
         if (user != null){
@@ -445,7 +409,7 @@ public class UserController {
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/topTenArtistsByPlaysAndCollections")
+    @GetMapping("/users/{userId}/top-ten-artists/by-plays/by-collections")
     public ResponseEntity<List<Artist>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
         List<Artist> artists  = userService.getTopTenArtistsByPlaysAndCollections(userId);
         if (artists != null){
