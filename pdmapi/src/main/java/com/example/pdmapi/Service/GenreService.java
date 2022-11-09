@@ -2,7 +2,8 @@
  * file: GenreService.java
  * authors: Gregory Ojiem gro3228,
  *          Melissa Burisky mpb8984,
- *          Mildness Onyekwere mno5865
+ *          Mildness Onyekwere mno5865,
+ *          Adrian Burgos awb8593
  */
 package com.example.pdmapi.Service;
 
@@ -393,13 +394,13 @@ public class GenreService {
     public List<Genre> getTop5Genres() {
         List<Genre> genres = new ArrayList<>();
 
-        String query = ("SELECT genre.name, count(\"name\") AS top FROM user_listens_to_song\n" +
+        String query = ("SELECT genre.name, genre.genre_id, count(\"name\") AS top FROM user_listens_to_song\n" +
                 "INNER JOIN song ON song.song_id=user_listens_to_song.song_id\n" +
                 "INNER JOIN song_has_genre ON song.song_id=song_has_genre.song_id\n" +
                 "INNER JOIN genre ON song_has_genre.genre_id=genre.genre_id\n" +
                 "WHERE  date_part('month', user_listens_to_song.date_time) = date_part('month', (SELECT current_timestamp))\n" +
                 "AND date_part('year', user_listens_to_song.date_time) = date_part('year', (SELECT current_timestamp))\n" +
-                "GROUP BY (genre.name)\n" +
+                "GROUP BY (genre.name, genre.genre_id)\n" +
                 "ORDER BY top desc\n" +
                 "limit 5;");
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -412,6 +413,7 @@ public class GenreService {
 
             while (rs.next()) {
                 Genre genre = new Genre();
+                genre.setGenreID(rs.getLong("genre_id"));
                 genre.setName(rs.getString("name"));
                 genres.add(genre);
             }

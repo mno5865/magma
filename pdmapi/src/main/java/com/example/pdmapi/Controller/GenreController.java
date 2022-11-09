@@ -2,7 +2,8 @@
  * file: GenreController.java
  * authors: Gregory Ojiem gro3228,
  *          Melissa Burisky mpb8984,
- *          Mildness Onyekwere mno5865
+ *          Mildness Onyekwere mno5865,
+ *          Adrian Burgos awb8593
  */
 
 package com.example.pdmapi.Controller;
