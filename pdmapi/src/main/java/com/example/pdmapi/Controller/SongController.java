@@ -2,7 +2,8 @@
  * file: SongController.java
  * authors: Gregory Ojiem gro3228,
  *          Melissa Burisky mpb8984,
- *          Mildness Onyekwere mno5865
+ *          Mildness Onyekwere mno5865,
+ *          Adrian Burgos awb8593
  */
 package com.example.pdmapi.Controller;
 
@@ -210,6 +211,38 @@ public class SongController {
         genre = genre.replace('-', ' ');
         List<SongInView> songs = songService.getSongsByGenre(genre,select,sort);
         if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * endpoint that gets song recommendations based on following activity
+     * @param userId (long) the user's identification number
+     * @return ResponseEntity noting the outcome of the request and list of songs
+     */
+    @CrossOrigin
+    @GetMapping("/songs/topoffollowing/{userId}")
+    public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
+    {
+        List<Song> songs = songService.topFiftySongsOfFollowing(userId);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+    
+     /**
+     * endpoint that gets the 50 songs with the most listens in the past 30 days
+     * @return ResponseEntity containing the list of top 50 songs
+     */
+    @CrossOrigin
+    @GetMapping("/songs/top-50")
+    public ResponseEntity<List<SongInView>> getTop50Songs() {
+        List<SongInView> songs = songService.getTop50Songs();
+        if (songs == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(songs, HttpStatus.OK);
