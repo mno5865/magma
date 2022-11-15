@@ -11,9 +11,9 @@
         <!-- menu -->
         <div class="menu">
           <a (click)="goBack()">Home</a>
-          <a href="/">Songs</a>
+          <a (click)="goToSongBrowser()">Songs</a>
           <a (click)="goToCollections()">Playlists</a>
-          <a href="/">Friends</a>
+          <a (click)="goToFriends()">Friends</a>
         </div>
       </div>
     </nav>
@@ -26,6 +26,9 @@
           <button> Plays </button>
           <button> Playlists </button>
           <button> Clear Filter </button>
+        </div>
+        <div *ngFor="let artist of artists" class="artistCard">
+            {{artist.name}}
         </div>
       </div>
 

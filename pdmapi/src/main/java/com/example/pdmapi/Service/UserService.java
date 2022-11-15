@@ -681,12 +681,12 @@ public class UserService {
     }
 
     /**
-     * Returns the number of Following based off the User logged in.
+     * Returns the number of people a user follows
      * @param userID The id of the user
      * @return following count, but if there is a problem -1
      */
     public int getFollowingCountByUserID(long userID){
-        String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = %d").formatted(userID);
+        String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_one_id = %d").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         int followingCount = 0;
         try {
@@ -760,9 +760,9 @@ public class UserService {
         String query = ("SELECT  a.name, ars.artist_id, Count(ars.song_id) as count " +
                 "FROM user_creates_collection as ucs\n" +
                 "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id\n" +
-                "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = chs.song_id\n" +
                 "JOIN artist as a on a.artist_id = ars.artist_id\n" +
-                "WHERE uls.user_id=%d " +
+                "WHERE ucs.user_id=%d " +
                 "GROUP BY a.name, ars.artist_id\n" +
                 "ORDER BY count DESC\n" +
                 "LIMIT 10").formatted(userID);
@@ -797,6 +797,7 @@ public class UserService {
     public List<Artist> getTopTenArtistsByPlaysAndCollections(long userID) {
         List<Artist> artists = new ArrayList<>();
         String query = ("SELECT COALESCE(by_play.artist_name, by_collection.artist_name) artist_name,\n" +
+                "       COALESCE(by_play.art_id, by_collection.art_id) art_id,\n" +
                 "       COALESCE(listen_count, 0) + COALESCE(in_collection_count, 0) ordering FROM\n" +
                 "(SELECT  a.name as artist_name,\n" +
                 "         ars.artist_id as art_id,\n" +
@@ -810,7 +811,7 @@ public class UserService {
                 "         ars.artist_id as art_id,\n" +
                 "         Count(ars.song_id) as in_collection_count\n" +
                 " FROM user_creates_collection as ucs\n" +
-                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id%d\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id=%d\n" +
                 "JOIN artist_releases_song as ars on ars.song_id = chs.song_id\n" +
                 "JOIN artist as a on a.artist_id = ars.artist_id\n" +
                 "GROUP BY a.name, ars.artist_id) as by_collection on by_collection.artist_name = by_play.artist_name\n" +
@@ -824,8 +825,8 @@ public class UserService {
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
                 Artist artist = new Artist();
-                artist.setArtistID(rs.getLong("artist_id"));
-                artist.setName(rs.getString("name"));
+                artist.setArtistID(rs.getLong("art_id"));
+                artist.setName(rs.getString("artist_name"));
                 artists.add(artist);
             }
         } catch (SQLException e) {

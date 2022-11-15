@@ -7,6 +7,7 @@ import { Collection } from './Collection'
 import { Observable } from 'rxjs'
 import { User } from './User'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Artist} from "./Artist";
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,6 @@ export class UtilsService {
     return this.http.post<number>(this.userURL+"/"+userID+"/following/"+friendID, this.httpOptions)
   }
 
-  //TODO add endpoints for getting counts and other stuff
   public getCollectionCount(userID: number): Observable<number> {
     return this.http.get<number>(this.userURL+"/"+ userID +"/collections/count", this.httpOptions)
   }
@@ -66,6 +66,18 @@ export class UtilsService {
 
   public getFollowingCount(userID: number): Observable<number> {
     return this.http.get<number>(this.userURL+"/"+ userID +"/following/count", this.httpOptions)
+  }
+
+  public getTopTenArtists(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists", this.httpOptions)
+  }
+
+  public getTopTenArtistsByPlays(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-plays", this.httpOptions)
+  }
+
+  public getTopTenArtistsByCollection(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-collections", this.httpOptions)
   }
 
   public setUser(user: User): void {
