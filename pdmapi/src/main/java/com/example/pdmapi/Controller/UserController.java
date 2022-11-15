@@ -6,7 +6,9 @@
 
 package com.example.pdmapi.Controller;
 
+import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.SongInView;
 import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.UserService;
 import com.google.common.hash.Hashing;
@@ -326,6 +328,38 @@ public class UserController {
     }
 
     /**
+     * endpoint that gets the count of the users followers
+     * @param userId The id of the user
+     * @return HTTP OK and the count of followers if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/following/count")
+    public ResponseEntity<Integer> getFollowersCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowersCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint that gets the count of the users following
+     * @param userId id of user
+     * @return HTTP OK and the count of following if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/followers/count")
+    public ResponseEntity<Integer> getFollowingCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowingCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Creates a user follows user relationship
      * @param userId The id of the user
      * @param friendId The id of the friend
@@ -356,6 +390,54 @@ public class UserController {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * endpoint for getting user's top ten artists by collection
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists/by-plays")
+    public ResponseEntity<List<Artist>> topTenArtistsByPlays(@PathVariable long userId) {
+        List<Artist> artists = userService.getTopTenArtistsByPlays(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint for getting user's top ten artists by plays
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists/by-collections")
+    public ResponseEntity<List<Artist>> topTenArtistsByCollections(@PathVariable long userId) {
+        List<Artist> artists  = userService.getTopTenArtistsByCollections(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint for getting user's top ten artists by plays and collection
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists")
+    public ResponseEntity<List<Artist>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
+        List<Artist> artists  = userService.getTopTenArtistsByPlaysAndCollections(userId);
+        if (artists != null) {
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
