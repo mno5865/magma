@@ -976,8 +976,8 @@ public class UserService {
     }
 
     public List<Song> recommendSongsByArtist(long userID) {
-        String query = ("SELECT song.song_id, song.title, song.runtime, song.release_date, count(song.song_id) as\n" +
-                "popularity FROM song\n" +
+        String query = ("SELECT song_id, title, runtime, release_date FROM\n" +
+                "(SELECT song.song_id, song.title, song.runtime, song.release_date, count(song.song_id) as popularity FROM song\n" +
                 "INNER JOIN collection_holds_song chs ON song.song_id = chs.song_id\n" +
                 "INNER JOIN\n" +
                 "(SELECT DISTINCT other_user, collection_id FROM\n" +
@@ -1031,7 +1031,19 @@ public class UserService {
                 "INNER JOIN user_listens_to_song ON g.other_user=user_listens_to_song.user_id\n" +
                 "WHERE user_listens_to_song.date_time > (LOCALTIMESTAMP - interval '90 days')\n" +
                 "GROUP BY (song.song_id, song.title, song.runtime, song.release_date)\n" +
-                "ORDER BY (popularity) DESC;").formatted(userID);
+                "ORDER BY (popularity) DESC) h\n" +
+                "EXCEPT\n" +
+                "SELECT * FROM\n" +
+                "(SELECT song.song_id, song.title, song.runtime, song.release_date FROM song\n" +
+                "INNER JOIN collection_holds_song chs on song.song_id = chs.song_id\n" +
+                "INNER JOIN user_creates_collection ucc on ucc.collection_id = chs.collection_id\n" +
+                "WHERE user_id=%d\n" +
+                "UNION\n" +
+                "SELECT song.song_id, song.title, song.runtime, song.release_date FROM song\n" +
+                "INNER JOIN album_contains_song acs on song.song_id = acs.song_id\n" +
+                "INNER JOIN collection_holds_album cha on acs.album_id = cha.album_id\n" +
+                "INNER JOIN user_creates_collection ucc on ucc.collection_id = cha.collection_id\n" +
+                "WHERE user_id=%d) i;").formatted(userID, userID, userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
