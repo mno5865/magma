@@ -9,6 +9,7 @@ package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.SongInView;
+import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -116,7 +117,6 @@ public class SongController {
         }
     }
 
-
     /**
      * get all the songs in a collection given collection id
      * @param collectionId
@@ -157,7 +157,6 @@ public class SongController {
         }
     }
 
-
     /**
      * endpoint that gets a specific song view by artist if artist of song contains the string
      * @param name
@@ -177,7 +176,6 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
-
 
     /**
      * endpoint that gets a specific song view by album title if title of song contains the string

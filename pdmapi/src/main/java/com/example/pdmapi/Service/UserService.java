@@ -1,11 +1,13 @@
 /**
  * file: UserService.java
- * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984, Mildness Onyekwere - mno5865
+ * authors: Gregory Ojiem - gro3228, Melissa Burisky - mpb8984,
+ *           Ananya Misra - am4063, Mildness Onyekwere - mno5865
  * description: A service that runs SQL statements and queries to modify or retrieve from the database
  */
 
 package com.example.pdmapi.Service;
 
+import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Collection;
 import com.example.pdmapi.Model.User;
 import com.google.common.hash.Hashing;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -650,6 +651,196 @@ public class UserService {
     }
 
     /**
+     * Returns the number of people following a specific user
+     * @param userID The id of the user
+     * @return follower count, but if there is a problem -1
+     */
+    public int getFollowersCountByUserID(long userID){
+        String query = ("SELECT COUNT(user_one_id) as num FROM user_follows_user WHERE user_two_id = %d").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int followerCount = 0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+               followerCount = rs.getInt("num");
+            }
+            return followerCount;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the number of Following based off the User logged in.
+     * @param userID The id of the user
+     * @return following count, but if there is a problem -1
+     */
+    public int getFollowingCountByUserID(long userID){
+        String query = ("SELECT COUNT(user_two_id) as num FROM user_follows_user WHERE user_one_id = %d").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        int followingCount = 0;
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                followingCount = rs.getInt("num");
+            }
+            return followingCount;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    // top ten artists
+    /**
+     * Returns the top ten artists played by the User logged in.
+     * @param userID The id of the user
+     * @return return list of artists
+     */
+    public List<Artist> getTopTenArtistsByPlays(long userID){
+        List<Artist> artists = new ArrayList<>();
+        String query = ("SELECT a.name, a.artist_id, " +
+                "COUNT(uls.song_id) as count FROM user_listens_to_song as uls " +
+                "INNER JOIN artist_releases_song as ars on ars.song_id = uls.song_id " +
+                "INNER JOIN artist as a on a.artist_id = ars.artist_id " +
+                "WHERE uls.user_id=%d " +
+                "GROUP BY a.name, a.artist_id " +
+                "ORDER BY count DESC " +
+                "LIMIT 10").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return artists;
+    }
+
+    /**
+     * Returns the top ten artists by collections played by the User logged in.
+     * @param userID The id of the user
+     * @return list of artist names
+     */
+    public List<Artist> getTopTenArtistsByCollections(long userID){
+        List<Artist> artists = new ArrayList<>();
+        String query = ("SELECT  a.name, ars.artist_id, Count(ars.song_id) as count " +
+                "FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id\n" +
+                "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "JOIN artist as a on a.artist_id = ars.artist_id\n" +
+                "WHERE uls.user_id=%d " +
+                "GROUP BY a.name, ars.artist_id\n" +
+                "ORDER BY count DESC\n" +
+                "LIMIT 10").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return artists;
+    }
+
+    /**
+     * Returns the top ten artists by plays and collections played by the User logged in.
+     * @param userID The id of the user
+     */
+    public List<Artist> getTopTenArtistsByPlaysAndCollections(long userID) {
+        List<Artist> artists = new ArrayList<>();
+        String query = ("SELECT COALESCE(by_play.artist_name, by_collection.artist_name) artist_name,\n" +
+                "       COALESCE(listen_count, 0) + COALESCE(in_collection_count, 0) ordering FROM\n" +
+                "(SELECT  a.name as artist_name,\n" +
+                "         ars.artist_id as art_id,\n" +
+                "         Count(uls.song_id) as listen_count\n" +
+                " FROM user_listens_to_song as uls\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = uls.song_id AND uls.user_id=%d\n" +
+                "JOIN artist as a on ars.artist_id = a.artist_id\n" +
+                "GROUP BY a.name, ars.artist_id) as by_play\n" +
+                "FULL OUTER JOIN\n" +
+                "(SELECT  a.name as artist_name,\n" +
+                "         ars.artist_id as art_id,\n" +
+                "         Count(ars.song_id) as in_collection_count\n" +
+                " FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id%d\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "JOIN artist as a on a.artist_id = ars.artist_id\n" +
+                "GROUP BY a.name, ars.artist_id) as by_collection on by_collection.artist_name = by_play.artist_name\n" +
+                "ORDER BY ordering desc\n" +
+                "LIMIT 10").formatted(userID, userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return artists;
+    }
+
+    /**
      * Verifies a user's password by using the user's ID as the seed for a random number generator, appending it
      * to the password they entered to act as a salt, and then hashing it, and then comparing it to a string stored
      * in the database that has gone through the same process
@@ -664,5 +855,4 @@ public class UserService {
         return Hashing.sha256().hashString(pass+randInt, StandardCharsets.UTF_8).toString()
                 .equals(hashedPass);
     }
-
 }
