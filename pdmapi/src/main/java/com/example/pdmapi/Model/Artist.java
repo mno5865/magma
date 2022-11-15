@@ -1,7 +1,7 @@
 /**
  * File: Artist.java
  * Artist.java: A public class that sets and gets the attributes for an artist.
- * @author Gregory Ojiem - gro3228, Ananya Misra - am4063
+ * @author Gregory Ojiem - gro3228
  */
 package com.example.pdmapi.Model;
 
@@ -19,17 +19,6 @@ public class Artist {
      */
     public Artist() {
     }
-
-    /**
-     * Constructor for Artist
-     * @param name name of the artist.
-     * @param artistID the id for the artist
-     */
-    public Artist(String name , long artistID){
-        this.artistID = artistID;
-        this.name = name;
-    }
-
 
     /**
      * Gets the id for Artist.

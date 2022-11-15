@@ -18,12 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UserService {
