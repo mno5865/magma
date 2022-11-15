@@ -9,6 +9,7 @@ package com.example.pdmapi.Service;
 
 import com.example.pdmapi.Model.Artist;
 import com.example.pdmapi.Model.Collection;
+import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.User;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -854,5 +855,209 @@ public class UserService {
         int randInt = rand.nextInt(1000000000);
         return Hashing.sha256().hashString(pass+randInt, StandardCharsets.UTF_8).toString()
                 .equals(hashedPass);
+    }
+
+    public List<Song> recommendSongsByGenre(long userID) {
+        String query = ("SELECT * FROM " +
+                "(SELECT song.song_id, song.title, song.release_date, song.runtime FROM song " +
+                "INNER JOIN song_has_genre shg on song.song_id = shg.song_id " +
+                "INNER JOIN " +
+                "(SELECT f.name, f.genre_id, personal_popularity, universal_popularity FROM " +
+                "(SELECT name, genre_id, sum(col_count + lis_count) as personal_popularity FROM " +
+                "(SELECT name, genre_id, count(genre_id) as col_count, 0 as lis_count FROM " +
+                "(SELECT genre.name, genre.genre_id FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN collection_holds_song chs ON chs.song_id=shg.song_id " +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=chs.collection_id " +
+                "WHERE ucc.user_id=%d " +
+                "UNION ALL " +
+                "SELECT genre.name, genre.genre_id FROM genre " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN collection_holds_album cha ON cha.album_id=ahs.album_id " +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=cha.collection_id " +
+                "WHERE ucc.user_id=%d) b " +
+                "GROUP BY (name, genre_id, lis_count) " +
+                "UNION ALL " +
+                "SELECT * FROM " +
+                "(SELECT name, genre_id, col_count, count(row_count) as lis_count FROM " +
+                "(SELECT DISTINCT genre.name, genre.genre_id, 0 as col_count, count(genre.genre_id) as row_count," +
+                "ults.date_time FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN user_listens_to_song ults ON ults.song_id=shg.song_id " +
+                "WHERE ults.user_id=%d " +
+                "GROUP BY (genre.name, genre.genre_id, ults.date_time) " +
+                "UNION ALL " +
+                "SELECT DISTINCT genre.name, genre.genre_id, 0 as col_count, count(genre.genre_id) as row_count," +
+                "ulta.date_time FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN user_listens_to_album ulta ON ulta.album_id=ahs.album_id " +
+                "WHERE ulta.user_id=%d " +
+                "GROUP BY (genre.name, genre.genre_id, ulta.date_time)) a " +
+                "GROUP BY (name, genre_id, col_count)) c " +
+                "WHERE lis_count > 2) d " +
+                "GROUP BY (name, genre_id)) e " +
+                "FULL JOIN" +
+                "(SELECT name, genre_id, sum(col_count + lis_count) as universal_popularity FROM " +
+                "(SELECT name, genre_id, count(genre_id) as col_count, 0 as lis_count FROM " +
+                "(SELECT genre.name, genre.genre_id FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN collection_holds_song chs ON chs.song_id=shg.song_id " +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=chs.collection_id " +
+                "UNION ALL " +
+                "SELECT genre.name, genre.genre_id FROM genre " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN collection_holds_album cha ON cha.album_id=ahs.album_id " +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=cha.collection_id) b " +
+                "GROUP BY (name, genre_id, lis_count) " +
+                "UNION ALL " +
+                "SELECT * FROM " +
+                "(SELECT name, genre_id, col_count, count(row_count) as lis_count FROM " +
+                "(SELECT DISTINCT genre.name, genre.genre_id, 0 as col_count, count(genre.genre_id) as row_count," +
+                "ults.date_time FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN user_listens_to_song ults ON ults.song_id=shg.song_id " +
+                "GROUP BY (genre.name, genre.genre_id, ults.date_time) " +
+                "UNION ALL " +
+                "SELECT DISTINCT genre.name, genre.genre_id, 0 as col_count, count(genre.genre_id) as row_count," +
+                "ulta.date_time FROM genre " +
+                "INNER JOIN song_has_genre shg ON shg.genre_id=genre.genre_id " +
+                "INNER JOIN album_has_genre ahs ON ahs.genre_id=genre.genre_id " +
+                "INNER JOIN user_listens_to_album ulta ON ulta.album_id=ahs.album_id " +
+                "GROUP BY (genre.name, genre.genre_id, ulta.date_time)) a " +
+                "GROUP BY (name, genre_id, col_count)) c " +
+                "WHERE lis_count > 2) d " +
+                "GROUP BY (name, genre_id)) f " +
+                "ON e.genre_id=f.genre_id " +
+                "ORDER BY universal_popularity DESC, personal_popularity DESC " +
+                "LIMIT 50) g " +
+                "ON g.genre_id = shg.genre_id) h " +
+                "EXCEPT " +
+                "SELECT * FROM " +
+                "(SELECT song.song_id, song.title, song.release_date, song.runtime FROM song " +
+                "INNER JOIN collection_holds_song chs on song.song_id = chs.song_id " +
+                "INNER JOIN user_creates_collection ucc on ucc.collection_id = chs.collection_id " +
+                "WHERE user_id=%d " +
+                "UNION " +
+                "SELECT song.song_id, song.title, song.release_date, song.runtime FROM song " +
+                "INNER JOIN album_contains_song acs on song.song_id = acs.song_id " +
+                "INNER JOIN collection_holds_album cha on acs.album_id = cha.album_id " +
+                "INNER JOIN user_creates_collection ucc on ucc.collection_id = cha.collection_id " +
+                "WHERE user_id=%d) i;").formatted(userID, userID, userID, userID, userID, userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(query);
+            List<Song> songs = new ArrayList<>();
+
+            while(rs.next()) {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                songs.add(song);
+            }
+            return songs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public List<Song> recommendSongsByArtist(long userID) {
+        String query = ("SELECT song.song_id, song.title, song.runtime, song.release_date, count(song.song_id) as\n" +
+                "popularity FROM song\n" +
+                "INNER JOIN collection_holds_song chs ON song.song_id = chs.song_id\n" +
+                "INNER JOIN\n" +
+                "(SELECT DISTINCT other_user, collection_id FROM\n" +
+                "(SELECT d.other_user FROM\n" +
+                "(SELECT artist_id, other_user, other_user_fav_count FROM\n" +
+                "(SELECT artist_id, user_id as other_user, count(user_id) as other_user_fav_count FROM\n" +
+                "(SELECT artist_id, user_id FROM\n" +
+                "(SELECT song.song_id, song.title, user_id FROM song\n" +
+                "INNER JOIN user_listens_to_song ON song.song_id=user_listens_to_song.song_id\n" +
+                "UNION ALL\n" +
+                "SELECT song.song_id, song.title, user_id FROM song\n" +
+                "INNER JOIN collection_holds_song chs ON song.song_id = chs.song_id\n" +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=chs.collection_id) a\n" +
+                "INNER JOIN artist_releases_song ars ON ars.song_id=a.song_id\n" +
+                "UNION ALL\n" +
+                "SELECT artist_id, user_id FROM\n" +
+                "(SELECT album.album_id, album.title, user_id FROM album\n" +
+                "INNER JOIN user_listens_to_album ON album.album_id=user_listens_to_album.album_id\n" +
+                "UNION ALL\n" +
+                "SELECT album.album_id, album.title, user_id FROM album\n" +
+                "INNER JOIN collection_holds_album cha ON album.album_id = cha.album_id\n" +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=cha.collection_id) b\n" +
+                "INNER JOIN artist_releases_album ara ON ara.album_id=b.album_id) c\n" +
+                "GROUP BY (artist_id, user_id)) x\n" +
+                "WHERE x.other_user_fav_count < 10) d\n" +
+                "INNER JOIN\n" +
+                "(SELECT artist_id, user_id as original_user, count(user_id) as user_fav_count FROM\n" +
+                "(SELECT artist_id, user_id FROM\n" +
+                "(SELECT song.song_id, song.title, user_id FROM song\n" +
+                "INNER JOIN user_listens_to_song ON song.song_id=user_listens_to_song.song_id\n" +
+                "UNION ALL\n" +
+                "SELECT song.song_id, song.title, user_id FROM song\n" +
+                "INNER JOIN collection_holds_song chs ON song.song_id = chs.song_id\n" +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=chs.collection_id) a\n" +
+                "INNER JOIN artist_releases_song ars ON ars.song_id=a.song_id\n" +
+                "UNION ALL\n" +
+                "SELECT artist_id, user_id FROM\n" +
+                "(SELECT album.album_id, album.title, user_id FROM album\n" +
+                "INNER JOIN user_listens_to_album ON album.album_id=user_listens_to_album.album_id\n" +
+                "UNION ALL\n" +
+                "SELECT album.album_id, album.title, user_id FROM album\n" +
+                "INNER JOIN collection_holds_album cha ON album.album_id = cha.album_id\n" +
+                "INNER JOIN user_creates_collection ucc ON ucc.collection_id=cha.collection_id) b\n" +
+                "INNER JOIN artist_releases_album ara ON ara.album_id=b.album_id) c\n" +
+                "WHERE user_id=%d\n" +
+                "GROUP BY (artist_id, user_id)) e\n" +
+                "ON d.artist_id=e.artist_id\n" +
+                "WHERE d.other_user!=e.original_user) f\n" +
+                "INNER JOIN user_creates_collection ucc ON ucc.user_id=f.other_user) g\n" +
+                "ON g.collection_id=chs.collection_id\n" +
+                "INNER JOIN user_listens_to_song ON g.other_user=user_listens_to_song.user_id\n" +
+                "WHERE user_listens_to_song.date_time > (LOCALTIMESTAMP - interval '90 days')\n" +
+                "GROUP BY (song.song_id, song.title, song.runtime, song.release_date)\n" +
+                "ORDER BY (popularity) DESC;").formatted(userID);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(query);
+            List<Song> songs = new ArrayList<>();
+
+            while(rs.next()) {
+                Song song = new Song();
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                songs.add(song);
+            }
+            return songs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
