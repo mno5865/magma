@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -652,37 +653,6 @@ public class UserService {
         }
     }
 
-
-
-    /**
-     * Returns the number of Collections based off the User logged in.
-     * @param userID The id of the user
-     */
-    public int countCollectionsByUserID(long userID){
-        String query = ("SELECT COUNT(collection_id) as num_colls FROM user_creates_collection WHERE user_id = %d").formatted(userID);
-        Connection conn = DataSourceUtils.getConnection(dataSource);
-        int numColls=0;
-        try {
-            Statement stmt = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()) {
-                numColls = rs.getInt("num_colls");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return numColls;
-
-    }
-
     /**
      * Returns the number of people following a specific user
      * @param userID The id of the user
@@ -733,7 +703,7 @@ public class UserService {
             return followingCount;
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 conn.close();
             } catch (SQLException e) {
@@ -757,7 +727,7 @@ public class UserService {
                 "INNER JOIN artist as a on a.artist_id = ars.artist_id " +
                 "WHERE uls.user_id=%d " +
                 "GROUP BY a.name, a.artist_id " +
-                "ORDER BY COUNT(uls.song_id) DESC " +
+                "ORDER BY count DESC " +
                 "LIMIT 10").formatted(userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
@@ -790,10 +760,12 @@ public class UserService {
      */
     public List<Artist> getTopTenArtistsByCollections(long userID){
         List<Artist> artists = new ArrayList<>();
-        String query = ("SELECT  a.name as name, ars.artist_id as id , Count(ars.song_id) as count FROM user_creates_collection as ucs\n" +
-                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id = %d\n" +
+        String query = ("SELECT  a.name, ars.artist_id, Count(ars.song_id) as count " +
+                "FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id\n" +
                 "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
                 "JOIN artist as a on a.artist_id = ars.artist_id\n" +
+                "WHERE uls.user_id=%d " +
                 "GROUP BY a.name, ars.artist_id\n" +
                 "ORDER BY count DESC\n" +
                 "LIMIT 10").formatted(userID);
@@ -825,59 +797,50 @@ public class UserService {
      * Returns the top ten artists by plays and collections played by the User logged in.
      * @param userID The id of the user
      */
-    public List<Artist> getTopTenArtistsByPlaysAndCollections(long userID){
-        List<Artist> result = new ArrayList<>();
-        String query = ("SELECT topTenArtistsByPlay.name as pname, topTenArtistsByCollection.name as cname, topTenArtistsByPlay.count as pcount, topTenArtistsByCollection.count as ccount, topTenArtistsByCollection.id as id  FROM\n" +
-                "(SELECT  a.name as name, ars.artist_id as id, Count(uls.song_id) as count FROM user_listens_to_song as uls\n" +
-                "JOIN artist_releases_song as ars on ars.song_id = uls.song_id AND uls.user_id = %d\n" +
+    public List<Artist> getTopTenArtistsByPlaysAndCollections(long userID) {
+        List<Artist> artists = new ArrayList<>();
+        String query = ("SELECT COALESCE(by_play.artist_name, by_collection.artist_name) artist_name,\n" +
+                "       COALESCE(listen_count, 0) + COALESCE(in_collection_count, 0) ordering FROM\n" +
+                "(SELECT  a.name as artist_name,\n" +
+                "         ars.artist_id as art_id,\n" +
+                "         Count(uls.song_id) as listen_count\n" +
+                " FROM user_listens_to_song as uls\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = uls.song_id AND uls.user_id=%d\n" +
                 "JOIN artist as a on ars.artist_id = a.artist_id\n" +
-                "GROUP BY a.name, ars.artist_id\n" +
-                "ORDER BY Count(uls.song_id) DESC\n" +
-                "LIMIT 10) as topTenArtistsByPlay\n" +
-                "    FULL OUTER JOIN\n" +
-                "(SELECT  a.name as name, ars.artist_id as id , Count(ars.song_id) as count FROM user_creates_collection as ucs\n" +
-                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id = %d\n" +
-                "Join artist_releases_song as ars on ars.song_id = chs.song_id\n" +
+                "GROUP BY a.name, ars.artist_id) as by_play\n" +
+                "FULL OUTER JOIN\n" +
+                "(SELECT  a.name as artist_name,\n" +
+                "         ars.artist_id as art_id,\n" +
+                "         Count(ars.song_id) as in_collection_count\n" +
+                " FROM user_creates_collection as ucs\n" +
+                "JOIN collection_holds_song as chs on chs.collection_id = ucs.collection_id AND ucs.user_id%d\n" +
+                "JOIN artist_releases_song as ars on ars.song_id = chs.song_id\n" +
                 "JOIN artist as a on a.artist_id = ars.artist_id\n" +
-                "GROUP BY a.name, ars.artist_id\n" +
-                "ORDER BY count DESC\n" +
-                "LIMIT 10) as topTenArtistsByCollection on topTenArtistsByCollection.name = topTenArtistsByPlay.name;").formatted(userID);
+                "GROUP BY a.name, ars.artist_id) as by_collection on by_collection.artist_name = by_play.artist_name\n" +
+                "ORDER BY ordering desc\n" +
+                "LIMIT 10").formatted(userID, userID);
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        TreeSet<Artist> artists = new TreeSet<>();
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()) {
-                String name = rs.getString("pname");
-                if( name == null || name.equals("") ){
-                    name = rs.getString("cname");
-                }
-                Artist artist = new Artist(name, rs.getLong("id"));
-                artist.setCollectionCount(rs.getInt("ccount"));
-                artist.setPlayCount(rs.getInt("pcount"));
+                Artist artist = new Artist();
+                artist.setArtistID(rs.getLong("artist_id"));
+                artist.setName(rs.getString("name"));
                 artists.add(artist);
-            }
-            int currRank = -1;
-            for(Artist a : artists){
-                if(result.size() <= 10 || a.rankBasedOnPlayAndCollections() == currRank){
-                    result.add(a);
-                    currRank = a.rankBasedOnPlayAndCollections();
-                }else{
-                    break;
-                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return result;
+        return artists;
     }
 
     /**

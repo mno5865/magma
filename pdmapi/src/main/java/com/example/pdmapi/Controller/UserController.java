@@ -393,9 +393,8 @@ public class UserController {
         }
     }
 
-
     /**
-     * Gets the list of the users that a user is following
+     * endpoint for getting user's top ten artists by collection
      * @param userId The id of the user
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
@@ -411,16 +410,15 @@ public class UserController {
     }
 
     /**
-     * Gets the list of the users that a user is following
+     * endpoint for getting user's top ten artists by plays
      * @param userId The id of the user
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
     @GetMapping("/users/{userId}/top-ten-artists/by-collections")
     public ResponseEntity<List<Artist>> topTenArtistsByCollections(@PathVariable long userId) {
-        User user = userService.getUser(userId);
-        if (user != null){
-            List<Artist> artists  = userService.getTopTenArtistsByCollections(userId);
+        List<Artist> artists  = userService.getTopTenArtistsByCollections(userId);
+        if (artists != null){
             return new ResponseEntity<>(artists, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -428,15 +426,15 @@ public class UserController {
     }
 
     /**
-     * Gets the list of the users that a user is following
+     * endpoint for getting user's top ten artists by plays and collection
      * @param userId The id of the user
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/top-ten-artists/by-plays/by-collections")
+    @GetMapping("/users/{userId}/top-ten-artists")
     public ResponseEntity<List<Artist>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
         List<Artist> artists  = userService.getTopTenArtistsByPlaysAndCollections(userId);
-        if (artists != null){
+        if (artists != null) {
             return new ResponseEntity<>(artists, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
