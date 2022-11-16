@@ -46,14 +46,19 @@ public class GenreService {
      * @param genre model that db info is tied to
      * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
-    public int createGenre(Genre genre) {
+    public int[] createGenre(Genre genre) {
         String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -63,7 +68,7 @@ public class GenreService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     /**

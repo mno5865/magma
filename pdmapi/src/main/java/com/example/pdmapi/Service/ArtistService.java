@@ -37,15 +37,20 @@ public class ArtistService {
      * @param artist artist being created
      * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
-    public int createArtist(Artist artist) {
-        String query = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
+    public int[] createArtist(Artist artist) {
+        String stmt = "INSERT INTO artist(name) VALUES ('%s')".formatted(artist.getName());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Statement stmt = conn.createStatement(
+            Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(query);
-        } catch (SQLException e) {
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -54,7 +59,7 @@ public class ArtistService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     // READ

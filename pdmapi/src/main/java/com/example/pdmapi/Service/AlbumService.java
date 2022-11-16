@@ -35,16 +35,21 @@ public class AlbumService {
      * @param album an album in the database
      * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
-    public int createAlbum(Album album) {
-        String st = ("INSERT INTO album(title, release_date) VALUES ('%s', '%tF')")
+    public int[] createAlbum(Album album) {
+        String stmt = ("INSERT INTO album(title, release_date) VALUES ('%s', '%tF')")
                 .formatted(album.getTitle(), album.getReleaseDate());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
-            Statement stmt = conn.createStatement(
+            Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return stmt.executeUpdate(st);
-        } catch (SQLException e) {
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -53,7 +58,7 @@ public class AlbumService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     /**

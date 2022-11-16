@@ -67,11 +67,11 @@ public class ArtistController {
      */
     @PostMapping(value = "/artists", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtist(@RequestBody Artist newArtist) {
-        int rowsAffected = artistService.createArtist(newArtist);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        int[] results = artistService.createArtist(newArtist);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 

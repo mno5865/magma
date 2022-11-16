@@ -35,7 +35,7 @@ public class SongService {
      * @param song song in the database
      * @return  e.printStackTrace() or -1
      */
-    public int createSong(Song song) {
+    public int[] createSong(Song song) {
 
         //String that prints a message to create a song
         String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s',%d,'%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
@@ -46,7 +46,12 @@ public class SongService {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(1);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -56,7 +61,7 @@ public class SongService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     // READ

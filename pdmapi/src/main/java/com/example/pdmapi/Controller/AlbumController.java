@@ -102,11 +102,11 @@ public class AlbumController {
     @CrossOrigin
     @PostMapping(value = "/albums", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createAlbum(@RequestBody Album newAlbum) {
-        int rowsAffected = albumService.createAlbum(newAlbum);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        int[] results = albumService.createAlbum(newAlbum);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 
