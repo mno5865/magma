@@ -56,7 +56,7 @@ public class GenreService {
             int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
             ResultSet keys = statement.getGeneratedKeys();
             keys.next();
-            int key = keys.getInt(1);
+            int key = keys.getInt(2);
             int[] results = {rowsAffected, key};
             return results;
         } catch (Exception e) {
