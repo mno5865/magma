@@ -22,13 +22,19 @@
       <!-- top artists -->
       <div class="artists">
         <h3>{{userInfo.firstName}}'s Top Artists</h3>
-        <div class="toggler">
-          <button> Plays </button>
-          <button> Playlists </button>
-          <button> Clear Filter </button>
+        <div class="filter">
+          <div class="toggle">
+            <button (click)="setFilterByPlays()"> Plays </button>
+            <button (click)="setFilterByCollections()"> Playlists </button>
+          </div>
+          <button (click)="clearFilter()"> Clear Filter </button>
         </div>
-        <div *ngFor="let artist of artists" class="artistCard">
-            {{artist.name}}
+        <div class="cards" >
+            <div class="card" *ngFor="let artist of artists">
+              <div class="container">
+                <p> #{{artists.indexOf(artist) + 1}} - {{artist.name}} </p>
+              </div>
+            </div>
         </div>
       </div>
 
