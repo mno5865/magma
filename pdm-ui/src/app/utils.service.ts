@@ -32,6 +32,10 @@ export class UtilsService {
     return this.user.username;
   }
 
+  public getUser(): User {
+    return this.user
+  }
+
   public getFirstName(): string {
     return this.user.firstName
   }

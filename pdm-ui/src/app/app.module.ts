@@ -13,6 +13,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SongbrowserComponent } from './songbrowser/songbrowser.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FriendviewComponent,
     HomepageComponent,
     SongbrowserComponent,
-    ProfileComponent
+    ProfileComponent,
+    NavBarComponent
   ],
   imports: [
     BrowserModule,

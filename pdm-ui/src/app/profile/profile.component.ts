@@ -1,3 +1,6 @@
+/**
+ * author: Mildness Onyekwere - mno5865
+ */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
 import { User } from "../User";
@@ -42,22 +45,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
 
-  }
-
-  goBack(): void {
-    this.router.navigate(['/users/' + this.userID + '/home']).then()
-  }
-
-  goToCollections(): void {
-    this.router.navigate(['/users/' + this.userID + '/collections']).then()
-  }
-
-  goToSongBrowser(): void {
-    this.router.navigate(['/users/' + this.userID + '/songs']).then()
-  }
-
-  goToFriends(): void {
-    this.router.navigate(['/users/' + this.userID + '/friends']).then()
   }
 
   setFilterByPlays(): void {
