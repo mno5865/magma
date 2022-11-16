@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <body>
+    <!--nav bar-->
+    <nav class="navbar">
+      <div class="branding">
+        <h2> <b>MAGMAfy </b> <fa-icon [icon]="faFire"></fa-icon></h2>
+        <i class="fa-duotone fa-camera-retro" style="color: #1c7ed6;"></i>
+      </div>
+      <div class="nav-links">
+        <!-- menu -->
+        <div class="menu">
+          <a (click)="goBack()">Home</a>
+          <a (click)="goToSongBrowser()">Songs</a>
+          <a (click)="goToCollections()">Playlists</a>
+          <a (click)="goToFriends()">Friends</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="content">
+      <!-- top artists -->
+      <div class="artists">
+        <h3>{{userInfo.firstName}}'s Top Artists</h3>
+        <div class="filter">
+          <div class="toggle">
+            <button (click)="setFilterByPlays()"> Plays </button>
+            <button (click)="setFilterByCollections()"> Playlists </button>
+          </div>
+          <button (click)="clearFilter()"> Clear Filter </button>
+        </div>
+        <div class="cards" >
+            <div class="card" *ngFor="let artist of artists">
+              <div class="container">
+                <p> #{{artists.indexOf(artist) + 1}} - {{artist.name}} </p>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- user info -->
+      <div class="info">
+        <h3>{{userInfo.firstName}}'s Profile</h3>
+        <p>Followers: {{followersCount}} Following: {{followingCount}}</p>
+        <div> Collections: {{collectionCount}} </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
+

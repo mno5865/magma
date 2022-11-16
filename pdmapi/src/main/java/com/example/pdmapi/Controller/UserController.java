@@ -330,7 +330,7 @@ public class UserController {
      * @return HTTP OK and the count of followers if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/following/count")
+    @GetMapping("/users/{userId}/followers/count")
     public ResponseEntity<Integer> getFollowersCountByUserID(@PathVariable long userId) {
         int count = userService.getFollowersCountByUserID(userId);
         if (count != -1) {
@@ -346,7 +346,7 @@ public class UserController {
      * @return HTTP OK and the count of following if successful, HTTP NOT_FOUND otherwise
      */
     @CrossOrigin
-    @GetMapping("/users/{userId}/followers/count")
+    @GetMapping("/users/{userId}/following/count")
     public ResponseEntity<Integer> getFollowingCountByUserID(@PathVariable long userId) {
         int count = userService.getFollowingCountByUserID(userId);
         if (count != -1) {

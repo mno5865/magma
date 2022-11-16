@@ -1,0 +1,125 @@
+* {
+  font-family: Varela, sans-serif;
+  cursor: default;
+}
+
+html{
+  margin:0px;
+}
+
+body {
+  background-image: linear-gradient(to bottom, black, red);
+  margin:0px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #F3A738;
+  color: #1B0906;
+  border-radius: 10px;
+}
+
+.nav-links a {
+  color: #1B0906;
+}
+
+/* navbar menu */
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 20px;
+}
+
+/* artist and info grid */
+.content {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  color: black;
+  column-gap: 1%;
+  padding: 5px;
+}
+
+.artists {
+  text-align: center;
+  grid-column: 1 / 5;
+  background-color: #F29125;
+  border-radius: 10px;
+}
+
+.filter {
+  display: inline-flex;
+  button {
+    border-radius: 8px;
+    border-width: 0px;
+    margin: 2px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  button:hover {
+    background-color: #621708;
+    color: whitesmoke;
+  }
+  .toggle{
+    button:focus {
+      background-color: #621708;
+      color: whitesmoke;
+    }
+  }
+
+}
+
+.info {
+  text-align: center;
+  grid-column: 5 / 7;
+  background-color: #F29125;
+  border-radius: 10px;
+}
+
+/** artist display **/
+.cards {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+  padding: .5rem;
+}
+
+.card {
+  background-color: #621708;
+  color: whitesmoke;
+  transition: 0.3s;
+  border-radius: 4px;
+  padding: .5rem;
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+@font-face {
+  font-family: Varela;
+  src: url(VarelaRound-Regular.ttf);
+}
+
+div {
+  font-family: Varela, sans-serif;
+}
+
+
+
+

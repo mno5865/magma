@@ -11,6 +11,8 @@ import { CollectionpageComponent } from './collectionpage/collectionpage.compone
 import { FriendviewComponent } from './friendview/friendview.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SongbrowserComponent } from './songbrowser/songbrowser.component';
+import { ProfileComponent } from './profile/profile.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,14 @@ import { SongbrowserComponent } from './songbrowser/songbrowser.component';
     CollectionpageComponent,
     FriendviewComponent,
     HomepageComponent,
-    SongbrowserComponent
+    SongbrowserComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
