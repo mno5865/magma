@@ -6,10 +6,7 @@
 
 package com.example.pdmapi.Controller;
 
-import com.example.pdmapi.Model.Artist;
-import com.example.pdmapi.Model.Collection;
-import com.example.pdmapi.Model.SongInView;
-import com.example.pdmapi.Model.User;
+import com.example.pdmapi.Model.*;
 import com.example.pdmapi.Service.UserService;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,7 +179,7 @@ public class UserController {
         if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-        return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -453,5 +450,17 @@ public class UserController {
     public ResponseEntity<Boolean> verifyPassword(@PathVariable long userID, @PathVariable String hashedPass,
                                                   @PathVariable String pass) {
         return new ResponseEntity<>(userService.verifyPassword(userID, pass, hashedPass), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userID}/recommend/genre")
+    public ResponseEntity<List<Song>> recommendSongsByGenre(@PathVariable long userID) {
+        return new ResponseEntity<>(userService.recommendSongsByGenre(userID), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/users/{userID}/recommend/artist")
+    public ResponseEntity<List<Song>> recommendSongsByArtist(@PathVariable long userID) {
+        return new ResponseEntity<>(userService.recommendSongsByArtist(userID), HttpStatus.OK);
     }
 }
