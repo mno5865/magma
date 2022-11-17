@@ -73,12 +73,12 @@ public class SongController {
      */
     @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
-        int rowsAffected = songService.createSong(newSong);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Integer> createSong(@RequestBody Song newSong) {
+        int[] results = songService.createSong(newSong);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 

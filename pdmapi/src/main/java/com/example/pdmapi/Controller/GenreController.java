@@ -105,11 +105,11 @@ public class GenreController {
     @CrossOrigin
     @PostMapping(value = "/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createGenre(@RequestBody Genre newGenre) {
-        int rowsAffected = genreService.createGenre(newGenre);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        int[] results = genreService.createGenre(newGenre);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 
