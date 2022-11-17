@@ -248,4 +248,15 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/songs/random")
+    public ResponseEntity<Song> getRandomSong() {
+        Song song = songService.getRandomSong();
+        if (song != null) {
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -556,4 +556,33 @@ public class SongService {
         }
         return songs;
     }
+
+    public Song getRandomSong() {
+        String stmt = "SELECT * FROM song ORDER BY random() LIMIT 1";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Song song = new Song();
+            while(rs.next()) {
+                song.setSongId(rs.getLong("song_id"));
+                song.setTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+            }
+            return song;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }
