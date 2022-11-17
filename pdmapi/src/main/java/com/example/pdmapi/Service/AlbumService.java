@@ -68,7 +68,7 @@ public class AlbumService {
      * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
     public int createAlbumContainsSong(long albumId, long songId, int track) {
-        String st = ("INSERT INTO album_contains_song(album_id, song_id) VALUES (%d, %d, %d)")
+        String st = ("INSERT INTO album_contains_song(album_id, song_id, track_number) VALUES (%d, %d, %d)")
                 .formatted(albumId, songId, track);
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
