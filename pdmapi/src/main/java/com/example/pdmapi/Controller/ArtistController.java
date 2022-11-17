@@ -168,7 +168,7 @@ public class ArtistController {
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
      */
-    @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/artists/{artistId}/songs/{songId}")
     public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId ) {
         int rowsAffected = artistService.createArtistReleasesSong(artistId,songId);
         if(rowsAffected == 1) {
