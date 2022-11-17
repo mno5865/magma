@@ -69,6 +69,40 @@ public class UserService {
         return null;
     }
 
+    public List<User> getAllUsers() {
+        String stmt = "SELECT * FROM \"user\"";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            List<User> users = new ArrayList<>();
+            while(rs.next()) {
+                User user = new User();
+                user.setUserID(rs.getLong("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setCreationDate(rs.getDate("creation_date"));
+                user.setAccessDate(rs.getTimestamp("access_date"));
+                users.add(user);
+            }
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets the last time a user listened to a song, deprecated function
      * @param userId The id of the user
