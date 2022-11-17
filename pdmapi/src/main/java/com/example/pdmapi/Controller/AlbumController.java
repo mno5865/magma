@@ -238,4 +238,15 @@ public class AlbumController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/albums/random")
+    public ResponseEntity<Album> getRandomAlbum() {
+        Album album = albumService.getRandomAlbum();
+        if (album != null) {
+            return new ResponseEntity<>(album, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

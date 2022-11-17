@@ -441,4 +441,32 @@ public class AlbumService {
         }
         return -1;
     }
+
+    public Album getRandomAlbum() {
+        String stmt = "SELECT * FROM album ORDER BY random() LIMIT 1";
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = statement.executeQuery(stmt);
+            Album album = new Album();
+            while(rs.next()) {
+                album.setAlbumID(rs.getLong("album_id"));
+                album.setTitle(rs.getString("title"));
+                album.setReleaseDate(rs.getDate("release_date"));
+            }
+            return album;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }
