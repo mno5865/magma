@@ -1,12 +1,12 @@
 /// file/component: Song Service
 /// description: Handles song related HTTP requests
-/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
+/// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593, Mildness Onyekwere - mno5865
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Song } from './Song';
 import { SongInView } from './SongInView'
-import {map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +51,9 @@ export class SongService {
   getOrderedSongs(searchBy: string, searchTerm: string, sortBy: number, order: string): Observable<SongInView[]> {
     console.log(this.globalURL+"songs/"+searchBy+"/"+searchTerm+"/"+sortBy+"/"+order)
     return this.http.get<SongInView[]>(this.globalURL+"songs/"+searchBy+"/"+searchTerm+"/"+sortBy+"/"+order)
+  }
+
+  getTopFiftySongs(): Observable<SongInView[]> {
+    return this.http.get<SongInView[]>(this.globalURL +" songs/top-50")
   }
 }
