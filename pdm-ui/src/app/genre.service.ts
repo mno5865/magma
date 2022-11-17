@@ -9,9 +9,6 @@ import { Observable } from "rxjs";
 export class GenreService {
   private globalURL = 'http://localhost:8080/api/';
 
-  private genreId: number = 0
-  private name: string = ''
-
   constructor(private http: HttpClient) { }
 
   getTopFiveGenres(): Observable<Genre[]> {

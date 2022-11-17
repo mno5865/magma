@@ -8,6 +8,8 @@ import { Observable } from 'rxjs'
 import { User } from './User'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Artist} from "./Artist";
+import {SongInView} from "./SongInView";
+import {Song} from "./Song";
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +84,14 @@ export class UtilsService {
 
   public getTopTenArtistsByCollection(userID: number): Observable<Artist[]> {
     return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-collections", this.httpOptions)
+  }
+
+  public getSongRecommendationsByGenre(userID: number): Observable<Song[]> {
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
+  }
+
+  public getSongRecommendationsByArtist(userID: number): Observable<Song[]> {
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
   }
 
   public setUser(user: User): void {
