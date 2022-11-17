@@ -54,6 +54,6 @@ export class SongService {
   }
 
   getTopFiftySongs(): Observable<SongInView[]> {
-    return this.http.get<SongInView[]>(this.globalURL +" songs/top-50")
+    return this.http.get<SongInView[]>(this.globalURL + "songs/top-50")
   }
 }

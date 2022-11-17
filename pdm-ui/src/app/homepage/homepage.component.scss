@@ -7,12 +7,25 @@
   cursor: default;
 }
 
-html{
-  margin:0px;
+.content {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  color: black;
+  column-gap: 1%;
+  padding: 5px;
+  text-align: center;
 }
 
-body {
-  background-image: linear-gradient(to bottom, black, red);
-  margin:0px;
+.genres {
+  grid-column: 1 / 2;
+}
+
+.songs {
+  grid-column: 2 / 7;
+}
+
+.song {
+
 }
 
