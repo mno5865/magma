@@ -520,16 +520,18 @@ public class SongService {
     public List<SongInView> getTop50Songs() {
         List<SongInView> songs = new ArrayList<>();
 
-        String query = ("SELECT topInfo.title, topInfo.name, listen_count FROM\n" +
-                "(select distinct on (s.title) s.song_id, s.title, s.runtime, s.release_date, art.name,\n" +
-                "       (select count(c) from song as c\n" +
-                "        inner join user_listens_to_song ults on c.song_id = ults.song_id\n" +
-                "        where c.song_id = s.song_id and ults.date_time >= CURRENT_TIMESTAMP - interval '30 days') as listen_count, s.release_date as song_release_date\n" +
-                "from song as s\n" +
-                "left outer join artist_releases_song ars on s.song_id = ars.song_id\n" +
-                "left outer join artist art on ars.artist_id = art.artist_id) topInfo\n" +
+        String query = ("SELECT * FROM\n" +
+                "(select distinct on (s.title) s.song_id, s.title,\n" +
+                "                              s.runtime, s.release_date,\n" +
+                "                              art.artist_id, art.name,\n" +
+                "    (select count(c) from song as c\n" +
+                "    inner join user_listens_to_song ults on c.song_id = ults.song_id\n" +
+                "    where c.song_id = s.song_id and ults.date_time >= CURRENT_TIMESTAMP - interval '30 days') as listen_count\n" +
+                "    from song as s\n" +
+                "    left outer join artist_releases_song ars on s.song_id = ars.song_id\n" +
+                "    left outer join artist art on ars.artist_id = art.artist_id) topInfo\n" +
                 "order by listen_count desc\n" +
-                "limit 50;");
+                "limit 50");
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -539,11 +541,14 @@ public class SongService {
 
             //If song does not exist in that genre create a song and its details in the genre.
             while (rs.next()) {
-                SongInView songInView = new SongInView();
-                songInView.setSongTitle(rs.getString("title"));
-                songInView.setArtistName(rs.getString("name"));
-                songInView.setListenCount(rs.getLong("listen_count"));
-                songs.add(songInView);
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setSongTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setArtistId(rs.getLong("artist_id"));
+                song.setArtistName(rs.getString("name"));
+                songs.add(song);
             }
         } catch (Exception e) {
             e.printStackTrace();

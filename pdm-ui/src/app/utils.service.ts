@@ -86,12 +86,12 @@ export class UtilsService {
     return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-collections", this.httpOptions)
   }
 
-  public getSongRecommendationsByGenre(userID: number): Observable<Song[]> {
-    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
+  public getSongRecommendationsByGenre(userID: number): Observable<SongInView[]> {
+    return this.http.get<SongInView[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
   }
 
-  public getSongRecommendationsByArtist(userID: number): Observable<Song[]> {
-    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
+  public getSongRecommendationsByArtist(userID: number): Observable<SongInView[]> {
+    return this.http.get<SongInView[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
   }
 
   public setUser(user: User): void {

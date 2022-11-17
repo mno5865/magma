@@ -4,6 +4,7 @@
  * @author Mildness Onyekwere - mno5865
  */
 package com.example.pdmapi.Model;
+import java.sql.Date;
 
 /**
  * SongInView class that defines the properties of an SongInView matching with the materialized
@@ -13,9 +14,11 @@ public class SongInView {
 
     long songId;
     long albumId;
+    long artistId;
     String songTitle;
     String artistName;
     String albumTitle;
+    Date releaseDate;
     long runtime;
     long listenCount;
 
@@ -44,6 +47,14 @@ public class SongInView {
 
     public void setAlbumId(long albumId) {
         this.albumId = albumId;
+    }
+
+    public long getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(long artistId) {
+        this.artistId = artistId;
     }
 
     public String getSongTitle() {
@@ -120,5 +131,13 @@ public class SongInView {
      */
     public void setListenCount(long listenCount) {
         this.listenCount = listenCount;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }
