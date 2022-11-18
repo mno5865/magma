@@ -324,7 +324,7 @@ public class SongService {
                         "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(artistName,select)
                 + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
-                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+                + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
         //  Try Catch Error Checking if song can be obtained by artist
         try {
@@ -377,7 +377,7 @@ public class SongService {
                         "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(albumTitle,select)
                 + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
-                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort +" ";
+                + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort +" ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         // Try Catch Error Checking if song can be obtained from an album
@@ -430,7 +430,7 @@ public class SongService {
                         "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(genre,select)
                 + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
-                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+                + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         //  Try Catch Error Checking if song can be obtained by genre
