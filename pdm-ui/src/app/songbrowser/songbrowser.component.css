@@ -1,6 +1,8 @@
 /**
- * author: Mildness Onyekwere - mno5865
- */
+  file: songbrowser.component.css
+  description: song browser styling
+  author: Mildness Onyekwere - mno5865
+*/
 
 .recs {
   overflow-x: auto;
