@@ -548,6 +548,7 @@ public class SongService {
                 song.setReleaseDate(rs.getDate("release_date"));
                 song.setArtistId(rs.getLong("artist_id"));
                 song.setArtistName(rs.getString("name"));
+                song.setListenCount(rs.getInt("listen_count"));
                 songs.add(song);
             }
         } catch (Exception e) {
