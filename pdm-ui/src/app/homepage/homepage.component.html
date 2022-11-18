@@ -1,23 +1,30 @@
 <div id="container">
-  <h2> <b>Welcome {{currentUser.firstName}}!</b> </h2>
+  <h2 class="header"> <b>Welcome {{currentUser.firstName}}!</b> </h2>
 
   <div class="content">
-    <div class="genres">
+    <div class="genreStuff">
       <h3> <b>World's Top Genres</b> </h3>
-      <div class="genre" *ngFor="let genre of topFiveGenres">
-        <p> #{{topFiveGenres.indexOf(genre) + 1}} - {{genre.name}} </p>
+      <div class="genres">
+        <div class="genre" *ngFor="let genre of topFiveGenres">
+          <p> #{{topFiveGenres.indexOf(genre) + 1}} - {{genre.name}} </p>
+        </div>
       </div>
     </div>
 
-    <div class="songs">
+    <div class="songStuff">
       <h3> <b>World's Top Songs</b> </h3>
-      <div *ngFor="let song of topFiftySongs">
-        <div class="songView">
-          {{song.songTitle}}
-          {{song.albumTitle}}
-          {{song.artistName}}
-          {{song.runtime}}
-          {{song.listenCount}}
+      <div class="songs">
+        <div *ngFor="let song of topFiftySongs">
+          <div class="songView">
+            #{{topFiftySongs.indexOf(song) + 1}} - {{song.songTitle}}
+            <div class="songContent">
+              By: {{song.artistName}}
+              <br>
+              {{song.listenCount}} listens
+              <br>
+              {{convertRuntime(song.runtime)}}
+            </div>
+          </div>
         </div>
       </div>
     </div>

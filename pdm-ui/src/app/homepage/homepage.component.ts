@@ -40,4 +40,11 @@ export class HomepageComponent implements OnInit {
   ngOnInit(): void {
 
   }
+
+  convertRuntime(runtime: number): string {
+    if (runtime % 60 < 10) {
+      return Math.floor(runtime/60).toString() + ":0" + runtime % 60
+    }
+    return Math.floor(runtime/60).toString() + ":" + runtime % 60
+  }
 }
