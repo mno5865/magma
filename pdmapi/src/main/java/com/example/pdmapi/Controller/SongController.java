@@ -259,4 +259,15 @@ public class SongController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/songs/in-view/{songId}")
+    public ResponseEntity<SongInView> getSongInView(@PathVariable long songId) {
+        SongInView song = songService.getSongInView(songId);
+        if (song != null) {
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

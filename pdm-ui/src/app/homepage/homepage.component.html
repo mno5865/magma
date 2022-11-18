@@ -16,7 +16,8 @@
       <div class="songs">
         <div *ngFor="let song of topFiftySongs">
           <div class="songView">
-            #{{topFiftySongs.indexOf(song) + 1}} - {{song.songTitle}}
+            <fa-icon [icon]="faPlay" (click)=listenToSong(song.songId)></fa-icon>
+            # {{topFiftySongs.indexOf(song) + 1}} - {{song.songTitle}}
             <div class="songContent">
               By: {{song.artistName}}
               <br>

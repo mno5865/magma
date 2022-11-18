@@ -539,7 +539,6 @@ public class SongService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
 
-            //If song does not exist in that genre create a song and its details in the genre.
             while (rs.next()) {
                 SongInView song = new SongInView();
                 song.setSongId(rs.getLong("song_id"));
@@ -578,6 +577,44 @@ public class SongService {
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getLong("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
+            }
+            return song;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public SongInView getSongInView(long songId){
+        String q = "refresh materialized view song_view";
+        String stmt = ("select distinct song_id, album_id, song_title, artist_name,\n" +
+                "       album_title, runtime, listen_count, release_date\n" +
+                "from song_view\n" +
+                "where song_id = %d\n" +
+                "limit 1").formatted(songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            statement.executeQuery(q);
+            ResultSet rs = statement.executeQuery(stmt);
+            SongInView song = new SongInView();
+            while (rs.next()) {
+                song.setSongId(rs.getLong("song_id"));
+                song.setSongTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setArtistId(rs.getLong("artist_id"));
+                song.setArtistName(rs.getString("name"));
+                song.setListenCount(rs.getInt("listen_count"));
             }
             return song;
         } catch (Exception e) {
