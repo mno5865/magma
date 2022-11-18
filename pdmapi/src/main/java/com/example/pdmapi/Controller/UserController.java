@@ -46,6 +46,10 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    /**
+     * Function that returns all users in the database
+     * @return HTTP Response OK containing all users
+     */
     @CrossOrigin
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -459,12 +463,22 @@ public class UserController {
         return new ResponseEntity<>(userService.verifyPassword(userID, pass, hashedPass), HttpStatus.OK);
     }
 
+    /**
+     * Returns a list of song recommendations for a specific user based on genres
+     * @param userID The id of the user
+     * @return HTTP OK Response with list of songs
+     */
     @CrossOrigin
     @GetMapping("/users/{userID}/recommend/genre")
     public ResponseEntity<List<Song>> recommendSongsByGenre(@PathVariable long userID) {
         return new ResponseEntity<>(userService.recommendSongsByGenre(userID), HttpStatus.OK);
     }
 
+    /**
+     * Returns a list of song recommendations for a specific user based on artists
+     * @param userID The id of the user
+     * @return HTTP OK Response with a list of songs
+     */
     @CrossOrigin
     @GetMapping("/users/{userID}/recommend/artist")
     public ResponseEntity<List<Song>> recommendSongsByArtist(@PathVariable long userID) {

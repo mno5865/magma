@@ -892,6 +892,11 @@ public class UserService {
                 .equals(hashedPass);
     }
 
+    /**
+     * Recommends a user songs based on the popularity of those songs with other users who listen to similar genres
+     * @param userID The id of the user
+     * @return A list of song recommendations
+     */
     public List<Song> recommendSongsByGenre(long userID) {
         String query = ("SELECT * FROM " +
                 "(SELECT song.song_id, song.title, song.release_date, song.runtime FROM song " +
@@ -1010,6 +1015,11 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Recommends a user songs based on the popularity of those songs with other users who listen to similar artists
+     * @param userID The id of the user
+     * @return A list of song recommendations
+     */
     public List<Song> recommendSongsByArtist(long userID) {
         String query = ("SELECT song_id, title, runtime, release_date FROM\n" +
                 "(SELECT song.song_id, song.title, song.runtime, song.release_date, count(song.song_id) as popularity FROM song\n" +
