@@ -270,7 +270,7 @@ public class SongService {
                 "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(songTitle,select)
                 + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
-                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+                + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         //  Try Catch Error Checking if song can be obtained from its list
@@ -593,27 +593,24 @@ public class SongService {
 
     public SongInView getSongInView(long songId){
         String q = "refresh materialized view song_view";
-        String stmt = ("select distinct song_id, album_id, song_title, artist_name,\n" +
-                "       album_title, runtime, listen_count, release_date\n" +
-                "from song_view\n" +
-                "where song_id = %d\n" +
-                "limit 1").formatted(songId);
+        String stmt = ("select distinct * from song_view " +
+                "where song_id = %d").formatted(songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            statement.executeQuery(q);
+            statement.executeUpdate(q);
             ResultSet rs = statement.executeQuery(stmt);
             SongInView song = new SongInView();
             while (rs.next()) {
                 song.setSongId(rs.getLong("song_id"));
-                song.setSongTitle(rs.getString("title"));
+                song.setSongTitle(rs.getString("song_title"));
                 song.setRuntime(rs.getLong("runtime"));
-                song.setReleaseDate(rs.getDate("release_date"));
+                song.setReleaseDate(rs.getDate("song_release_date"));
                 song.setArtistId(rs.getLong("artist_id"));
-                song.setArtistName(rs.getString("name"));
+                song.setArtistName(rs.getString("artist_name"));
                 song.setListenCount(rs.getInt("listen_count"));
             }
             return song;

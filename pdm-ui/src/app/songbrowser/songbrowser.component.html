@@ -2,12 +2,14 @@
   <h1><b>Search for Songs</b></h1>
 
   <div class="recommended">
-
-
       <div class="songStuff">
         <h3> <b>Your Recommendations</b> </h3>
+        <div class="filters">
+          <button (click)="setFilterByGenre()"> Genre </button>
+          <button (click)="setFilterByArtist()"> Artist </button>
+        </div>
 
-        <div class="songs">
+        <div class="recs">
           <div *ngFor="let rec of recs">
             <div class="songView">
               <fa-icon [icon]="faPlay" (click)=listenToSong(rec.songId)></fa-icon>
@@ -25,6 +27,7 @@
       </div>
   </div>
 
+  <br>
   <form class="form" onsubmit="return false">
     <input type="text" placeholder="Search" #searchTerm required>
     <button id="submitter" type="submit" (click)="searchForSongs(searchBy.value, searchTerm.value, sortBy.value,

@@ -81,9 +81,20 @@ export class SongbrowserComponent implements OnInit {
   }
 
   setFilterByGenre(): void {
-
+    this.recs = []
+    this.recsByGenre.forEach(rec => {
+      this.songService.getSongInView(rec.songId).subscribe(song => {
+        this.recs.push(song)
+      })
+    })
   }
 
   setFilterByArtist(): void {
+    this.recs = []
+    this.recsByArtist.forEach(rec => {
+      this.songService.getSongInView(rec.songId).subscribe(song => {
+        this.recs.push(song)
+      })
+    })
   }
 }

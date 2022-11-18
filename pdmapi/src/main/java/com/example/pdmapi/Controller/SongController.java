@@ -223,7 +223,7 @@ public class SongController {
      * @return ResponseEntity noting the outcome of the request and list of songs
      */
     @CrossOrigin
-    @GetMapping("/songs/topoffollowing/{userId}")
+    @GetMapping("/songs/top-of-following/{userId}")
     public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
     {
         List<Song> songs = songService.topFiftySongsOfFollowing(userId);
