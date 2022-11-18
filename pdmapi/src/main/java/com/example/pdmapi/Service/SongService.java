@@ -270,7 +270,7 @@ public class SongService {
                 "like upper('%s') order by case when %d = 1 then s.song_title END ").formatted(songTitle,select)
                 + sort +", case when %d = 2 then s.artist_name END ".formatted(select)
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
-                + sort +", case when %d = 4 then s.release_date END ".formatted(select) + sort + " ";
+                + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
         //  Try Catch Error Checking if song can be obtained from its list
@@ -464,7 +464,7 @@ public class SongService {
         return songs;
     }
     
-        /**
+    /**
      * Gets a user's top 50 recommended songs based on the
      * songs the people they follows listen to.
      * @param userId (long) the user's identification number
@@ -520,16 +520,18 @@ public class SongService {
     public List<SongInView> getTop50Songs() {
         List<SongInView> songs = new ArrayList<>();
 
-        String query = ("SELECT topInfo.title, topInfo.name, listen_count FROM\n" +
-                "(select distinct on (s.title) s.song_id, s.title, s.runtime, s.release_date, art.name,\n" +
-                "       (select count(c) from song as c\n" +
-                "        inner join user_listens_to_song ults on c.song_id = ults.song_id\n" +
-                "        where c.song_id = s.song_id and ults.date_time >= CURRENT_TIMESTAMP - interval '30 days') as listen_count, s.release_date as song_release_date\n" +
-                "from song as s\n" +
-                "left outer join artist_releases_song ars on s.song_id = ars.song_id\n" +
-                "left outer join artist art on ars.artist_id = art.artist_id) topInfo\n" +
+        String query = ("SELECT * FROM\n" +
+                "(select distinct on (s.title) s.song_id, s.title,\n" +
+                "                              s.runtime, s.release_date,\n" +
+                "                              art.artist_id, art.name,\n" +
+                "    (select count(c) from song as c\n" +
+                "    inner join user_listens_to_song ults on c.song_id = ults.song_id\n" +
+                "    where c.song_id = s.song_id and ults.date_time >= CURRENT_TIMESTAMP - interval '30 days') as listen_count\n" +
+                "    from song as s\n" +
+                "    left outer join artist_releases_song ars on s.song_id = ars.song_id\n" +
+                "    left outer join artist art on ars.artist_id = art.artist_id) topInfo\n" +
                 "order by listen_count desc\n" +
-                "limit 50;");
+                "limit 50");
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement stmt = conn.createStatement(
@@ -537,13 +539,16 @@ public class SongService {
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery(query);
 
-            //If song does not exist in that genre create a song and its details in the genre.
             while (rs.next()) {
-                SongInView songInView = new SongInView();
-                songInView.setSongTitle(rs.getString("title"));
-                songInView.setArtistName(rs.getString("name"));
-                songInView.setListenCount(rs.getLong("listen_count"));
-                songs.add(songInView);
+                SongInView song = new SongInView();
+                song.setSongId(rs.getLong("song_id"));
+                song.setSongTitle(rs.getString("title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("release_date"));
+                song.setArtistId(rs.getLong("artist_id"));
+                song.setArtistName(rs.getString("name"));
+                song.setListenCount(rs.getInt("listen_count"));
+                songs.add(song);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -572,6 +577,41 @@ public class SongService {
                 song.setTitle(rs.getString("title"));
                 song.setRuntime(rs.getLong("runtime"));
                 song.setReleaseDate(rs.getDate("release_date"));
+            }
+            return song;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public SongInView getSongInView(long songId){
+        String q = "refresh materialized view song_view";
+        String stmt = ("select distinct * from song_view " +
+                "where song_id = %d").formatted(songId);
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement statement = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            statement.executeUpdate(q);
+            ResultSet rs = statement.executeQuery(stmt);
+            SongInView song = new SongInView();
+            while (rs.next()) {
+                song.setSongId(rs.getLong("song_id"));
+                song.setSongTitle(rs.getString("song_title"));
+                song.setRuntime(rs.getLong("runtime"));
+                song.setReleaseDate(rs.getDate("song_release_date"));
+                song.setArtistId(rs.getLong("artist_id"));
+                song.setArtistName(rs.getString("artist_name"));
+                song.setListenCount(rs.getInt("listen_count"));
             }
             return song;
         } catch (Exception e) {

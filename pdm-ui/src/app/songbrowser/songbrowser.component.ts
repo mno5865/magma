@@ -3,11 +3,14 @@
 /// author: Gregory Ojiem - gro3228
 
 import { Component, OnInit } from '@angular/core';
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { SongService } from '../song.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../collection.service';
 import { Collection } from '../Collection';
 import { SongInView } from '../SongInView';
+import { UtilsService } from "../utils.service";
+import {Song} from "../Song";
 
 @Component({
   selector: 'app-songbrowser',
@@ -15,15 +18,25 @@ import { SongInView } from '../SongInView';
   styleUrls: ['./songbrowser.component.css']
 })
 export class SongbrowserComponent implements OnInit {
+  faPlay = faPlay
   songList: SongInView[] = []
+  recs: SongInView[] = []
+  recsByGenre: Song[] = []
+  recsByArtist: Song[] = []
   runtimeInfo: {[key:number]:number} = {}
   userID: number = 0
   collectionList: Collection[] = []
   selected: string = ""
   constructor(private songService : SongService, private collectionService : CollectionService,
-              private router : Router, route: ActivatedRoute) {
+              private utilsService: UtilsService, private router : Router, route: ActivatedRoute) {
     route.params.subscribe((params) => {
       this.userID = params["userID"]   // this keeps track of the username field of the URL
+      this.utilsService.getSongRecommendationsByGenre(this.userID).subscribe(recs => {
+        this.recsByGenre = recs
+      })
+      this.utilsService.getSongRecommendationsByArtist(this.userID).subscribe(recs => {
+        this.recsByArtist= recs
+      })
     })
   }
 
@@ -63,7 +76,25 @@ export class SongbrowserComponent implements OnInit {
     })
   }
 
-  goBack(): void {
-    this.router.navigate(['/users/'+this.userID+'/home'])
+  listenToSong(songId: number): void {
+    this.songService.listenToSong(this.userID, songId).subscribe()
+  }
+
+  setFilterByGenre(): void {
+    this.recs = []
+    this.recsByGenre.forEach(rec => {
+      this.songService.getSongInView(rec.songId).subscribe(song => {
+        this.recs.push(song)
+      })
+    })
+  }
+
+  setFilterByArtist(): void {
+    this.recs = []
+    this.recsByArtist.forEach(rec => {
+      this.songService.getSongInView(rec.songId).subscribe(song => {
+        this.recs.push(song)
+      })
+    })
   }
 }

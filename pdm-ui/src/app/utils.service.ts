@@ -87,11 +87,11 @@ export class UtilsService {
   }
 
   public getSongRecommendationsByGenre(userID: number): Observable<Song[]> {
-    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/recommend/genre", this.httpOptions)
   }
 
   public getSongRecommendationsByArtist(userID: number): Observable<Song[]> {
-    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/", this.httpOptions)
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/recommend/artist", this.httpOptions)
   }
 
   public setUser(user: User): void {

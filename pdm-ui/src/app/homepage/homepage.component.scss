@@ -7,12 +7,52 @@
   cursor: default;
 }
 
-html{
-  margin:0px;
+
+.content {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  color: black;
+  column-gap: 1%;
+  padding: 5px;
+  text-align: center;
 }
 
-body {
-  background-image: linear-gradient(to bottom, black, red);
-  margin:0px;
+.header {
+  text-align: center;
+}
+
+.genreStuff {
+  text-align: center;
+  background-color: #F29125;
+  border-radius: 10px;
+  grid-column: 1 / 2;
+}
+
+.songStuff {
+  text-align: center;
+  background-color: #F29125;
+  border-radius: 10px;
+  grid-column: 2 / 4;
+}
+
+.songs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 5%;
+  row-gap: 2%;
+  margin: 2%;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.songView {
+  grid-column: auto;
+  vertical-align: middle;
+  background-color: #621708;
+  color: whitesmoke;
+  transition: 0.3s;
+  border-radius: 4px;
+  padding: .5rem;
 }
 

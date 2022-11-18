@@ -223,7 +223,7 @@ public class SongController {
      * @return ResponseEntity noting the outcome of the request and list of songs
      */
     @CrossOrigin
-    @GetMapping("/songs/topoffollowing/{userId}")
+    @GetMapping("/songs/top-of-following/{userId}")
     public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
     {
         List<Song> songs = songService.topFiftySongsOfFollowing(userId);
@@ -253,6 +253,17 @@ public class SongController {
     @GetMapping("/songs/random")
     public ResponseEntity<Song> getRandomSong() {
         Song song = songService.getRandomSong();
+        if (song != null) {
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/in-view/{songId}")
+    public ResponseEntity<SongInView> getSongInView(@PathVariable long songId) {
+        SongInView song = songService.getSongInView(songId);
         if (song != null) {
             return new ResponseEntity<>(song, HttpStatus.OK);
         } else {

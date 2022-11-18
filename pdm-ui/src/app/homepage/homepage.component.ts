@@ -4,12 +4,13 @@
 
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { UtilsService } from '../utils.service'
-import { User } from '../User'
 import { SongInView } from "../SongInView";
 import { Genre } from "../Genre";
 import { GenreService } from "../genre.service";
 import { SongService } from "../song.service";
+import { User } from "../User";
 
 @Component({
   selector: 'app-homepage',
@@ -18,6 +19,8 @@ import { SongService } from "../song.service";
 })
 
 export class HomepageComponent implements OnInit {
+  faPlay = faPlay
+  userID: number = 0
   currentUser: User = {userID: 0, username: "", password: "", firstName: "", lastName: "", creationDate: new Date(),
     accessDate: new Date(), email: ""}
   topFiveGenres: Genre[] = []
@@ -27,6 +30,7 @@ export class HomepageComponent implements OnInit {
               private genreService: GenreService, private songService: SongService,
               route: ActivatedRoute) {
     route.params.subscribe((params) => {
+      this.userID = this.utilsService.getUserID()
       this.currentUser.firstName = this.utilsService.getFirstName()
       this.genreService.getTopFiveGenres().subscribe(genres => {
         this.topFiveGenres = genres
@@ -39,5 +43,16 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  convertRuntime(runtime: number): string {
+    if (runtime % 60 < 10) {
+      return Math.floor(runtime/60).toString() + ":0" + runtime % 60
+    }
+    return Math.floor(runtime/60).toString() + ":" + runtime % 60
+  }
+
+  listenToSong(songId: number): void {
+    this.songService.listenToSong(this.userID, songId).subscribe()
   }
 }

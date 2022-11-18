@@ -1,0 +1,13 @@
+/**
+ * author: Mildness Onyekwere - mno5865
+ */
+
+.recs {
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: inline-flex;
+  column-gap: 3%;
+  width: 100%;
+  white-space: nowrap;
+}
+
