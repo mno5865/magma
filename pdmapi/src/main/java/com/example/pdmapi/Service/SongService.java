@@ -36,12 +36,9 @@ public class SongService {
      * @return  e.printStackTrace() or -1
      */
     public int[] createSong(Song song) {
-
-        //String that prints a message to create a song
         String stmt = "INSERT INTO song (title,runtime, release_date) VALUES ('%s',%d,'%tF')".formatted(song.getTitle(),song.getRuntime(),song.getReleaseDate());
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        //Try Catch Error Checking if song can be created
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -71,11 +68,9 @@ public class SongService {
      * @return List of songs in the Database
      */
     public List<Song> getSongs() {
-        //String that prints a message to get the songs
         String stmt = "SELECT * FROM song";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        // Try Catch Error Checking if song can be retrieved
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -83,7 +78,6 @@ public class SongService {
             ResultSet rs = statement.executeQuery(stmt);
             List<Song> songs = new ArrayList<>();
 
-            // If not then creates a song and then sets the title,runtime,releasedate and adds songs to list
             while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
@@ -111,18 +105,15 @@ public class SongService {
      * @return song or null
      */
     public Song getSong(Long songId) {
-        // String that prints a message to get the song
         String stmt = "SELECT * FROM song WHERE song_id=%d".formatted(songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        //Try Catch Error Checking if song can be obtained
         try {
             Statement statement = conn.createStatement(
                             ResultSet.TYPE_SCROLL_INSENSITIVE,
                             ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
             Song song = new Song();
-            //Gets song ID,Title,Runtime and releasedate
             while(rs.next()) {
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));
@@ -151,12 +142,10 @@ public class SongService {
      * @return statement.executeUpdate(stmt) or -1
      */
     public int updateSong(Long songId, Song songDetails) {
-        //String that prints a message to update a song
         String stmt = "UPDATE song SET title='%s',runtime=%d,release_date='%tF' WHERE song_id=%d"
                 .formatted(songDetails.getTitle(),songDetails.getRuntime(),songDetails.getReleaseDate(), songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        //Try Catch Error Checking if song can be updated
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -182,11 +171,9 @@ public class SongService {
      * @return statement.executeUpdate(stmt) or -1
      */
     public int deleteSong(Long songId) {
-        //String that prints a message to delete the song
         String stmt = "DELETE FROM song WHERE song_id=%d".formatted(songId);
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        //Try Catch Error Checking if song can be deleted
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -210,7 +197,6 @@ public class SongService {
      * @return songs or null
      */
     public List<Song> getCollectionSongs(long collectionId) {
-        // String that prints a message to get a list of
         String stmt = "SELECT song.song_id,song.title,song.runtime,song.release_date\n" +
                 "FROM song,collection_holds_song\n" +
                 "WHERE song.song_id=collection_holds_song.song_id\n" +
@@ -218,14 +204,12 @@ public class SongService {
         Connection conn = DataSourceUtils.getConnection(dataSource);
         List<Song> songs = new ArrayList<>();
 
-        // Try Catch Error Checking if songs list can be obtained
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
 
-            //If not create a new song and set its SongID, Titlte, runtime, release date and then add it to the songs database
             while (rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
@@ -260,9 +244,6 @@ public class SongService {
         List<SongInView> songs = new ArrayList<>();
         songTitle = "%" + songTitle + "%";
         String q = "refresh materialized view song_view";
-        String p = "refresh view song_view_with_genre";
-        //String query = ("select * from song_view s where upper(s.song_title) like upper('%s') ")
-        //        .formatted(songTitle);
         String query1 = ("select s.song_id, s.album_id, s.song_title, " +
                 "s.artist_name, s.album_title, s.runtime, s.listen_count " +
                 "from song_view s left join song_view_with_genre sg on " +
@@ -273,7 +254,6 @@ public class SongService {
                 + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        //  Try Catch Error Checking if song can be obtained from its list
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -281,7 +261,6 @@ public class SongService {
             stmt.executeUpdate(q);
             ResultSet rs = stmt.executeQuery(query1);
 
-            // Creates new song in the view and adds all of its details to the specific song
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongId(rs.getLong("song_id"));
@@ -326,7 +305,6 @@ public class SongService {
                 + sort +", case when %d = 3 then sg.genre END ".formatted(select)
                 + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort + " ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
-        //  Try Catch Error Checking if song can be obtained by artist
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -334,7 +312,6 @@ public class SongService {
             stmt.executeUpdate(q);
             ResultSet rs = stmt.executeQuery(query1);
 
-            //If not create a song in view and then set its title and other details
             while(rs.next()){
                 SongInView song = new SongInView();
                 song.setSongId(rs.getLong("song_id"));
@@ -380,7 +357,6 @@ public class SongService {
                 + sort +", case when %d = 4 then s.song_release_date END ".formatted(select) + sort +" ";
         Connection conn = DataSourceUtils.getConnection(dataSource);
 
-        // Try Catch Error Checking if song can be obtained from an album
         try {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,

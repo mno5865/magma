@@ -484,4 +484,19 @@ public class UserController {
     public ResponseEntity<List<Song>> recommendSongsByArtist(@PathVariable long userID) {
         return new ResponseEntity<>(userService.recommendSongsByArtist(userID), HttpStatus.OK);
     }
+
+    /**
+     * Utility function to hash a user's password, used if we forget a password and want to change it
+     * @param id The id of the user
+     * @return Hashed version of the password
+     */
+    @CrossOrigin
+    @GetMapping("/users/{id}/hash")
+    public ResponseEntity<String> hashString(@PathVariable long id) {
+        User user = userService.getUser(id);
+        Random rand = new Random(id);
+        int randInt = rand.nextInt(1000000000);
+        String hashedStr = Hashing.sha256().hashString(user.getPassword()+randInt, StandardCharsets.UTF_8).toString();
+        return new ResponseEntity<>(hashedStr, HttpStatus.OK);
+    }
 }
