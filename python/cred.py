@@ -1,5 +1,4 @@
-client_ID = 'a0887a2b2efe4f90baaefe8d06fa9dbb'
-extra_client_ID = '0a45751ae32946bf93f08bfb9b4587ec'
-client_SECRET = 'db61f2bfcdd943dd96874305ced4ea7d'
-extra_client_SECRET = '4ebf4b88f9ed4b118db3acac9f8c0ee0'
-redirect_url = 'http://localhost:9000'
+client_ID =
+client_SECRET =
+
+
