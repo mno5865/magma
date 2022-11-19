@@ -6,17 +6,19 @@
 
 package com.example.pdmapi.Controller;
 
-import com.example.pdmapi.Model.Collection;
-import com.example.pdmapi.Model.User;
+import com.example.pdmapi.Model.*;
 import com.example.pdmapi.Service.UserService;
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -42,6 +44,17 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * Function that returns all users in the database
+     * @return HTTP Response OK containing all users
+     */
+    @CrossOrigin
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     /**
@@ -89,15 +102,29 @@ public class UserController {
     }
 
     /**
-     * Creates a new user entity in the database
+     * Creates a new user entity in the database, and then updates their password to a hashed version based on
+     * the user's ID
      * @param newUser A model of the user to create
      * @return HTTP CREATED response
      */
     @CrossOrigin
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody User newUser) {
-        userService.createUser(newUser);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Integer> createUser(@RequestBody User newUser) {
+        User nullUser = new User();
+        int[] results = userService.createUser(nullUser);
+        //GENERATING RANDOM VALUE
+        Random rand = new Random(results[1]);
+        int randInt = rand.nextInt(1000000000);
+        String hashedPass = Hashing.sha256().hashString(newUser.getPassword()+randInt, StandardCharsets.UTF_8)
+                .toString();
+        //UPDATING USER PASSWORD TO HASHED VAL
+        newUser.setPassword(hashedPass);
+        userService.updateUser((long) results[1], newUser);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -108,9 +135,13 @@ public class UserController {
      */
     @CrossOrigin
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateUser(@PathVariable long id, @RequestBody User updatedUser) {
-        userService.updateUser(id, updatedUser);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> updateUser(@PathVariable long id, @RequestBody User updatedUser) {
+        int rowsAffected = userService.updateUser(id, updatedUser);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -137,9 +168,13 @@ public class UserController {
      */
     @CrossOrigin
     @DeleteMapping("/users/{id}")
-    public ResponseEntity deleteUser(@PathVariable long id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Integer> deleteUser(@PathVariable long id) {
+        int rowsAffected = userService.deleteUser(id);
+        if(rowsAffected == 1) {
+            return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -155,7 +190,7 @@ public class UserController {
         if(rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.OK);
         } else {
-        return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(rowsAffected,HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -169,7 +204,7 @@ public class UserController {
      */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/collections/{collectionId}")
-    public ResponseEntity createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
+    public ResponseEntity<Integer> createUserCreatesCollection(@PathVariable long userId, @PathVariable long collectionId) {
         int rowsAffected = userService.createUserCreatesCollection(userId, collectionId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -191,6 +226,22 @@ public class UserController {
             return new ResponseEntity<>(collections, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Gets a count of collections that belong to a certain user
+     * @param userId The id of the user
+     * @return HTTP OK if successful and the list of collections, HTTP BAD_REQUEST otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/collections/count")
+    public ResponseEntity<Integer> getCollectionCountByUserId(@PathVariable long userId) {
+        int count = userService.getCollectionCountByUserId(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -250,7 +301,7 @@ public class UserController {
     }
 
     /**
-     * Deletes user listens to collection relationship, deprecatd
+     * Deletes user listens to collection relationship, deprecated
      * @param userId The id of the user
      * @param collectionId The id of the collection
      * @return HTTP OK if successful, and BAD_REQUEST otherwise
@@ -285,6 +336,38 @@ public class UserController {
     }
 
     /**
+     * endpoint that gets the count of the users followers
+     * @param userId The id of the user
+     * @return HTTP OK and the count of followers if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/followers/count")
+    public ResponseEntity<Integer> getFollowersCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowersCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint that gets the count of the users following
+     * @param userId id of user
+     * @return HTTP OK and the count of following if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/following/count")
+    public ResponseEntity<Integer> getFollowingCountByUserID(@PathVariable long userId) {
+        int count = userService.getFollowingCountByUserID(userId);
+        if (count != -1) {
+            return new ResponseEntity<>(count, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Creates a user follows user relationship
      * @param userId The id of the user
      * @param friendId The id of the friend
@@ -292,7 +375,7 @@ public class UserController {
      */
     @CrossOrigin
     @PostMapping(value = "/users/{userId}/following/{friendId}")
-    public ResponseEntity createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
+    public ResponseEntity<Integer> createUserFollowsUser(@PathVariable long userId, @PathVariable long friendId) {
         int rowsAffected = userService.createUserFollowsUser(userId, friendId);
         if (rowsAffected == 1) {
             return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
@@ -318,4 +401,102 @@ public class UserController {
         }
     }
 
+    /**
+     * endpoint for getting user's top ten artists by plays
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists/by-plays")
+    public ResponseEntity<List<Artist>> topTenArtistsByPlays(@PathVariable long userId) {
+        List<Artist> artists = userService.getTopTenArtistsByPlays(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint for getting user's top ten artists by collections
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists/by-collections")
+    public ResponseEntity<List<Artist>> topTenArtistsByCollections(@PathVariable long userId) {
+        List<Artist> artists  = userService.getTopTenArtistsByCollections(userId);
+        if (artists != null){
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * endpoint for getting user's top ten artists by plays and collection
+     * @param userId The id of the user
+     * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userId}/top-ten-artists")
+    public ResponseEntity<List<Artist>> topTenArtistsByPlaysAndCollections(@PathVariable long userId) {
+        List<Artist> artists  = userService.getTopTenArtistsByPlaysAndCollections(userId);
+        if (artists != null) {
+            return new ResponseEntity<>(artists, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Used to verify a user's password using SHA-256
+     * @param userID The ID of the user
+     * @param hashedPass The user's hashed password stored in the database
+     * @param pass The password the user entered
+     * @return True if the password matches the hashed password false otherwise
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userID}/verify/{hashedPass}/{pass}")
+    public ResponseEntity<Boolean> verifyPassword(@PathVariable long userID, @PathVariable String hashedPass,
+                                                  @PathVariable String pass) {
+        return new ResponseEntity<>(userService.verifyPassword(userID, pass, hashedPass), HttpStatus.OK);
+    }
+
+    /**
+     * Returns a list of song recommendations for a specific user based on genres
+     * @param userID The id of the user
+     * @return HTTP OK Response with list of songs
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userID}/recommend/genre")
+    public ResponseEntity<List<Song>> recommendSongsByGenre(@PathVariable long userID) {
+        return new ResponseEntity<>(userService.recommendSongsByGenre(userID), HttpStatus.OK);
+    }
+
+    /**
+     * Returns a list of song recommendations for a specific user based on artists
+     * @param userID The id of the user
+     * @return HTTP OK Response with a list of songs
+     */
+    @CrossOrigin
+    @GetMapping("/users/{userID}/recommend/artist")
+    public ResponseEntity<List<Song>> recommendSongsByArtist(@PathVariable long userID) {
+        return new ResponseEntity<>(userService.recommendSongsByArtist(userID), HttpStatus.OK);
+    }
+
+    /**
+     * Utility function to hash a user's password, used if we forget a password and want to change it
+     * @param id The id of the user
+     * @return Hashed version of the password
+     */
+    @CrossOrigin
+    @GetMapping("/users/{id}/hash")
+    public ResponseEntity<String> hashString(@PathVariable long id) {
+        User user = userService.getUser(id);
+        Random rand = new Random(id);
+        int randInt = rand.nextInt(1000000000);
+        String hashedStr = Hashing.sha256().hashString(user.getPassword()+randInt, StandardCharsets.UTF_8).toString();
+        return new ResponseEntity<>(hashedStr, HttpStatus.OK);
+    }
 }

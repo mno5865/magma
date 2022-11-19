@@ -1,0 +1,35 @@
+<!--
+file: profile.component.html
+description: ui markup for profile
+author: Mildness Onyekwere - mno5865
+-->
+<div class="content">
+  <!-- top artists -->
+  <div class="artists">
+    <h3>{{userInfo.firstName}}'s Top Artists</h3>
+    <div class="filter">
+      <div class="toggle">
+        <button (click)="setFilterByPlays()"> Plays </button>
+        <button (click)="setFilterByCollections()"> Playlists </button>
+      </div>
+      <button (click)="clearFilter()"> Clear Filter </button>
+    </div>
+    <div class="cards" >
+        <div class="card" *ngFor="let artist of artists">
+          <div class="container">
+            <p> #{{artists.indexOf(artist) + 1}} - {{artist.name}} </p>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- user info -->
+  <div class="info">
+    <h3>{{userInfo.firstName}}'s Profile</h3>
+    <p>Followers: {{followersCount}} Following: {{followingCount}}</p>
+    <div> Collections: {{collectionCount}} </div>
+  </div>
+</div>
+
+
+

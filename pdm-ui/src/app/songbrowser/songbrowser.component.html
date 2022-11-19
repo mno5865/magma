@@ -1,63 +1,94 @@
-<h1><b>MAGMAfy Songs</b></h1>
+<!--
+file: songbrowser.component.html
+description: ui markup for song browser
+author: Gregory Ojiem - gro3228, Mildness Onyekwere - mno5865
+-->
+<div class="container">
+  <h1><b>Search for Songs</b></h1>
 
-<button (click)="goBack()">Back</button>
-<br><br>
+  <div class="recommended">
+      <div class="songStuff">
+        <h3> <b>Your Recommendations</b> </h3>
+        <div class="filters">
+          <button (click)="setFilterByGenre()"> Genre </button>
+          <button (click)="setFilterByArtist()"> Artist </button>
+        </div>
 
-<form onsubmit="return false">
-  <input type="text" placeholder="Search" #searchTerm required>
-  <button id="submitter" type="submit" (click)="searchForSongs(searchBy.value, searchTerm.value, sortBy.value,
-  ascendDescend.value)">Search</button>
-
-  <span>&nbsp;</span>
-
-  <span>Search by </span>
-  <select #searchBy required>
-    <option value="bytitle">Title</option>
-    <option value="byartist">Artist</option>
-    <option value="byalbum">Album</option>
-    <option value="bygenre">Genre</option>
-  </select>
-
-  <span>&nbsp;</span>
-
-  <span>Sort by </span>
-  <select #sortBy required>
-    <option value="1">Title</option>
-    <option value="2">Artist</option>
-    <option value="3">Release Year</option>
-    <option value="4">Genre</option>
-  </select>
-
-  <span>&nbsp;</span>
-
-  <span>Order by </span>
-  <select #ascendDescend required>
-    <option value="ASC">Ascending</option>
-    <option value="DESC">Descending</option>
-  </select>
-
-  <div class="songs" *ngFor="let song of songList">
-    <span id="songTitle">Title: <strong>{{song.songTitle}}</strong> </span>
-    <br>
-    <span id="artistName">Artist: {{song.artistName}} </span>
-    <br>
-    <span id="albumTitle">Album: {{song.albumTitle}} </span>
-    <br>
-    <span id="runtime">Runtime: {{convertRuntime(song.runtime)}}</span>
-    <br>
-    <span id="listenCount">Listens: {{song.listenCount}} </span>
-    <br>
-    <span>Collection: </span>
-    <select id="selectedCollection" #collections (change)="onSelected(collections.value)">
-      <option value="default">----</option>
-      <option *ngFor="let collection of collectionList" value="{{collection.collectionID}}">
-        {{collection.title}}
-      </option>
-    </select>
-    <br>
-    <button id="addSong" type="submit" (click)="addSongToCollection(song.songId)">Add song</button>
-    <button id="addAlbum" type="submit" (click)="addAlbumToCollection(song.albumId)">Add the song's album</button>
-    <br><br>
+        <div class="recs">
+          <div *ngFor="let rec of recs">
+            <div class="songView">
+              <fa-icon [icon]="faPlay" (click)=listenToSong(rec.songId)></fa-icon>
+                {{rec.songTitle}}
+              <div class="songContent">
+                By: {{rec.artistName}}
+                <br>
+                {{rec.listenCount}} listens
+                <br>
+                {{convertRuntime(rec.runtime)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 
-</form>
+  <br>
+  <form class="form" onsubmit="return false">
+    <input type="text" placeholder="Search" #searchTerm required>
+    <button id="submitter" type="submit" (click)="searchForSongs(searchBy.value, searchTerm.value, sortBy.value,
+  ascendDescend.value)">Search</button>
+
+    <span>&nbsp;</span>
+
+    <span>Search by </span>
+    <select #searchBy required>
+      <option value="bytitle">Title</option>
+      <option value="byartist">Artist</option>
+      <option value="byalbum">Album</option>
+      <option value="bygenre">Genre</option>
+    </select>
+
+    <span>&nbsp;</span>
+
+    <span>Sort by </span>
+    <select #sortBy required>
+      <option value="1">Title</option>
+      <option value="2">Artist</option>
+      <option value="3">Release Year</option>
+      <option value="4">Genre</option>
+    </select>
+
+    <span>&nbsp;</span>
+
+    <span>Order by </span>
+    <select #ascendDescend required>
+      <option value="ASC">Ascending</option>
+      <option value="DESC">Descending</option>
+    </select>
+
+    <div class="songs" *ngFor="let song of songList">
+      <span id="songTitle">Title: <strong>{{song.songTitle}}</strong> </span>
+      <br>
+      <span id="artistName">Artist: {{song.artistName}} </span>
+      <br>
+      <span id="albumTitle">Album: {{song.albumTitle}} </span>
+      <br>
+      <span id="runtime">Runtime: {{convertRuntime(song.runtime)}}</span>
+      <br>
+      <span id="listenCount">Listens: {{song.listenCount}} </span>
+      <br>
+      <span>Collection: </span>
+      <select id="selectedCollection" #collections (change)="onSelected(collections.value)">
+        <option value="default">----</option>
+        <option *ngFor="let collection of collectionList" value="{{collection.collectionID}}">
+          {{collection.title}}
+        </option>
+      </select>
+      <br>
+      <button id="addSong" type="submit" (click)="addSongToCollection(song.songId)">Add song</button>
+      <button id="addAlbum" type="submit" (click)="addAlbumToCollection(song.albumId)">Add the song's album</button>
+      <br><br>
+    </div>
+
+  </form>
+</div>

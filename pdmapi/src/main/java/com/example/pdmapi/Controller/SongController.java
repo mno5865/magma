@@ -2,12 +2,14 @@
  * file: SongController.java
  * authors: Gregory Ojiem gro3228,
  *          Melissa Burisky mpb8984,
- *          Mildness Onyekwere mno5865
+ *          Mildness Onyekwere mno5865,
+ *          Adrian Burgos awb8593
  */
 package com.example.pdmapi.Controller;
 
 import com.example.pdmapi.Model.Song;
 import com.example.pdmapi.Model.SongInView;
+import com.example.pdmapi.Model.User;
 import com.example.pdmapi.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,12 +73,12 @@ public class SongController {
      */
     @CrossOrigin
     @PostMapping(value = "/songs", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Song> createSong(@RequestBody Song newSong) {
-        int rowsAffected = songService.createSong(newSong);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Integer> createSong(@RequestBody Song newSong) {
+        int[] results = songService.createSong(newSong);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -114,7 +116,6 @@ public class SongController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
 
     /**
      * get all the songs in a collection given collection id
@@ -156,7 +157,6 @@ public class SongController {
         }
     }
 
-
     /**
      * endpoint that gets a specific song view by artist if artist of song contains the string
      * @param name
@@ -176,7 +176,6 @@ public class SongController {
             return new ResponseEntity<>(songs, HttpStatus.OK);
         }
     }
-
 
     /**
      * endpoint that gets a specific song view by album title if title of song contains the string
@@ -215,6 +214,60 @@ public class SongController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * endpoint that gets song recommendations based on following activity
+     * @param userId (long) the user's identification number
+     * @return ResponseEntity noting the outcome of the request and list of songs
+     */
+    @CrossOrigin
+    @GetMapping("/songs/top-of-following/{userId}")
+    public ResponseEntity<List<Song>> topFiftySongsOfFollowing(@PathVariable long userId)
+    {
+        List<Song> songs = songService.topFiftySongsOfFollowing(userId);
+        if(songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+    
+     /**
+     * endpoint that gets the 50 songs with the most listens in the past 30 days
+     * @return ResponseEntity containing the list of top 50 songs
+     */
+    @CrossOrigin
+    @GetMapping("/songs/top-50")
+    public ResponseEntity<List<SongInView>> getTop50Songs() {
+        List<SongInView> songs = songService.getTop50Songs();
+        if (songs == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(songs, HttpStatus.OK);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/random")
+    public ResponseEntity<Song> getRandomSong() {
+        Song song = songService.getRandomSong();
+        if (song != null) {
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/songs/in-view/{songId}")
+    public ResponseEntity<SongInView> getSongInView(@PathVariable long songId) {
+        SongInView song = songService.getSongInView(songId);
+        if (song != null) {
+            return new ResponseEntity<>(song, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

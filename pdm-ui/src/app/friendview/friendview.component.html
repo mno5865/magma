@@ -1,19 +1,48 @@
-<h1><b>MAGMAfy Friends</b></h1>
+<!--
+file: friendview.component.html
+description: ui markup for friendview
+author: Gregory Ojiem - gro3228, Mildness Onyekwere - mno5865
+-->
 
-<button (click)="goBack()">Back</button>
-<br>
-<h1><b>MAGMAfy</b></h1>
+<div class="container">
 
-<input type="text" placeholder="Enter your friend's email" #friendEmail required>
-<button type="submit" (click)="findFriendByEmail(friendEmail.value)">Search</button>
-<br><br>
-<div class="follow">
-  <span>{{friendInfo.username}} </span>
-  <button (click)="followUser(userID, friendInfo.userID)">Follow</button>
-</div>
-<h2>Following</h2>
-<div class="collections" *ngFor="let friend of friendList">
-  <span id="name" > {{friend.username}} </span>
-  <button id="unfollow" (click)="unfollowUser(userID, friend.userID)">Unfollow</button>
-  <br><br>
+  <div class="friendfinder">
+    <h2><b>Find a Friend to Follow</b></h2>
+    <input type="text" placeholder="Enter your friend's email" #friendEmail required>
+    <button type="submit" (click)="findFriendByEmail(friendEmail.value)">Search</button>
+    <br><br>
+    <div class="follow">
+      <span>{{friendInfo.username}} </span>
+      <button (click)="followUser(userID, friendInfo.userID)">Follow</button>
+    </div>
+  </div>
+
+  <div class="friendrecs">
+    <h3>Check Out Your Following's Top Choices</h3>
+    <div class="songs">
+      <div *ngFor="let song of topFiftySongs">
+        <div class="songView">
+          <fa-icon [icon]="faPlay" (click)=listenToSong(song.songId)></fa-icon>
+          # {{topFiftySongs.indexOf(song) + 1}} - {{song.songTitle}}
+          <div class="songContent">
+            By: {{song.artistName}}
+            <br>
+            {{song.listenCount}} listens
+            <br>
+            {{convertRuntime(song.runtime)}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="following">
+    <h3>Following</h3>
+
+    <div class="collections" *ngFor="let friend of friendList">
+      <span id="name" > {{friend.username}} </span>
+      <button id="unfollow" (click)="unfollowUser(userID, friend.userID)">Unfollow</button>
+      <br><br>
+    </div>
+  </div>
 </div>

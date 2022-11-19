@@ -7,6 +7,9 @@ import { Collection } from './Collection'
 import { Observable } from 'rxjs'
 import { User } from './User'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Artist} from "./Artist";
+import {SongInView} from "./SongInView";
+import {Song} from "./Song";
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +34,10 @@ export class UtilsService {
     return this.user.username;
   }
 
+  public getUser(): User {
+    return this.user
+  }
+
   public getFirstName(): string {
     return this.user.firstName
   }
@@ -53,6 +60,38 @@ export class UtilsService {
 
   public followFriend(userID: number, friendID: number): Observable<number> {
     return this.http.post<number>(this.userURL+"/"+userID+"/following/"+friendID, this.httpOptions)
+  }
+
+  public getCollectionCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/collections/count", this.httpOptions)
+  }
+
+  public getFollowersCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/followers/count", this.httpOptions)
+  }
+
+  public getFollowingCount(userID: number): Observable<number> {
+    return this.http.get<number>(this.userURL+"/"+ userID +"/following/count", this.httpOptions)
+  }
+
+  public getTopTenArtists(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists", this.httpOptions)
+  }
+
+  public getTopTenArtistsByPlays(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-plays", this.httpOptions)
+  }
+
+  public getTopTenArtistsByCollection(userID: number): Observable<Artist[]> {
+    return this.http.get<Artist[]>(this.userURL+"/"+ userID +"/top-ten-artists/by-collections", this.httpOptions)
+  }
+
+  public getSongRecommendationsByGenre(userID: number): Observable<Song[]> {
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/recommend/genre", this.httpOptions)
+  }
+
+  public getSongRecommendationsByArtist(userID: number): Observable<Song[]> {
+    return this.http.get<Song[]>(this.userURL+"/"+ userID +"/recommend/artist", this.httpOptions)
   }
 
   public setUser(user: User): void {

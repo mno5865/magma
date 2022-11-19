@@ -2,7 +2,8 @@
  * file: GenreService.java
  * authors: Gregory Ojiem gro3228,
  *          Melissa Burisky mpb8984,
- *          Mildness Onyekwere mno5865
+ *          Mildness Onyekwere mno5865,
+ *          Adrian Burgos awb8593
  */
 package com.example.pdmapi.Service;
 
@@ -45,14 +46,19 @@ public class GenreService {
      * @param genre model that db info is tied to
      * @return the amount of rows affected by this insert statement, if -1 there is a problem
      */
-    public int createGenre(Genre genre) {
+    public int[] createGenre(Genre genre) {
         String stmt = "INSERT INTO genre(name) VALUES ('%s')".formatted(genre.getName());
         Connection conn = DataSourceUtils.getConnection(dataSource);
         try {
             Statement statement = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            return statement.executeUpdate(stmt);
+            int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
+            ResultSet keys = statement.getGeneratedKeys();
+            keys.next();
+            int key = keys.getInt(2);
+            int[] results = {rowsAffected, key};
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -62,7 +68,7 @@ public class GenreService {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return new int[2];
     }
 
     /**
@@ -384,5 +390,47 @@ public class GenreService {
             }
         }
         return -1;
+    }
+
+    /**
+     * Get the top 5 genres that were played since the 1st of this month
+     * @return a list of 5 Genres
+     */
+    public List<Genre> getTop5Genres() {
+        List<Genre> genres = new ArrayList<>();
+
+        String query = ("SELECT genre.name, genre.genre_id, count(\"name\") AS top FROM user_listens_to_song\n" +
+                "INNER JOIN song ON song.song_id=user_listens_to_song.song_id\n" +
+                "INNER JOIN song_has_genre ON song.song_id=song_has_genre.song_id\n" +
+                "INNER JOIN genre ON song_has_genre.genre_id=genre.genre_id\n" +
+                "WHERE  date_part('month', user_listens_to_song.date_time) = date_part('month', (SELECT current_timestamp))\n" +
+                "AND date_part('year', user_listens_to_song.date_time) = date_part('year', (SELECT current_timestamp))\n" +
+                "GROUP BY (genre.name, genre.genre_id)\n" +
+                "ORDER BY top desc\n" +
+                "limit 5;");
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+
+        try {
+            Statement stmt = conn.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Genre genre = new Genre();
+                genre.setGenreID(rs.getLong("genre_id"));
+                genre.setName(rs.getString("name"));
+                genres.add(genre);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return genres;
     }
 }

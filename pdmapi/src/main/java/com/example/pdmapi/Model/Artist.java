@@ -12,7 +12,6 @@ package com.example.pdmapi.Model;
 public class Artist {
 
     private long artistID;
-
     private String name;
 
     /**

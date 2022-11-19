@@ -1,0 +1,32 @@
+/**
+  file: nav-bar.component.css
+  description: nav bar styling
+  author: Mildness Onyekwere - mno5865
+*/
+
+@font-face {
+  font-family: Varela;
+  src: url(VarelaRound-Regular.ttf);
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #F3A738;
+  color: #1B0906;
+  border-radius: 10px;
+}
+
+.nav-links a {
+  color: #1B0906;
+}
+
+/* navbar menu */
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 20px;
+}

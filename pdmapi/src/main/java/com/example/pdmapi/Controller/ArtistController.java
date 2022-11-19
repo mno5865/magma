@@ -67,11 +67,11 @@ public class ArtistController {
      */
     @PostMapping(value = "/artists", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> createArtist(@RequestBody Artist newArtist) {
-        int rowsAffected = artistService.createArtist(newArtist);
-        if (rowsAffected == 1) {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.CREATED);
+        int[] results = artistService.createArtist(newArtist);
+        if (results[0] == 1 && results[1] != 0) {
+            return new ResponseEntity<>(results[1], HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(rowsAffected, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(results[1], HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -117,7 +117,7 @@ public class ArtistController {
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
      */
-    @PostMapping(value = "/artists/{artistId}/albums/{albumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/artists/{artistId}/albums/{albumId}")
     public ResponseEntity<Integer> createArtistReleasesAlbum(@PathVariable long artistId, @PathVariable long albumId) {
         int rowsAffected = artistService.createArtistReleasesAlbum(artistId,albumId);
         if(rowsAffected == 1) {
@@ -168,7 +168,7 @@ public class ArtistController {
      * @return ResponseEntity<Integer> of the number of rows in db affected by the service request
      *         if rows affected isn't one, obviously something is wrong
      */
-    @PostMapping(value = "/artists/{artistId}/songs/{songId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/artists/{artistId}/songs/{songId}")
     public ResponseEntity<Integer> createArtistReleasesSong(@PathVariable long artistId, @PathVariable long songId ) {
         int rowsAffected = artistService.createArtistReleasesSong(artistId,songId);
         if(rowsAffected == 1) {

@@ -1,9 +1,38 @@
+<!--
+file: homepage.component.html
+description: ui markup for homepage
+author: Gregory Ojiem - gro3228, Mildness Onyekwere - mno5865
+-->
 <div id="container">
-  <h1><b>MAGMAfy</b></h1>
-  <h2><b>Welcome {{currentUser.firstName}}</b></h2>
-  <button id="songbrowser" (click)="goToSongBrowser()"> Search for songs </button>
-  <button id="collections" (click)="goToCollections()"> Collections </button>
-  <button id="friends" (click)="goToFriends()"> Friends </button>
-  <button (click)="logout()"> Logout </button>
+  <h2 class="header"> <b>Welcome {{currentUser.firstName}}!</b> </h2>
 
+  <div class="content">
+    <div class="genreStuff">
+      <h3> <b>World's Top Genres</b> </h3>
+      <div class="genres">
+        <div class="genre" *ngFor="let genre of topFiveGenres">
+          <p> #{{topFiveGenres.indexOf(genre) + 1}} - {{genre.name}} </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="songStuff">
+      <h3> <b>World's Top Songs</b> </h3>
+      <div class="songs">
+        <div *ngFor="let song of topFiftySongs">
+          <div class="songView">
+            <fa-icon [icon]="faPlay" (click)=listenToSong(song.songId)></fa-icon>
+            # {{topFiftySongs.indexOf(song) + 1}} - {{song.songTitle}}
+            <div class="songContent">
+              By: {{song.artistName}}
+              <br>
+              {{song.listenCount}} listens
+              <br>
+              {{convertRuntime(song.runtime)}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

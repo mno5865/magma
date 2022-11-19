@@ -1,7 +1,6 @@
 /// file/component: Routing Service
 /// description: Redirects users to the correct pages across the site
 /// author: Gregory Ojiem - gro3228, Adrian Burgos - awb8593
-
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { HomepageComponent } from './homepage/homepage.component'
@@ -17,6 +16,8 @@ import {FriendsredirectService } from './friendsredirect.service'
 import { HomeredirectService } from './homeredirect.service'
 import { SongbrowserComponent } from './songbrowser/songbrowser.component'
 import { SongsredirectService } from './songsredirect.service'
+import {ProfileRedirectService} from "./profile-redirect.service";
+import {ProfileComponent} from "./profile/profile.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,7 +38,10 @@ const routes: Routes = [
   { path: 'songs', canActivate: [SongsredirectService], component: SongbrowserComponent },
   { path: 'users/:userID/songs', component: SongbrowserComponent },
 
-  { path: '',   redirectTo: '/login', pathMatch: 'full' },
+  { path: 'profile', canActivate: [ProfileRedirectService], component: ProfileComponent },
+  { path: 'users/:userID/profile', component: ProfileComponent },
+
+  { path: '',   redirectTo: '/login', pathMatch: 'full' }
 ]
 
 @NgModule({
