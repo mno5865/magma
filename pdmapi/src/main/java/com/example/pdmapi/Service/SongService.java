@@ -536,6 +536,10 @@ public class SongService {
         return songs;
     }
 
+    /**
+     * Retrieves a random song from the database
+     * @return A random song
+     */
     public Song getRandomSong() {
         String stmt = "SELECT * FROM song ORDER BY random() LIMIT 1";
         Connection conn = DataSourceUtils.getConnection(dataSource);
@@ -565,6 +569,11 @@ public class SongService {
         return null;
     }
 
+    /**
+     * Takes a regular song id and then retrieves the associated SongInView
+     * @param songId The id of the song
+     * @return The view of the song
+     */
     public SongInView getSongInView(long songId){
         String q = "refresh materialized view song_view";
         String stmt = ("select distinct * from song_view " +

@@ -239,6 +239,10 @@ public class AlbumController {
         }
     }
 
+    /**
+     * Gets a random album from the database
+     * @return HTTP OK Response with the album if album found, HTTP NOT_FOUND Response otherwise
+     */
     @CrossOrigin
     @GetMapping("/albums/random")
     public ResponseEntity<Album> getRandomAlbum() {
