@@ -1,6 +1,6 @@
 /// file/component: Song Browser
 /// description: Allows a user to search for new songs and add them to collections
-/// author: Gregory Ojiem - gro3228
+/// author: Gregory Ojiem - gro3228, Mildness Onyekwere - mno5865
 
 import { Component, OnInit } from '@angular/core';
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
