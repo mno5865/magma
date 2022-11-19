@@ -249,6 +249,10 @@ public class SongController {
         }
     }
 
+    /**
+     * Returns a random song from the database
+     * @return HTTP Response OK with the song if song returned successfuly, HTTP Response NOT_FOUND otherwise
+     */
     @CrossOrigin
     @GetMapping("/songs/random")
     public ResponseEntity<Song> getRandomSong() {
@@ -260,6 +264,11 @@ public class SongController {
         }
     }
 
+    /**
+     * Retrieves the associated SongInView view of a song
+     * @param songId The id of the song
+     * @return HTTP Response OK with the song view if song returned successfuly, HTTP Response NOT_FOUND otherwise
+     */
     @CrossOrigin
     @GetMapping("/songs/in-view/{songId}")
     public ResponseEntity<SongInView> getSongInView(@PathVariable long songId) {
