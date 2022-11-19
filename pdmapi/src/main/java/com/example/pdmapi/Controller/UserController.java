@@ -402,7 +402,7 @@ public class UserController {
     }
 
     /**
-     * endpoint for getting user's top ten artists by collection
+     * endpoint for getting user's top ten artists by plays
      * @param userId The id of the user
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */
@@ -418,7 +418,7 @@ public class UserController {
     }
 
     /**
-     * endpoint for getting user's top ten artists by plays
+     * endpoint for getting user's top ten artists by collections
      * @param userId The id of the user
      * @return HTTP OK and the list of users if successful, HTTP NOT_FOUND otherwise
      */

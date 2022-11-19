@@ -446,8 +446,7 @@ public class SongService {
      * @param userId (long) the user's identification number
      * @return A list of the recommended songs
      */
-    public List<Song> topFiftySongsOfFollowing(long userId)
-    {
+    public List<Song> topFiftySongsOfFollowing(long userId) {
         List<Song> songs = new ArrayList<>();
         String stmt = "SELECT song.song_id,song.title,song.release_date,song.runtime,listen_count " +
                 "from song inner join " +
@@ -468,8 +467,7 @@ public class SongService {
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = statement.executeQuery(stmt);
-            while(rs.next())
-            {
+            while(rs.next()) {
                 Song song = new Song();
                 song.setSongId(rs.getLong("song_id"));
                 song.setTitle(rs.getString("title"));

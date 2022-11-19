@@ -786,7 +786,7 @@ public class UserService {
     }
 
     /**
-     * Returns the top ten artists by collections played by the User logged in.
+     * Returns the top ten artists by houser's collections
      * @param userID The id of the user
      * @return list of artist names
      */
