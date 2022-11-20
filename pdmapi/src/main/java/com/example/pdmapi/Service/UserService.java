@@ -229,7 +229,7 @@ public class UserService {
             int rowsAffected = statement.executeUpdate(stmt, Statement.RETURN_GENERATED_KEYS);
             ResultSet keys = statement.getGeneratedKeys();
             keys.next();
-            int key = keys.getInt(8);
+            int key = keys.getInt(4);
             int[] results = {rowsAffected, key};
             return results;
         } catch (Exception e) {
